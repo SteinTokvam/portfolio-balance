@@ -1,4 +1,4 @@
-import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from '@nextui-org/react';
+import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
 import { addNewInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';

@@ -1,6 +1,5 @@
-import { Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { AddIcon } from "../icons/AddIcon";
 import { GraphIcon } from "../icons/GraphIcon";
 
 export default function Statistics() {
