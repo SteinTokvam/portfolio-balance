@@ -2,6 +2,7 @@
   "name": "portfolio-balance",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://steintokvam.github.io/portfolio-balance",
   "dependencies": {
     "@nextui-org/react": "^2.1.13",
     "@reduxjs/toolkit": "^1.9.5",
