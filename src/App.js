@@ -1,23 +1,22 @@
-import logo from './logo.svg';
+import { Spacer } from '@nextui-org/react';
 import './App.css';
+import InvestmentTable from './components/InvestmentTable';
+import NewInvestment from './components/NewInvestment';
+import Statistics from './components/Statistics';
+
 
 function App() {
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NewInvestment />
+      <Spacer y={4} />
+      <div className="flex flex-col md:flex-row">
+        <InvestmentTable />
+        <Spacer y={4} x={4}/>  
+        <Statistics />
+      </div>
     </div>
   );
 }
