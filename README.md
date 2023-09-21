@@ -1,2 +1,2 @@
 # Portfolio balancer
-App to keep track of your investments.
+App to keep track of your investments. 
