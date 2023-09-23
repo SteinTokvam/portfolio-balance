@@ -1,10 +1,10 @@
 import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
-import { useDispatch } from 'react-redux';
-import { addNewInvestment } from '../actions/investments';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNewInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-export default function NewInvestmentModal({isOpen, onOpenChange}) {
+export default function NewInvestmentModal({isOpen, onOpenChange, isEdit}) {
 
     const textInputStyle = {
         label: "text-black/50 dark:text-white/90",
@@ -28,28 +28,45 @@ export default function NewInvestmentModal({isOpen, onOpenChange}) {
         ],}
     
     
-      const investeringstyper = ["Aksje", "Fond"];
-      const [selectedKeys, setSelectedKeys] = useState(new Set([investeringstyper[0]]));
-      const [selectedName, setSelectedName] = useState("");
-      const [selectedValue, setSelectedPrice] = useState(0);
+    const investeringstyper = ["Aksje", "Fond"];
+    const [selectedKeys, setSelectedKeys] = useState(new Set([investeringstyper[0]]));
+    const [selectedName, setSelectedName] = useState("");
+    const [selectedAccount, setSelectedAccount] = useState("");
+    const [selectedValue, setSelectedPrice] = useState(0);
+
+    const selectedInvestmentType = useMemo(
+    () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
+    [selectedKeys]
+    );
+
+    const dispatch = useDispatch()
+    const investmentToEdit = useSelector(state => state.rootReducer.investments.investmentToEdit)
     
-      const selectedInvestmentType = useMemo(
-        () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
-        [selectedKeys]
-      );
-    
-      const dispatch = useDispatch()
-    
-      function handleSubmit() {
-        dispatch(addNewInvestment({key: uuidv4(), type: selectedInvestmentType, name: selectedName, value: parseFloat(selectedValue)}))
-      }
+    useEffect(() => {
+        console.log(investmentToEdit)
+        if(isEdit && investmentToEdit !== undefined) {
+            console.log(investmentToEdit)
+            setSelectedKeys(new Set([investmentToEdit.type]))
+            setSelectedName(investmentToEdit.name)
+            setSelectedAccount(investmentToEdit.account)
+            setSelectedPrice(investmentToEdit.value)
+        }
+    }, [investmentToEdit])
+
+    function handleSubmit() {
+        if(isEdit) {
+            dispatch(editInvestment({key: investmentToEdit.key, type: selectedInvestmentType, name: selectedName, account: selectedAccount,value: parseFloat(selectedValue)}))
+        } else {
+            dispatch(addNewInvestment({key: uuidv4(), type: selectedInvestmentType, name: selectedName, account: selectedAccount,value: parseFloat(selectedValue)}))
+        }
+    }
 
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Investering:</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">{isEdit ? "Endre investering" : "Ny investering"}:</ModalHeader>
               <ModalBody>
                 <Select
                   label="Type investering"
@@ -64,6 +81,7 @@ export default function NewInvestmentModal({isOpen, onOpenChange}) {
                     </SelectItem>
                   ))}
                 </Select>
+                <Input type="text" classNames={textInputStyle} label="Navn på konto" value={selectedAccount} onValueChange={setSelectedAccount}/>
                 <Input type="text" classNames={textInputStyle} label="Navn på investering" value={selectedName} onValueChange={setSelectedName}/>
                 <Input type="number" classNames={textInputStyle} label="Verdi" startContent={
                   <div className="pointer-events-none flex items-center">

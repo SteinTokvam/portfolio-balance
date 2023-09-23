@@ -9,7 +9,20 @@ const investmentReducer = (state = initialState, action) => {
                 ...state,
                 investments: [...state.investments, action.payload],
             }
-        
+        case 'EDIT_INVESTMENT':
+            const currentInvestments = [...state.investments]
+            const index = currentInvestments.findIndex(investment => investment.key === action.payload.key)
+            currentInvestments[index] = action.payload
+            window.localStorage.setItem("investments", JSON.stringify(currentInvestments))
+            return {
+                ...state,
+                investments: currentInvestments
+            }
+        case 'SET_INVESTMENT_TO_EDIT':
+            return {
+                ...state,
+                investmentToEdit: action.payload
+            }
         default: 
             return state;
         

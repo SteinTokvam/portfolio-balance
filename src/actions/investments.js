@@ -4,3 +4,17 @@ export const addNewInvestment = (investment) => {
         payload: investment
     }
 }
+
+export const editInvestment = (investment) => {
+    return {
+        type: 'EDIT_INVESTMENT',
+        payload: investment
+    }
+}
+
+export const setInvestmentToEdit = (investment) => {
+    return {
+        type: 'SET_INVESTMENT_TO_EDIT',
+        payload: investment
+    }
+}

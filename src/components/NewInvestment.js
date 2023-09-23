@@ -9,7 +9,7 @@ export default function NewInvestment() {
       <>
         <Spacer y={4} />
         <Button onPress={onOpen} color='primary'>+</Button>
-        <NewInvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <NewInvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false}/>
       </>
     )
 }
