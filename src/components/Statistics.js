@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { GraphIcon } from "../icons/GraphIcon";
+import { investmentTypes } from "../Util/Global";
 
 export default function Statistics() {
 
@@ -9,7 +10,7 @@ export default function Statistics() {
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
     return (
 
-        <Card className="max-w-[400px]">
+        <Card className="max-w-[500px] min-w-[250px] ">
             <CardHeader className="flex gap-3">
                 <GraphIcon />
                 <div className="flex flex-col">
@@ -20,8 +21,10 @@ export default function Statistics() {
             <Divider/>
             <CardBody>
                 <li>Total verdi: {totalValue} kr</li>
-                <li>Andel aksjer: {totalValue > 0 ? ((investments.filter(investment => investment.type === "Aksje").reduce((sum, aksjer) => sum + aksjer.value, 0)/totalValue)*100).toFixed(2) : 0}%</li>
-                <li>Andel fond: {totalValue > 0 ? ((investments.filter(investment => investment.type === "Fond").reduce((sum, fond) => sum + fond.value, 0)/totalValue)*100).toFixed(2) : 0}%</li>
+                {totalValue > 0 ? investmentTypes.map(investmentType => {
+                    const investmentSum = investments.filter(investment => investment.type === investmentType).reduce((sum, investment) => sum + investment.value, 0)
+                    return investmentSum > 0 ? <li key={investmentType}>Andel {investmentType}: {((investmentSum/totalValue)*100).toFixed(2)}%</li> : ""
+                }): ""}
             </CardBody>
             
         </Card>

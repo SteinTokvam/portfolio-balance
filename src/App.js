@@ -21,6 +21,7 @@ function App() {
         <InvestmentTable />
         <Spacer y={4} x={4}/>  
         <Statistics />
+        <Spacer y={4} x={4}/>  
       </div>
     </div>
   );

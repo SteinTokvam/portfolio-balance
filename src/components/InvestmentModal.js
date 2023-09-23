@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNewInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
+import { investmentTypes } from '../Util/Global';
 
 export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
 
@@ -28,8 +29,7 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
         ],}
     
     
-    const investeringstyper = ["Aksje", "Fond"];
-    const [selectedKeys, setSelectedKeys] = useState(new Set([investeringstyper[0]]));
+    const [selectedKeys, setSelectedKeys] = useState(new Set([investmentTypes[0]]));
     const [selectedName, setSelectedName] = useState("");
     const [selectedAccount, setSelectedAccount] = useState("");
     const [selectedValue, setSelectedPrice] = useState(0);
@@ -73,7 +73,7 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                   onSelectionChange={setSelectedKeys}
                   selectedKeys={selectedKeys}
                 >
-                  {investeringstyper.map((investering) => (
+                  {investmentTypes.map((investering) => (
                     <SelectItem key={investering} value={investering}>
                       {investering}
                     </SelectItem>
