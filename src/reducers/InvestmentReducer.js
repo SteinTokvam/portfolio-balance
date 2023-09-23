@@ -23,6 +23,11 @@ const investmentReducer = (state = initialState, action) => {
                 ...state,
                 investmentToEdit: action.payload
             }
+        case 'DELETE_INVESTMENTS':
+            return {
+                ...state,
+                investments: action.payload
+            }
         default: 
             return state;
         

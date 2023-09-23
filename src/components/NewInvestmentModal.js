@@ -43,9 +43,7 @@ export default function NewInvestmentModal({isOpen, onOpenChange, isEdit}) {
     const investmentToEdit = useSelector(state => state.rootReducer.investments.investmentToEdit)
     
     useEffect(() => {
-        console.log(investmentToEdit)
         if(isEdit && investmentToEdit !== undefined) {
-            console.log(investmentToEdit)
             setSelectedKeys(new Set([investmentToEdit.type]))
             setSelectedName(investmentToEdit.name)
             setSelectedAccount(investmentToEdit.account)

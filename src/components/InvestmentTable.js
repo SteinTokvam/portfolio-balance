@@ -1,7 +1,6 @@
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, useDisclosure} from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import NewInvestmentModal from "./NewInvestmentModal";
-import { useState } from "react";
 import { setInvestmentToEdit } from "../actions/investments";
 
 export default function InvestmentTable() {
@@ -52,7 +51,7 @@ export default function InvestmentTable() {
             {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
           </TableHeader>
           <TableBody classNames="text-left" items={investments.map(elem => {
-            return {key: elem.key, type: elem.type, name: elem.name, value: elem.value, current_percent: (elem.value/totalValue*100).toFixed(2)}
+            return {key: elem.key, type: elem.type, account: elem.account, name: elem.name, value: elem.value, current_percent: (elem.value/totalValue*100).toFixed(2)}
           })} emptyContent={"Ingen investeringer er lagt inn."}>
 
             {(item) => (

@@ -18,3 +18,10 @@ export const setInvestmentToEdit = (investment) => {
         payload: investment
     }
 }
+
+export const deleteInvestments = () => {
+    return {
+        type: 'DELETE_INVESTMENTS',
+        payload: []
+    }
+}
