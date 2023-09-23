@@ -1,4 +1,4 @@
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, useDisclosure} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, useDisclosure} from "@nextui-org/react";
 import {AcmeLogo} from "../icons/AcmeLogo.jsx";
 import SettingsIcon from "../icons/SettingsIcon.js";
 import Settings from "./Settings.js";

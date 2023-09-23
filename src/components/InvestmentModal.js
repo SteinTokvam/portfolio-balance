@@ -4,7 +4,7 @@ import { addNewInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
 
-export default function NewInvestmentModal({isOpen, onOpenChange, isEdit}) {
+export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
 
     const textInputStyle = {
         label: "text-black/50 dark:text-white/90",
@@ -49,7 +49,7 @@ export default function NewInvestmentModal({isOpen, onOpenChange, isEdit}) {
             setSelectedAccount(investmentToEdit.account)
             setSelectedPrice(investmentToEdit.value)
         }
-    }, [investmentToEdit])
+    }, [investmentToEdit, isEdit])
 
     function handleSubmit() {
         if(isEdit) {

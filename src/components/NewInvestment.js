@@ -1,5 +1,5 @@
 import { Button, useDisclosure, Spacer } from '@nextui-org/react';
-import NewInvestmentModal from './NewInvestmentModal';
+import InvestmentModal from './InvestmentModal';
 
 export default function NewInvestment() {
 
@@ -9,7 +9,7 @@ export default function NewInvestment() {
       <>
         <Spacer y={4} />
         <Button onPress={onOpen} color='primary'>+</Button>
-        <NewInvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false}/>
+        <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false}/>
       </>
     )
 }

@@ -1,6 +1,6 @@
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, useDisclosure} from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import NewInvestmentModal from "./NewInvestmentModal";
+import InvestmentModal from "./InvestmentModal";
 import { setInvestmentToEdit } from "../actions/investments";
 
 export default function InvestmentTable() {
@@ -42,7 +42,7 @@ export default function InvestmentTable() {
 
     return (
         <>
-        <NewInvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true}/>
+        <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true}/>
         <Table isStriped aria-label="Table over different investments"
         selectionMode="single"
         selectionBehavior={"toggle"}
