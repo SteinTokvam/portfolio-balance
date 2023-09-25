@@ -4,6 +4,7 @@ import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/i
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
 import { investmentTypes } from '../Util/Global';
+import DeleteIcon from '../icons/DeleteIcon';
 
 export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
 
@@ -92,15 +93,15 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                 } value={selectedValue} onValueChange={setSelectedPrice}/>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                {isEdit ? <Button color="danger" variant="light" onPress={() => {
+              {isEdit ? <Button isIconOnly color="danger" variant="solid" onPress={() => {
                   onClose()
                   handleDelete()
                   }}>
-                  Delete
+                  <DeleteIcon />
                 </Button> : ""}
+                <Button color="primary" variant="light" onPress={onClose}>
+                  Close
+                </Button>
                 <Button color="success" variant="light" aria-label="add" onPress={() => {
                   onClose()
                   handleSubmit()
