@@ -33,13 +33,10 @@ export default function Settings({ isOpen, onOpenChange }) {
                                 <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput}/>
                                 Import data
                             </Button>
-                            <Button color="primary" variant="flat">
-                                <Link href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                            <Button color="primary" variant="flat" href={`data:text/json;charset=utf-8,${encodeURIComponent(
                                     JSON.stringify(investments)
-                                )}`}
-                                    download="investments-export.json">
-                                    Export data
-                                </Link>
+                                )}`} as={Link} download="investments-export.json">
+                                Export data
                             </Button>
 
                             <Divider />
