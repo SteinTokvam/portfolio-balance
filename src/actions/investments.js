@@ -5,6 +5,13 @@ export const addNewInvestment = (investment) => {
     }
 }
 
+export const importInvestments = (investments) => {
+    return {
+        type: 'IMPORT_INVESTMENTS',
+        payload: investments
+    }
+}
+
 export const editInvestment = (investment) => {
     return {
         type: 'EDIT_INVESTMENT',
