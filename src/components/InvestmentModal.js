@@ -91,11 +91,11 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                 <Button color="danger" variant="light" onPress={onClose}>
                   Abort
                 </Button>
-                <Button isIconOnly color="success" variant="light" aria-label="add" onPress={() => {
+                <Button color="success" variant="light" aria-label="add" onPress={() => {
                   onClose()
                   handleSubmit()
                   }}>
-                  Add
+                  {isEdit ? "Save changes" : "Add"}
                 </Button>
               </ModalFooter>
             </>
