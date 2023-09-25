@@ -1,5 +1,5 @@
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, useDisclosure} from "@nextui-org/react";
-import {AcmeLogo} from "../icons/AcmeLogo.jsx";
+import {Logo} from "../icons/Logo.jsx";
 import SettingsIcon from "../icons/SettingsIcon.js";
 import Settings from "./Settings.js";
 
@@ -10,7 +10,7 @@ export default function MyNavbar() {
     return (
         <Navbar>
       <NavbarBrand>
-        <AcmeLogo />
+        <Logo />
         <p className="font-bold text-inherit">Portfolio rebalancer</p>
       </NavbarBrand>
       <NavbarContent justify="end">

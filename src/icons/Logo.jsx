@@ -1,4 +1,4 @@
-export const AcmeLogo = () => (
+export const Logo = () => (
     <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
     <g fill="#53db78" stroke="currentColor" stroke-linejoin="round" stroke-width="2">
         <path d="M6 20h8v14H6zm14-6h8v26h-8z"/>
