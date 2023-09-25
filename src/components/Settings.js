@@ -1,6 +1,6 @@
 import { Button, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
-import { addNewInvestment, deleteInvestments, importInvestments } from "../actions/investments"
+import { deleteInvestments, importInvestments } from "../actions/investments"
 import { useRef } from "react"
 
 export default function Settings({ isOpen, onOpenChange }) {
