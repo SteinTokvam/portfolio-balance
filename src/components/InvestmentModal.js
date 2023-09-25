@@ -1,6 +1,6 @@
 import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewInvestment, editInvestment } from '../actions/investments';
+import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
 import { investmentTypes } from '../Util/Global';
@@ -59,6 +59,10 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
         }
     }
 
+    function handleDelete() {
+        dispatch(deleteInvestment(investmentToEdit))
+    }
+
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -88,9 +92,15 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                 } value={selectedValue} onValueChange={setSelectedPrice}/>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Abort
+                <Button color="primary" variant="light" onPress={onClose}>
+                  Close
                 </Button>
+                {isEdit ? <Button color="danger" variant="light" onPress={() => {
+                  onClose()
+                  handleDelete()
+                  }}>
+                  Delete
+                </Button> : ""}
                 <Button color="success" variant="light" aria-label="add" onPress={() => {
                   onClose()
                   handleSubmit()
