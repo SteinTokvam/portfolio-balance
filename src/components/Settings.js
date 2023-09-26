@@ -35,10 +35,10 @@ export default function Settings({ isOpen, onOpenChange }) {
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage)
         window.localStorage.setItem('settings', JSON.stringify({language: selectedLanguage}))
-    }, [selectedLanguage])
+    }, [selectedLanguage, i18n])
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
             <ModalContent>
                 {(onClose) => (
                     <>

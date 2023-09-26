@@ -1,4 +1,4 @@
-import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Divider } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
@@ -69,7 +69,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
       <ModalContent>
         {(onClose) => (
           <>
