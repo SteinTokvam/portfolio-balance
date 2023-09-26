@@ -38,6 +38,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
   const [selectedName, setSelectedName] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedValue, setSelectedPrice] = useState(0);
+  const [selectedPercentage, setSelectedPercentage] = useState(0);
   const [selectedNote, setSelectedNote] = useState("");
 
   const selectedInvestmentType = useMemo(
@@ -60,9 +61,9 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
 
   function handleSubmit() {
     if (isEdit) {
-      dispatch(editInvestment({ key: investmentToEdit.key, type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote }))
+      dispatch(editInvestment({ key: investmentToEdit.key, type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote, percentage: selectedPercentage }))
     } else {
-      dispatch(addNewInvestment({ key: uuidv4(), type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote }))
+      dispatch(addNewInvestment({ key: uuidv4(), type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote, percentage: selectedPercentage }))
     }
   }
 
@@ -97,6 +98,11 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
                   <span className="text-default-400 text-small">{t('valuators.currency')}</span>
                 </div>
               } value={selectedValue} onValueChange={setSelectedPrice} />
+              <Input type="number" classNames={textInputStyle} label={t('investmentModal.goalPercentage')} startContent={
+                <div className="pointer-events-none flex items-center">
+                  <span className="text-default-400 text-small">{t('valuators.percentage')}</span>
+                </div>
+              } value={selectedPercentage} onValueChange={setSelectedPercentage} />
 
               <Textarea label={t('investmentModal.textAreaDescription')} labelPlacement="outside" placeholder={t('investmentModal.textAreaPlaceholder')} className="max-w-xs" value={selectedNote} onValueChange={setSelectedNote}/>
             </ModalBody>

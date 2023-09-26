@@ -1,6 +1,7 @@
 {
     "valuators": {
-        "currency": "Kr"
+        "currency": "Kr",
+        "percentage": "%"
     },
     "newInvestment" : {
         "add" : "+"
@@ -13,6 +14,7 @@
         "nameOfAccount": "Name of Account",
         "nameOfInvestment": "Name of Investment",
         "value": "Value",
+        "goalPercentage": "Goal percentage for investment",
         "close": "Close",
         "saveChanges": "Save Changes",
         "save": "Add",

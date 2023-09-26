@@ -12,7 +12,7 @@ export default function Settings({ isOpen, onOpenChange }) {
 
     const hiddenFileInput = useRef(null);
     const lang = JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'en'
-    console.log(lang)
+
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
 
     const selectedLanguage = useMemo(

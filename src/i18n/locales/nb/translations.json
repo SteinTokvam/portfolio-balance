@@ -1,6 +1,7 @@
 {
     "valuators": {
-        "currency": "Kr"
+        "currency": "Kr",
+        "percentage": "%"
     },
     "newInvestment" : {
         "add" : "+"
@@ -13,6 +14,7 @@
         "nameOfAccount": "Navn på konto",
         "nameOfInvestment": "Navn på investering",
         "value": "Verdi",
+        "goalPercentage": "Målprosent for investering",
         "close": "Lukk",
         "saveChanges": "Lagre endringer",
         "save": "Legg til",
