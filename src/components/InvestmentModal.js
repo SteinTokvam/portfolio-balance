@@ -1,4 +1,4 @@
-import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
@@ -38,6 +38,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
   const [selectedName, setSelectedName] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedValue, setSelectedPrice] = useState(0);
+  const [selectedNote, setSelectedNote] = useState("");
 
   const selectedInvestmentType = useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
@@ -53,14 +54,15 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
       setSelectedName(investmentToEdit.name)
       setSelectedAccount(investmentToEdit.account)
       setSelectedPrice(investmentToEdit.value)
+      setSelectedNote(investmentToEdit.note)
     }
   }, [investmentToEdit, isEdit])
 
   function handleSubmit() {
     if (isEdit) {
-      dispatch(editInvestment({ key: investmentToEdit.key, type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue) }))
+      dispatch(editInvestment({ key: investmentToEdit.key, type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote }))
     } else {
-      dispatch(addNewInvestment({ key: uuidv4(), type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue) }))
+      dispatch(addNewInvestment({ key: uuidv4(), type: selectedInvestmentType, name: selectedName, account: selectedAccount, value: parseFloat(selectedValue), note: selectedNote }))
     }
   }
 
@@ -95,6 +97,8 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
                   <span className="text-default-400 text-small">{t('valuators.currency')}</span>
                 </div>
               } value={selectedValue} onValueChange={setSelectedPrice} />
+
+              <Textarea label={t('investmentModal.textAreaDescription')} labelPlacement="outside" placeholder={t('investmentModal.textAreaPlaceholder')} className="max-w-xs" value={selectedNote} onValueChange={setSelectedNote}/>
             </ModalBody>
             <ModalFooter>
               {isEdit ? <Button isIconOnly color="danger" variant="solid" onPress={() => {

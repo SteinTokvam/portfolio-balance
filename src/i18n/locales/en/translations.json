@@ -13,10 +13,11 @@
         "nameOfAccount": "Name of Account",
         "nameOfInvestment": "Name of Investment",
         "value": "Value",
-        
         "close": "Close",
         "saveChanges": "Save Changes",
-        "save": "Add"
+        "save": "Add",
+        "textAreaDescription": "Comment for this investment.",
+        "textAreaPlaceholder": "Add a note."
     },
     "investmentTable": {
         "columnTypeLabel": "TYPE",

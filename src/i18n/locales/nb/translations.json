@@ -13,10 +13,11 @@
         "nameOfAccount": "Navn på konto",
         "nameOfInvestment": "Navn på investering",
         "value": "Verdi",
-        
         "close": "Lukk",
         "saveChanges": "Lagre endringer",
-        "save": "Legg til"
+        "save": "Legg til",
+        "textAreaDescription": "Notat til investeringen.",
+        "textAreaPlaceholder": "Legg til et notat."
     },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
