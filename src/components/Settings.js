@@ -1,19 +1,27 @@
-import { Button, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
+import { Button, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteInvestments, importInvestments } from "../actions/investments"
-import { useRef } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { languages } from "../Util/Global"
 
 export default function Settings({ isOpen, onOpenChange }) {
     const dispatch = useDispatch()
-    const {t} = useTranslation();
+    const { t, i18n } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
 
     const hiddenFileInput = useRef(null);
 
-    const handleClick = event => {
+    const [selectedKeys, setSelectedKeys] = useState(new Set([JSON.parse(window.localStorage.getItem('settings')).language || 'en']));
+
+    const selectedLanguage = useMemo(
+        () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
+        [selectedKeys]
+        );
+
+    const handleClick = () => {
         hiddenFileInput.current.click();
-      };
+    };
 
     const importInvestmentsFile = e => {
         const fileReader = new FileReader();
@@ -24,6 +32,11 @@ export default function Settings({ isOpen, onOpenChange }) {
         };
     };
 
+    useEffect(() => {
+        i18n.changeLanguage(selectedLanguage)
+        window.localStorage.setItem('settings', JSON.stringify({language: selectedLanguage}))
+    }, [selectedLanguage])
+
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent>
@@ -31,13 +44,27 @@ export default function Settings({ isOpen, onOpenChange }) {
                     <>
                         <ModalHeader className="flex flex-col gap-1">{t('settings.header')}</ModalHeader>
                         <ModalBody>
+                            <Select
+                                label={t('settings.selectType')}
+                                placeholder={t('settings.selectLabel')}
+                                className="max-w-xs"
+                                onSelectionChange={setSelectedKeys}
+                                selectedKeys={selectedKeys}
+                            >
+                                {languages.map((lang) => (
+                                    <SelectItem key={lang} value={lang}>
+                                        {lang}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                            <Divider />
                             <Button color="primary" variant="flat" onPress={handleClick}>
-                                <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput}/>
+                                <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput} />
                                 {t('settings.importButton')}
                             </Button>
                             <Button color="primary" variant="flat" href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                                    JSON.stringify(investments)
-                                )}`} as={Link} download="investments-export.json">
+                                JSON.stringify(investments)
+                            )}`} as={Link} download="investments-export.json">
                                 {t('settings.exportButton')}
                             </Button>
 

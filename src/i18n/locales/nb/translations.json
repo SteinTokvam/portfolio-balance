@@ -20,7 +20,7 @@
     },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
-        "columnAccountLabel": "KONT",
+        "columnAccountLabel": "KONTO",
         "columnNameLabel": "NAVN",
         "columnValueLabel": "VERDI",
         "columnCurrentPercentLabel": "Nåværende prosentandel",
@@ -48,6 +48,8 @@
         "exportButton": "Eksporter data",
         "deleteButton": "Slett all brukerdata!",
         "deleteAlert": "All brukerdata slettet.",
-        "closeButton": "Lukk"
+        "closeButton": "Lukk",
+        "selectType": "Språk",
+        "selectLabel": "Velg språk"
     }
 }

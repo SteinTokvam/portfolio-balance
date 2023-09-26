@@ -48,6 +48,8 @@
         "exportButton": "Export data",
         "deleteButton": "Delete all user data!",
         "deleteAlert": "All user data deleted.",
-        "closeButton": "Close"
+        "closeButton": "Close",
+        "selectType": "Language",
+        "selectLabel": "Choose language"
     }
 }
