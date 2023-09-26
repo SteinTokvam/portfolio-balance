@@ -6,8 +6,8 @@
         "add" : "+"
     },
     "investmentModal": {
-        "editTitle": "Edit investment",
-        "newTitle": "Add new Investment",
+        "editTitle": "Edit investment:",
+        "newTitle": "Add new Investment:",
         "type": "Type of Investment",
         "typeLabel": "Choose type of Investment",
         "nameOfAccount": "Name of Account",

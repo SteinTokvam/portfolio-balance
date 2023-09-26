@@ -72,7 +72,7 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">{isEdit ? t('investmentModal.editTitle') : t('investmentModal.newTitle')}:</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">{isEdit ? t('investmentModal.editTitle') : t('investmentModal.newTitle')}</ModalHeader>
               <ModalBody>
                 <Select
                   label={t('investmentModal.type')}

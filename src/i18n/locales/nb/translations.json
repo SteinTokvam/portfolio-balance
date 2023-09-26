@@ -6,8 +6,8 @@
         "add" : "+"
     },
     "investmentModal": {
-        "editTitle": "Endre investering",
-        "newTitle": "Legg til investering",
+        "editTitle": "Endre investering:",
+        "newTitle": "Legg til investering:",
         "type": "Investeringstype",
         "typeLabel": "Velg investeringstype",
         "nameOfAccount": "Navn på konto",
