@@ -24,7 +24,7 @@
         "columnAccountLabel": "KONTO",
         "columnNameLabel": "NAVN",
         "columnValueLabel": "VERDI",
-        "columnCurrentPercentLabel": "Nåværende prosentandel",
+        "columnCurrentPercentLabel": "NÅVÆRENDE PROSENTANDEL",
         "tableLabel": "Tabell over forskjellige investeringer.",
         "emptyTable": "Ingen investeringer lagt til enda."
     },
