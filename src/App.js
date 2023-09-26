@@ -5,9 +5,22 @@ import NewInvestment from './components/NewInvestment';
 import Statistics from './components/Statistics';
 import MyNavbar from './components/MyNavbar';
 import './i18n/config';
+import { useDispatch } from 'react-redux';
+import { addInitialAccountTypes } from './actions/account';
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
 
 function App() {
+
+  const dispatch = useDispatch()
+  const {t} = useTranslation()
+
+  useEffect(() => {
+    
+    const defaultAccountType = window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [t('valuators.defaultAccountType')] 
+    dispatch(addInitialAccountTypes(defaultAccountType))
+  }, [dispatch, t])
 
   return (
     <div className="App">

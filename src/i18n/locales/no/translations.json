@@ -1,7 +1,8 @@
 {
     "valuators": {
         "currency": "Kr",
-        "percentage": "%"
+        "percentage": "%",
+        "defaultAccountType": "Kontanter"
     },
     "newInvestment" : {
         "add" : "+"
@@ -53,6 +54,8 @@
         "deleteAlert": "All brukerdata slettet.",
         "closeButton": "Lukk",
         "selectType": "Språk",
-        "selectLabel": "Velg språk"
+        "selectLabel": "Velg språk",
+        "accountType": "Kontotype",
+        "addAccountButton": "Legg til konto"
     }
 }

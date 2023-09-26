@@ -2,19 +2,19 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 i18n.use(initReactI18next).init({
-  fallbackLng: 'en',
+  fallbackLng: 'us',
   resources: {
-    en: {
-      translations: require('./locales/en/translations.json')
+    us: {
+      translations: require('./locales/us/translations.json')
     },
-    nb: {
-      translations: require('./locales/nb/translations.json')
+    no: {
+      translations: require('./locales/no/translations.json')
     }
   },
   ns: ['translations'],
   defaultNS: 'translations'
 });
 
-i18n.languages = ['en', 'nb'];
+i18n.languages = ['us', 'no'];
 
 export default i18n;

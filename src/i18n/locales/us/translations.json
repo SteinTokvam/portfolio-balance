@@ -1,7 +1,8 @@
 {
     "valuators": {
         "currency": "Kr",
-        "percentage": "%"
+        "percentage": "%",
+        "defaultAccountType": "Cash"
     },
     "newInvestment" : {
         "add" : "+"
@@ -53,6 +54,8 @@
         "deleteAlert": "All user data deleted.",
         "closeButton": "Close",
         "selectType": "Language",
-        "selectLabel": "Choose language"
+        "selectLabel": "Choose language",
+        "accountType": "Account type",
+        "addAccountButton": "Add account"
     }
 }

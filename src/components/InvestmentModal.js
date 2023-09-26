@@ -3,38 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
-import { investmentTypes } from '../Util/Global';
+import { textInputStyle } from '../Util/Global';
 import DeleteIcon from '../icons/DeleteIcon';
 import { useTranslation } from 'react-i18next';
 
 export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
 
+  const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+
   const { t } = useTranslation();
 
-  const textInputStyle = {
-    label: "text-black/50 dark:text-white/90",
-    input: [
-      "bg-transparent",
-      "text-black/90 dark:text-white/90",
-      "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-    ],
-    innerWrapper: "bg-transparent",
-    inputWrapper: [
-      "shadow-xl",
-      "bg-default-200/50",
-      "dark:bg-default/60",
-      "backdrop-blur-xl",
-      "backdrop-saturate-200",
-      "hover:bg-default-200/70",
-      "dark:hover:bg-default/70",
-      "group-data-[focused=true]:bg-default-200/50",
-      "dark:group-data-[focused=true]:bg-default/60",
-      "!cursor-text",
-    ],
-  }
-
-
-  const [selectedKeys, setSelectedKeys] = useState(new Set([investmentTypes[0]]));
+  const [selectedKeys, setSelectedKeys] = useState(accountTypes[0] === null ? null : new Set([accountTypes[0]]));
   const [selectedName, setSelectedName] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedValue, setSelectedPrice] = useState(0);
@@ -85,7 +64,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
                 onSelectionChange={setSelectedKeys}
                 selectedKeys={selectedKeys}
               >
-                {investmentTypes.map((investering) => (
+                {accountTypes.map((investering) => (
                   <SelectItem key={investering} value={investering}>
                     {investering}
                   </SelectItem>
