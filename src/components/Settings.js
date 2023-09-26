@@ -11,8 +11,9 @@ export default function Settings({ isOpen, onOpenChange }) {
     const investments = useSelector(state => state.rootReducer.investments.investments)
 
     const hiddenFileInput = useRef(null);
-
-    const [selectedKeys, setSelectedKeys] = useState(new Set([JSON.parse(window.localStorage.getItem('settings')).language || 'en']));
+    const lang = JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'en'
+    console.log(lang)
+    const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
 
     const selectedLanguage = useMemo(
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
