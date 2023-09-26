@@ -1,0 +1,53 @@
+{
+    "valuators": {
+        "currency": "Kr"
+    },
+    "newInvestment" : {
+        "add" : "+"
+    },
+    "investmentModal": {
+        "editTitle": "Edit investment",
+        "newTitle": "Add new Investment",
+        "type": "Type of Investment",
+        "typeLabel": "Choose type of Investment",
+        "nameOfAccount": "Name of Account",
+        "nameOfInvestment": "Name of Investment",
+        "value": "Value",
+        
+        "close": "Close",
+        "saveChanges": "Save Changes",
+        "save": "Add"
+    },
+    "investmentTable": {
+        "columnTypeLabel": "TYPE",
+        "columnAccountLabel": "ACCOUNT",
+        "columnNameLabel": "NAME",
+        "columnValueLabel": "VALUE",
+        "columnCurrentPercentLabel": "CURRENT PERCENT",
+        "tableLabel": "Table over different investments.",
+        "emptyTable": "No investments added yet."
+    },
+    "statistics": {
+        "cardTitle": "Statistics",
+        "cardSubTitle": "Key statistics about your investments.",
+        "cardTotalValue": "Total value: {{value}} {{currency}}",
+        "cardShareOfValue": "Share of {{investment}}: {{percentage}}%"
+    },
+    "investmentTypes": {
+        "stock": "Stock",
+        "equityFund": "Equity Fund",
+        "crypto": "Cryptocurrency",
+        "cash": "Cash"
+    },
+    "navbar": {
+        "brand": "Portfolio rebalancer"
+    },
+    "settings": {
+        "header": "Settings",
+        "importButton": "Import data",
+        "exportButton": "Export data",
+        "deleteButton": "Delete all user data!",
+        "deleteAlert": "All user data deleted.",
+        "closeButton": "Close"
+    }
+}

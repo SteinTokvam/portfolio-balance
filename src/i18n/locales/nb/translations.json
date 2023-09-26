@@ -1,0 +1,18 @@
+{
+    "newInvestment" : {
+        "add" : "+"
+    },
+    "investmentModal": {
+        "editTitle": "Endre investering",
+        "newTitle": "Legg til ny investering",
+        "type": "Type investering",
+        "typeLabel": "Velg type investering",
+        "nameOfAccount": "Kontonavn",
+        "nameOfInvestment": "Navn på investering",
+        "value": "Verdi",
+        "currency": "Kr",
+        "close": "Lukk",
+        "saveChanges": "Lagre endringer",
+        "save": "Legg til"
+    }
+}

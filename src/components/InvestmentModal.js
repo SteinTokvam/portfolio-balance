@@ -5,8 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
 import { investmentTypes } from '../Util/Global';
 import DeleteIcon from '../icons/DeleteIcon';
+import { useTranslation } from 'react-i18next';
 
 export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
+
+  const {t} = useTranslation();
 
     const textInputStyle = {
         label: "text-black/50 dark:text-white/90",
@@ -69,11 +72,11 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">{isEdit ? "Endre investering" : "Ny investering"}:</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">{isEdit ? t('investmentModal.editTitle') : t('investmentModal.newTitle')}:</ModalHeader>
               <ModalBody>
                 <Select
-                  label="Type investering"
-                  placeholder="Velg type investering"
+                  label={t('investmentModal.type')}
+                  placeholder={t('investmentModal.typeLabel')}
                   className="max-w-xs"
                   onSelectionChange={setSelectedKeys}
                   selectedKeys={selectedKeys}
@@ -84,11 +87,11 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                     </SelectItem>
                   ))}
                 </Select>
-                <Input type="text" classNames={textInputStyle} label="Navn på konto" value={selectedAccount} onValueChange={setSelectedAccount}/>
-                <Input type="text" classNames={textInputStyle} label="Navn på investering" value={selectedName} onValueChange={setSelectedName}/>
-                <Input type="number" classNames={textInputStyle} label="Verdi" startContent={
+                <Input type="text" classNames={textInputStyle} label={t('investmentModal.nameOfAccount')} value={selectedAccount} onValueChange={setSelectedAccount}/>
+                <Input type="text" classNames={textInputStyle} label={t('investmentModal.nameOfInvestment')} value={selectedName} onValueChange={setSelectedName}/>
+                <Input type="number" classNames={textInputStyle} label={t('investmentModal.value')} startContent={
                   <div className="pointer-events-none flex items-center">
-                    <span className="text-default-400 text-small">Kr</span>
+                    <span className="text-default-400 text-small">{t('valuators.currency')}</span>
                   </div>
                 } value={selectedValue} onValueChange={setSelectedPrice}/>
               </ModalBody>
@@ -102,11 +105,11 @@ export default function InvestmentModal({isOpen, onOpenChange, isEdit}) {
                 <Button color="primary" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="success" variant="light" aria-label="add" onPress={() => {
+                <Button color="success" variant="light" aria-label={t('investmentModal.save')} onPress={() => {
                   onClose()
                   handleSubmit()
                   }}>
-                  {isEdit ? "Save changes" : "Add"}
+                  {isEdit ? t('investmentModal.saveChanges') : t('investmentModal.save')}
                 </Button>
               </ModalFooter>
             </>

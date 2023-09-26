@@ -4,10 +4,10 @@ import InvestmentTable from './components/InvestmentTable';
 import NewInvestment from './components/NewInvestment';
 import Statistics from './components/Statistics';
 import MyNavbar from './components/MyNavbar';
+import './i18n/config';
 
 
 function App() {
-
 
   return (
     <div className="App">
@@ -16,7 +16,7 @@ function App() {
       <NewInvestment />
       <Spacer y={4} x={4}/>
       </div>
-      
+
       <div className="flex flex-col md:flex-row">
         <InvestmentTable />
         <Spacer y={4} x={4}/>  

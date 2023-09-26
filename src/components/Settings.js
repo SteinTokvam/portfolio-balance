@@ -2,9 +2,11 @@ import { Button, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, Mod
 import { useDispatch, useSelector } from "react-redux"
 import { deleteInvestments, importInvestments } from "../actions/investments"
 import { useRef } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function Settings({ isOpen, onOpenChange }) {
     const dispatch = useDispatch()
+    const {t} = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
 
     const hiddenFileInput = useRef(null);
@@ -27,33 +29,33 @@ export default function Settings({ isOpen, onOpenChange }) {
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">Settings</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">{t('settings.header')}</ModalHeader>
                         <ModalBody>
                             <Button color="primary" variant="flat" onPress={handleClick}>
                                 <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput}/>
-                                Import data
+                                {t('settings.importButton')}
                             </Button>
                             <Button color="primary" variant="flat" href={`data:text/json;charset=utf-8,${encodeURIComponent(
                                     JSON.stringify(investments)
                                 )}`} as={Link} download="investments-export.json">
-                                Export data
+                                {t('settings.exportButton')}
                             </Button>
 
                             <Divider />
                             <Button color="danger" variant="light" onPress={() => {
                                 window.localStorage.clear()
                                 dispatch(deleteInvestments())
-                                alert("All user data deleted.")
+                                alert(t('settings.deleteAlert'))
                                 onClose()
                             }}>
-                                Delete all user data!
+                                {t('settings.deleteButton')}
                             </Button>
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" variant="flat" aria-label="close" onPress={() => {
                                 onClose()
                             }}>
-                                Close
+                                {t('settings.closeButton')}
                             </Button>
                         </ModalFooter>
                     </>
