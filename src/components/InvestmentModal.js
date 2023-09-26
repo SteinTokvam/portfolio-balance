@@ -108,7 +108,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
                 <DeleteIcon />
               </Button> : ""}
               <Button color="primary" variant="light" onPress={onClose}>
-                Close
+                {t('investmentModal.close')}
               </Button>
               <Button color="success" variant="light" aria-label={t('investmentModal.save')} onPress={() => {
                 onClose()
