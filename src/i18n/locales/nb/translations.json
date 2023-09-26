@@ -1,18 +1,53 @@
 {
+    "valuators": {
+        "currency": "Kr"
+    },
     "newInvestment" : {
         "add" : "+"
     },
     "investmentModal": {
         "editTitle": "Endre investering",
-        "newTitle": "Legg til ny investering",
-        "type": "Type investering",
-        "typeLabel": "Velg type investering",
-        "nameOfAccount": "Kontonavn",
+        "newTitle": "Legg til investering",
+        "type": "Investeringstype",
+        "typeLabel": "Velg investeringstype",
+        "nameOfAccount": "Navn på konto",
         "nameOfInvestment": "Navn på investering",
         "value": "Verdi",
-        "currency": "Kr",
+        
         "close": "Lukk",
         "saveChanges": "Lagre endringer",
         "save": "Legg til"
+    },
+    "investmentTable": {
+        "columnTypeLabel": "TYPE",
+        "columnAccountLabel": "KONT",
+        "columnNameLabel": "NAVN",
+        "columnValueLabel": "VERDI",
+        "columnCurrentPercentLabel": "Nåværende prosentandel",
+        "tableLabel": "Tabell over forskjellige investeringer.",
+        "emptyTable": "Ingen investeringer lagt til enda."
+    },
+    "statistics": {
+        "cardTitle": "Statistikk",
+        "cardSubTitle": "Nøkkeltall om dine investeringer.",
+        "cardTotalValue": "Total verdi: {{value}} {{currency}}",
+        "cardShareOfValue": "Andel av {{investment}}: {{percentage}}%"
+    },
+    "investmentTypes": {
+        "stock": "Aksje",
+        "equityFund": "Fond",
+        "crypto": "Kryptovaluta",
+        "cash": "Kontanter"
+    },
+    "navbar": {
+        "brand": "Portfolio rebalancer"
+    },
+    "settings": {
+        "header": "Innstillinger",
+        "importButton": "Importer data",
+        "exportButton": "Eksporter data",
+        "deleteButton": "Slett all brukerdata!",
+        "deleteAlert": "All brukerdata slettet.",
+        "closeButton": "Lukk"
     }
 }
