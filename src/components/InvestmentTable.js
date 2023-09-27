@@ -13,20 +13,16 @@ export default function InvestmentTable() {
 
     const columns = [
         {
-            key: "type",
-            label: t('investmentTable.columnTypeLabel'),
-        },
-        {
             key: "account",
             label: t('investmentTable.columnAccountLabel'),
         },
         {
-            key: "name",
-            label: t('investmentTable.columnNameLabel'),
+            key: "type",
+            label: t('investmentTable.columnTypeLabel'),
         },
         {
-            key: "value",
-            label: t('investmentTable.columnValueLabel'),
+            key: "name",
+            label: t('investmentTable.columnNameLabel'),
         },
         {
             key: "current_percent",
@@ -54,7 +50,7 @@ export default function InvestmentTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={investments.map(elem => {
-                    return { key: elem.key, type: elem.type, account: elem.account, name: elem.name, value: elem.value, current_percent: (elem.value / totalValue * 100).toFixed(2) }
+                    return { key: elem.key, type: elem.type, account: elem.account, name: elem.name, current_percent: (elem.value / totalValue * 100).toFixed(2) + "%" }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (

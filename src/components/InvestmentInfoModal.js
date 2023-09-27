@@ -1,4 +1,4 @@
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Avatar, useDisclosure } from '@nextui-org/react';
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Avatar, useDisclosure, Spacer } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import EditIcon from '../icons/EditIcon';
@@ -47,7 +47,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                         <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                         <ModalHeader className="justify-between">
                             <div className="flex gap-5">
-                                <Avatar isBordered radius="full" size="md" src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e7/Yara_International_%28emblem%29.svg/1280px-Yara_International_%28emblem%29.svg.png" />
+                                <Avatar isBordered radius="full" size="md" src="finnesIkke" />
                                 <div className="flex flex-col gap-1 items-start justify-center">
                                     <h4 className="text-small font-semibold leading-none text-default-600">{investmentToView.name}</h4>
                                     <h5 className="text-small tracking-tight text-default-400">{investmentToView.account}</h5>
@@ -75,7 +75,13 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                                 <h4 className="text-small font-semibold leading-none text-default-600">Målprosent:</h4>
                                 <b>{(investmentToView.value / totalValue * 100).toFixed(2)}%</b>
                                 <b>{investmentToView.percentage}%</b>
+                                <Spacer y={4} />
                             </div>
+                            <div>
+                            <h4 className="text-small font-semibold leading-none text-default-600">Kommentar</h4>
+                            <small>{investmentToView.note}</small>
+                            </div>
+                            
                         </ModalBody>
                         <ModalFooter>
                             <Button isIconOnly color="danger" variant="solid" onPress={() => {
