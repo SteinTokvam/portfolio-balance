@@ -52,7 +52,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
   }
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop='blur'>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop={isEdit ? '' : 'blur'}>
       <ModalContent>
         {(onClose) => (
           <>
