@@ -1,13 +1,16 @@
 import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Avatar, useDisclosure } from '@nextui-org/react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import EditIcon from '../icons/EditIcon';
 import InvestmentModal from './InvestmentModal';
 import { useEffect, useState } from 'react';
+import { deleteInvestment } from '../actions/investments';
+import DeleteIcon from '../icons/DeleteIcon';
 
 export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEdit }) {
 
     const { t } = useTranslation();
+    const dispatch = useDispatch()
 
     const investmentToEdit = useSelector(state => state.rootReducer.investments.investmentToEdit)
     const investments = useSelector(state => state.rootReducer.investments.investments);
@@ -15,18 +18,29 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
     const [investmentToView, setInvestmentToView] = useState({})
 
     useEffect(() => {
-        if(investmentToEdit === undefined) {
+        if (investmentToEdit === undefined) {
             return
         }
-        setInvestmentToView(investments.filter(investment => investment.key === investmentToEdit.key)[0])
+        const foundInvestment = investments.filter(investment => investment.key === investmentToEdit.key)
+
+        if (foundInvestment.length !== 0) {
+            setInvestmentToView(foundInvestment[0])
+        } else {
+            setInvestmentToView({})
+        }
     }, [investments, investmentToEdit])
 
     var totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+    function handleDelete() {
+        dispatch(deleteInvestment(investmentToEdit))
+      }
+
     return (
         <Modal isOpen={isOpenInfo} onOpenChange={onOpenChangeInfo} backdrop='blur' scrollBehavior='inside' hideCloseButton={true}>
+
             <ModalContent>
                 {(onCloseInfo) => (
                     <>
@@ -45,18 +59,13 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                                 radius="full"
                                 size="sm"
                                 variant={"bordered"}
-                                onPress={() => {
-                                    //onCloseInfo()
-                                    onOpen()
-                                }}
+                                onPress={onOpen}
                             >
                                 <EditIcon />
                                 Edit
                             </Button>
-
                         </ModalHeader>
                         <ModalBody>
-
                             <div className='grid grid-cols-2 gap-5 justify-between'>
                                 <h4 className="text-small font-semibold leading-none text-default-600">Type:</h4>
                                 <h4 className="text-small font-semibold leading-none text-default-600">Verdi:</h4>
@@ -67,12 +76,14 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                                 <b>{(investmentToView.value / totalValue * 100).toFixed(2)}%</b>
                                 <b>{investmentToView.percentage}%</b>
                             </div>
-
-
                         </ModalBody>
                         <ModalFooter>
-
-
+                            <Button isIconOnly color="danger" variant="solid" onPress={() => {
+                                onCloseInfo()
+                                handleDelete()
+                            }}>
+                                <DeleteIcon />
+                            </Button>
                             <Button color="primary" variant="light" onPress={onCloseInfo}>
                                 {t('investmentModal.close')}
                             </Button>
@@ -81,5 +92,6 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                 )}
             </ModalContent>
         </Modal>
+
     )
 }

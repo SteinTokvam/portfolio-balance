@@ -1,10 +1,9 @@
 import { Input, Select, SelectItem, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewInvestment, deleteInvestment, editInvestment } from '../actions/investments';
+import { addNewInvestment, editInvestment } from '../actions/investments';
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useMemo, useState } from 'react';
 import { textInputStyle } from '../Util/Global';
-import DeleteIcon from '../icons/DeleteIcon';
 import { useTranslation } from 'react-i18next';
 
 export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
@@ -47,10 +46,6 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
     }
   }
 
-  function handleDelete() {
-    dispatch(deleteInvestment(investmentToEdit))
-  }
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop={isEdit ? '' : 'blur'}>
       <ModalContent>
@@ -87,12 +82,6 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
               <Textarea label={t('investmentModal.textAreaDescription')} labelPlacement="outside" placeholder={t('investmentModal.textAreaPlaceholder')} className="max-w-xs" value={selectedNote} onValueChange={setSelectedNote}/>
             </ModalBody>
             <ModalFooter>
-              {isEdit ? <Button isIconOnly color="danger" variant="solid" onPress={() => {
-                onClose()
-                handleDelete()
-              }}>
-                <DeleteIcon />
-              </Button> : ""}
               <Button color="primary" variant="light" onPress={onClose}>
                 {t('investmentModal.close')}
               </Button>
