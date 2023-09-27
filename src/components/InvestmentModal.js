@@ -13,7 +13,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
 
   const { t } = useTranslation();
 
-  const [selectedKeys, setSelectedKeys] = useState(accountTypes[0] === null ? null : new Set([accountTypes[0]]));
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [selectedName, setSelectedName] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [selectedValue, setSelectedPrice] = useState(0);
