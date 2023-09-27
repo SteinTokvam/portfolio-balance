@@ -8,6 +8,7 @@ const initialState = {
 const accountReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_INITIAL_ACCOUNT_TYPES':
+            window.localStorage.setItem('accountTypes', JSON.stringify(action.payload))
             return {
                 accountTypes: action.payload
             }

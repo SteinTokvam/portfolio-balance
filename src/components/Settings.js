@@ -4,15 +4,16 @@ import { deleteInvestments, importInvestments } from "../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages, textInputStyle } from "../Util/Global"
-import { addNewAccountType, deleteAccountTypes } from "../actions/account"
+import { addInitialAccountTypes, addNewAccountType, deleteAccountTypes } from "../actions/account"
 
 export default function Settings({ isOpen, onOpenChange }) {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
 
     const hiddenFileInput = useRef(null);
-    const lang = JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us'
+    const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
 
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
     const [accountTypeText, setAccountTypeText] = useState("")
@@ -31,9 +32,23 @@ export default function Settings({ isOpen, onOpenChange }) {
         fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
         fileReader.onload = e => {
             console.log("e.target.result", e.target.result);
-            dispatch(importInvestments(JSON.parse(e.target.result)));
+            const json = JSON.parse(e.target.result)
+            dispatch(importInvestments(json.investments));
+            dispatch(addInitialAccountTypes(json.accountTypes))
+            setLang(json.settings.language)
+            setSelectedKeys(new Set([json.settings.language]))
+            window.localStorage.setItem('settings', JSON.stringify(json.settings))
+            i18n.changeLanguage(json.settings.language)
         };
     };
+
+    const processFile = () => {
+        return JSON.stringify({
+            investments: investments,
+            settings: JSON.parse(window.localStorage.getItem('settings')),
+            accountTypes: accountTypes
+        })
+    }
 
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage)
@@ -66,7 +81,7 @@ export default function Settings({ isOpen, onOpenChange }) {
                                 {t('settings.importButton')}
                             </Button>
                             <Button color="primary" variant="flat" href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                                JSON.stringify(investments)
+                                processFile()
                             )}`} as={Link} download="investments-export.json">
                                 {t('settings.exportButton')}
                             </Button>
