@@ -34,6 +34,7 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
       setSelectedName(investmentToEdit.name)
       setSelectedAccount(investmentToEdit.account)
       setSelectedPrice(investmentToEdit.value)
+      setSelectedPercentage(investmentToEdit.percentage)
       setSelectedNote(investmentToEdit.note)
     }
   }, [investmentToEdit, isEdit])
