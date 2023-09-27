@@ -1,8 +1,8 @@
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import InvestmentModal from "./InvestmentModal";
 import { setInvestmentToEdit } from "../actions/investments";
 import { useTranslation } from "react-i18next";
+import InvestmentInfoModal from "./InvestmentInfoModal";
 
 export default function InvestmentTable() {
 
@@ -45,7 +45,7 @@ export default function InvestmentTable() {
 
     return (
         <>
-            <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
+            <InvestmentInfoModal isOpenInfo={isOpen} onOpenChangeInfo={onOpenChange}/>
             <Table isStriped aria-label={t('investmentTable.tableLabel')}
                 selectionMode="single"
                 selectionBehavior={"toggle"}
