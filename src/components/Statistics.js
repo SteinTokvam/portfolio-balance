@@ -2,7 +2,6 @@ import { Card, CardHeader, CardBody, Divider, Spacer } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { GraphIcon } from "../icons/GraphIcon";
 import { useTranslation } from "react-i18next";
-import { Transaction } from "@react-stately/virtualizer";
 
 export default function Statistics() {
 
