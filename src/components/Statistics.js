@@ -39,7 +39,7 @@ export default function Statistics() {
             const key = investment.key
 
             if (parseInt(investment.percentage) === 0) {
-                return { key: key, name: investment.name, toBuy: 0}//-investment.value }
+                return { key: key, name: investment.name, toBuy: -investment.value }
             }
 
             return { key: key, name: investment.name, toBuy: toBuy }
