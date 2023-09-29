@@ -22,6 +22,14 @@
         "textAreaDescription": "Comment for this investment.",
         "textAreaPlaceholder": "Add a note."
     },
+    "investmentInfoModal": {
+        "type": "Type:",
+        "value": "Value:",
+        "currentPercentage": "Current percentage:",
+        "goalPercentage": "Goal percentage:",
+        "note": "Note:",
+        "edit": "Edit"
+    },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
         "columnAccountLabel": "ACCOUNT",

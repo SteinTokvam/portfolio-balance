@@ -62,23 +62,23 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                                 onPress={onOpen}
                             >
                                 <EditIcon />
-                                Edit
+                                {t('investmentInfoModal.edit')}
                             </Button>
                         </ModalHeader>
                         <ModalBody>
                             <div className='grid grid-cols-2 gap-5 justify-between'>
-                                <h4 className="text-small font-semibold leading-none text-default-600">Type:</h4>
-                                <h4 className="text-small font-semibold leading-none text-default-600">Verdi:</h4>
+                                <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.type')}</h4>
+                                <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.value')}</h4>
                                 <b>{investmentToView.type}</b>
-                                <b>{investmentToView.value}Kr</b>
-                                <h4 className="text-small font-semibold leading-none text-default-600">Nåværende prosent:</h4>
-                                <h4 className="text-small font-semibold leading-none text-default-600">Målprosent:</h4>
-                                <b>{(investmentToView.value / totalValue * 100).toFixed(2)}%</b>
+                                <b>{investmentToView.value}{t('valuators.currency')}</b>
+                                <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.currentPercentage')}</h4>
+                                <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
+                                <b>{(investmentToView.value / totalValue * 100).toFixed(2)}{t('valuators.percentage')}</b>
                                 <b>{investmentToView.percentage}%</b>
                                 <Spacer y={4} />
                             </div>
                             <div>
-                            <h4 className="text-small font-semibold leading-none text-default-600">Kommentar</h4>
+                            <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.note')}</h4>
                             <small>{investmentToView.note}</small>
                             </div>
                             
