@@ -22,8 +22,9 @@ function App() {
     dispatch(addInitialAccountTypes(defaultAccountType))
   }, [dispatch, t])
 
+  const isDark = true
   return (
-    <div className="App">
+    <div className={isDark ? "App dark bg-background h-screen" : "App"}>
       <MyNavbar />
       <div className='w-full text-center'>
       <NewInvestment />

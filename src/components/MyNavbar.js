@@ -17,7 +17,7 @@ export default function MyNavbar() {
   ];
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen}>
+    <Navbar onMenuOpenChange={setIsMenuOpen} className="text-foreground">
       <NavbarContent>
         <NavbarBrand>
           <Logo />
