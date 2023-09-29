@@ -10,6 +10,7 @@ export default function InvestmentTable() {
 
     const investments = useSelector(state => state.rootReducer.investments.investments);
     var totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
+    
 
     const columns = [
         {
