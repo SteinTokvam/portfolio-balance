@@ -1,8 +1,7 @@
-import { Card, CardHeader, CardBody, Divider, Spacer } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { GraphIcon } from "../icons/GraphIcon";
 import { useTranslation } from "react-i18next";
-import { doRebalance } from "../Util/Calculations";
 
 export default function Statistics() {
 
