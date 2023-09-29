@@ -22,6 +22,14 @@
         "textAreaDescription": "Notat til investeringen.",
         "textAreaPlaceholder": "Legg til et notat."
     },
+    "investmentInfoModal": {
+        "type": "Type:",
+        "value": "Verdi:",
+        "currentPercentage": "Nåværende prosentandel:",
+        "goalPercentage": "Målprosent:",
+        "note": "Kommentar:",
+        "edit": "Rediger"
+    },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
         "columnAccountLabel": "KONTO",
