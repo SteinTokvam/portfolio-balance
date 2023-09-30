@@ -2,7 +2,7 @@ import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMe
 import { Logo } from "../icons/Logo.jsx";
 import Settings from "./Settings.js";
 import { useTranslation } from "react-i18next";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import { routes } from "../Util/Global.js";
 import { useNavigate } from "react-router-dom";
 
