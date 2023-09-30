@@ -13,6 +13,7 @@ export default function MyNavbar() {
   const menuItems = [
     "Dashboard",
     "Portfolio",
+    "Accounts",
     "Settings"
   ];
 
@@ -25,7 +26,7 @@ export default function MyNavbar() {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent justify="end" className="hidden lg:flex">
+      <NavbarContent justify="end" className="hidden sm:flex lg:flex">
         <Settings isOpen={isOpen} onOpenChange={onOpenChange} />
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>

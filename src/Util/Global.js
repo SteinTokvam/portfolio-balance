@@ -21,3 +21,7 @@ export const textInputStyle = {
       "!cursor-text",
     ],
   }
+
+  export const routes = {
+    dashboard: '/',
+}
