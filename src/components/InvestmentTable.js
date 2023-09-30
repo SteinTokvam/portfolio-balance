@@ -43,7 +43,7 @@ export default function InvestmentTable() {
     return (
         <>
             <InvestmentInfoModal isOpenInfo={isOpen} onOpenChangeInfo={onOpenChange}/>
-            <Table isStriped aria-label={t('investmentTable.tableLabel')}
+            <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}
                 onRowAction={(key) => editInvestment(investments.filter(elem => elem.key === key)[0])}>
