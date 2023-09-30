@@ -2,23 +2,37 @@ import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMe
 import { Logo } from "../icons/Logo.jsx";
 import Settings from "./Settings.js";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useReducer, useState } from "react";
+import { routes } from "../Util/Global.js";
+import { useNavigate } from "react-router-dom";
 
 export default function MyNavbar() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
   const { t } = useTranslation();
 
   const menuItems = [
-    "Dashboard",
-    "Portfolio",
-    "Accounts",
-    "Settings"
+    { name: "Dashboard", link: routes.dashboard },
+    { name: "Portfolio", link: routes.portfolio },
+    { name: "Settings", link: onOpen },
   ];
 
+  const navigate = useNavigate()
+
+  function handleClick(isSettings, route) {
+    if(isSettings) {
+      route()
+    } else {
+      navigate(route)
+    }
+    setIsMenuOpen()
+  }
+
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} className="text-foreground">
+    <Navbar isMenuOpen={isMenuOpen}
+      onMenuOpenChange={setIsMenuOpen}
+      className="text-foreground">
       <NavbarContent>
         <NavbarBrand>
           <Logo />
@@ -29,12 +43,12 @@ export default function MyNavbar() {
       <NavbarContent justify="end" className="hidden sm:flex lg:flex">
         <Settings isOpen={isOpen} onOpenChange={onOpenChange} />
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
-              onPress={() => item === "Settings" ? onOpen() : ""}
+              onPress={() => item.name === "Settings" ? onOpen() : navigate(item.link)}
             >
-              {item}
+              {item.name}
             </Button>
           </NavbarMenuItem>
         ))}
@@ -52,16 +66,13 @@ export default function MyNavbar() {
 
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
-              color={
-                index === 2 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
               className="w-full"
-              onPress={() => item === "Settings" ? onOpen() : ""}
+              onPress={() => item.name === "Settings" ? handleClick(true, onOpen) : handleClick(false, item.link)}
               size="lg"
             >
-              {item}
+              {item.name}
             </Link>
           </NavbarMenuItem>
         ))}
