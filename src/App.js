@@ -7,6 +7,7 @@ import { addInitialAccountTypes } from './actions/account';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
+import Portfolio from './components/Portfolio';
 
 
 function App() {
@@ -24,20 +25,11 @@ function App() {
   return (
     <div className={isDark ? "App dark bg-background h-screen" : "App"}>
       <MyNavbar />
-      <Dashboard />
       {
-        //<div className='w-full text-center'>
-      //<NewInvestment />
-      //<Spacer y={4} x={4}/>
-      //</div>
-
-      //<div className="flex flex-col md:flex-row">
-        //<InvestmentTable />
-        //<Spacer y={4} x={4}/>  
-        //<Statistics />
-        //<Spacer y={4} x={4}/>  
-      //</div>
-    }
+      //  <Dashboard />
+      }
+      <Portfolio />
+      
     </div>
   );
 }
