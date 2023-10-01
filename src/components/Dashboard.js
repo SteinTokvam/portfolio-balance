@@ -15,7 +15,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         const res = Math.max.apply(Math, investments.map(function (i) { return i.value; }))
-        setBiggestInvestment(investments.find(function (i) { return i.value === res; }))
+
+        const foundInvestment = investments.find(function (i) { return i.value === res; })
+        if (foundInvestment !== undefined || foundInvestment !== Infinity) {
+            setBiggestInvestment(foundInvestment)
+        }
     }, [setBiggestInvestment, investments])
 
     const totalValueByType = accountTypes.map(accountType => {
@@ -46,13 +50,17 @@ export default function Dashboard() {
                     }
                 </div>
             </div>
-            <div className="full text-center mx-auto flex flex-col justify-center">
-                <Spacer y={20} />
-                <h1 className="text-medium font-semibold leading-none text-default-600">Største investering:</h1>
-                <Spacer y={2} />
-                <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValue.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
-                <Spacer y={4} />
-            </div>
+            {console.log(biggestInvestment)}
+            {
+                biggestInvestment !== null && biggestInvestment !== undefined && Object.keys(biggestInvestment).length > 0 ?
+                <div className="full text-center mx-auto flex flex-col justify-center">
+                    <Spacer y={20} />
+                    <h1 className="text-medium font-semibold leading-none text-default-600">Største investering:</h1>
+                    <Spacer y={2} />
+                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValue.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
+                    <Spacer y={4} />
+                </div> : ""
+            }
             <div className='w-full mx-auto text-center'>
                 <NewInvestment />
             </div>
