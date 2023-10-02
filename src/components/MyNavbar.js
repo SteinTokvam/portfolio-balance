@@ -2,7 +2,7 @@ import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMe
 import { Logo } from "../icons/Logo.jsx";
 import Settings from "./Settings.js";
 import { useTranslation } from "react-i18next";
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { routes } from "../Util/Global.js";
 import { useNavigate } from "react-router-dom";
 
@@ -12,12 +12,16 @@ export default function MyNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
   const { t } = useTranslation();
 
-  const menuItems = [
-    { name: t('navbar.dashboard'), link: routes.dashboard },
-    { name: t('navbar.portfolio'), link: routes.portfolio },
-    { name: t('navbar.rebalancing'), link: routes.rebalancing },
-    { name: t('navbar.settings'), link: onOpen },
-  ];
+  const [menuItems, setMenuItems] = useState([])
+
+  useEffect(() => {
+    setMenuItems([
+      { name: t('navbar.dashboard'), link: routes.dashboard },
+      { name: t('navbar.portfolio'), link: routes.portfolio },
+      { name: t('navbar.rebalancing'), link: routes.rebalancing },
+      { name: t('navbar.settings'), link: onOpen },
+    ]);
+  }, [menuItems, t, onOpen])
 
   const navigate = useNavigate()
 
