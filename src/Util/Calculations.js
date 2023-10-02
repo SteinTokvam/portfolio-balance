@@ -20,7 +20,7 @@ function calculateRebalance(investmentType, investments) {
         var toBuy = (percentageDiff * totalValueForType).toFixed(0)
 
         if (toBuy < 99 && toBuy > -99) {
-            console.log("fjerner " + toBuy + " fra investering " + investment.name)
+            //console.log("fjerner " + toBuy + " fra investering " + investment.name)
             toBuy = 0
         }
         const key = investment.key

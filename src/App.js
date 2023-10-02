@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import Portfolio from './components/Portfolio';
 import { routes } from './Util/Global';
+import Rebalancing from './components/Rebalancing';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -25,17 +27,23 @@ function App() {
 
   const isDark = false
   return (
-    <div className={isDark ? "App dark bg-background h-screen" : "App"}>
-      <MyNavbar />
-      <Routes>
-        <Route path={routes.dashboard} element={
-          <Dashboard />
-        } />
-        <Route path={routes.portfolio} element={
-          <Portfolio />
-        } />
-      </Routes>
-    </div>
+    <>
+      <div className={isDark ? "App dark bg-background h-screen" : "App h-screen"}>
+        <MyNavbar />
+        <Routes>
+          <Route path={routes.dashboard} element={
+            <Dashboard />
+          } />
+          <Route path={routes.portfolio} element={
+            <Portfolio />
+          } />
+          <Route path={routes.rebalancing} element={
+            <Rebalancing />
+          } />
+        </Routes>
+      </div>
+      <Footer />
+    </>
   );
 }
 

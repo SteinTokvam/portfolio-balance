@@ -73,5 +73,8 @@
         "selectLabel": "Choose language",
         "accountType": "Account type",
         "addAccountButton": "Add account"
+    },
+    "footer": {
+        "github": "View source on GitHub"
     }
 }
