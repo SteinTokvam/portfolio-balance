@@ -29,7 +29,7 @@
     "investmentInfoModal": {
         "type": "Type:",
         "value": "Value:",
-        "currentPercentage": "Current percentage:",
+        "currentPercentage": "Current percentage for asset type:",
         "goalPercentage": "Goal percentage:",
         "note": "Note:",
         "edit": "Edit"

@@ -30,12 +30,26 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
         }
     }, [investments, investmentToEdit])
 
-    var totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+
+    const totalValueByType = accountTypes.map(accountType => {
+        return { accountType: accountType, value: investments.filter(investment => investment.type === accountType).reduce((sum, investment) => sum + investment.value, 0) }
+    });
+    
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     function handleDelete() {
         dispatch(deleteInvestment(investmentToEdit))
+      }
+
+      function calulatePercentageByType() {
+        if(Object.keys(investmentToView).length === 0) {
+            return 0
+        }
+        const accountType = totalValueByType.filter(elem => elem.accountType === investmentToView.type)[0]
+        const res = (investmentToView.value / accountType.value * 100).toFixed(2)
+        return res
       }
 
     return (
@@ -73,7 +87,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                                 <b>{investmentToView.value}{t('valuators.currency')}</b>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.currentPercentage')}</h4>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
-                                <b>{(investmentToView.value / totalValue * 100).toFixed(2)}{t('valuators.percentage')}</b>
+                                <b>{calulatePercentageByType()}{t('valuators.percentage')}</b>
                                 <b>{investmentToView.percentage}%</b>
                                 <Spacer y={4} />
                             </div>

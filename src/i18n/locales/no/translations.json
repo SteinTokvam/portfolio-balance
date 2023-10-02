@@ -29,7 +29,7 @@
     "investmentInfoModal": {
         "type": "Type:",
         "value": "Verdi:",
-        "currentPercentage": "Nåværende prosentandel:",
+        "currentPercentage": "Nåværende prosentandel for investeringstype:",
         "goalPercentage": "Målprosent:",
         "note": "Kommentar:",
         "edit": "Rediger"
