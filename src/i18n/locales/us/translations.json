@@ -76,5 +76,9 @@
     },
     "footer": {
         "github": "View source on GitHub"
+    },
+    "rebalancer": {
+        "textbox": "Sum to invest:",
+        "header": "Portfolio rebalancing"
     }
 }

@@ -76,5 +76,9 @@
     },
     "footer": {
         "github": "Vis kildekoden på GitHub"
+    },
+    "rebalancer": {
+        "textbox": "Sum å investere:",
+        "header": "Rebalansering av portfolio"
     }
 }
