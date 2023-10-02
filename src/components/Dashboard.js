@@ -31,7 +31,7 @@ export default function Dashboard() {
         <>
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
-                <h1 className="text-medium text-left font-semibold leading-none text-default-600">Total verdi</h1>
+                <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
                 <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue} {t('valuators.currency')}</h2>
                 <Spacer y={20} />
@@ -55,7 +55,7 @@ export default function Dashboard() {
                 biggestInvestment !== null && biggestInvestment !== undefined && Object.keys(biggestInvestment).length > 0 ?
                 <div className="full text-center mx-auto flex flex-col justify-center">
                     <Spacer y={20} />
-                    <h1 className="text-medium font-semibold leading-none text-default-600">Største investering:</h1>
+                    <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                     <Spacer y={2} />
                     <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValue.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
                     <Spacer y={4} />

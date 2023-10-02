@@ -4,6 +4,10 @@
         "percentage": "%",
         "defaultAccountType": "Kontanter"
     },
+    "dashboard": {
+        "biggestInvestment": "Største investering:",
+        "total": "Total verdi"
+    },
     "newInvestment" : {
         "add" : "+"
     },
@@ -52,7 +56,11 @@
         "cash": "Kontanter"
     },
     "navbar": {
-        "brand": "Portfolio rebalancer"
+        "brand": "Portfolio rebalancer",
+        "dashboard": "Dashboard",
+        "portfolio": "Portfolio",
+        "rebalancing": "Rebalansering",
+        "settings": "Innstillinger"
     },
     "settings": {
         "header": "Innstillinger",

@@ -13,20 +13,19 @@ export default function MyNavbar() {
   const { t } = useTranslation();
 
   const menuItems = [
-    { name: "Dashboard", link: routes.dashboard },
-    { name: "Portfolio", link: routes.portfolio },
-    { name: "Settings", link: onOpen },
+    { name: t('navbar.dashboard'), link: routes.dashboard },
+    { name: t('navbar.portfolio'), link: routes.portfolio },
+    { name: t('navbar.rebalancing'), link: routes.rebalancing },
+    { name: t('navbar.settings'), link: onOpen },
   ];
 
   const navigate = useNavigate()
 
-  function handleClick(isSettings, route) {
-    if(isSettings) {
-      route()
-    } else {
-      navigate(route)
+  function handleClick(isHamburgerMenu, route) {
+    route()
+    if (isHamburgerMenu) {
+      setIsMenuOpen()
     }
-    setIsMenuOpen()
   }
 
   return (
@@ -46,7 +45,7 @@ export default function MyNavbar() {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
-              onPress={() => item.name === "Settings" ? onOpen() : navigate(item.link)}
+              onPress={() => item.name === t('navbar.settings') ? handleClick(false, onOpen) : handleClick(false, () => navigate(item.link))}
             >
               {item.name}
             </Button>
@@ -69,7 +68,7 @@ export default function MyNavbar() {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
               className="w-full"
-              onPress={() => item.name === "Settings" ? handleClick(true, onOpen) : handleClick(false, item.link)}
+              onPress={() => item.name === t('navbar.settings') ? handleClick(true, onOpen) : handleClick(true, () => navigate(item.link))}
               size="lg"
             >
               {item.name}
