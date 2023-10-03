@@ -79,6 +79,12 @@
     },
     "rebalancer": {
         "textbox": "Sum å investere:",
-        "header": "Rebalansering av portfolio"
+        "header": "Rebalansering av portfolio",
+        "rebalanceButton": "Rebalanser portfolio",
+        "text": "Nytt innskudd?"
+    },
+    "rebalancingModal": {
+        "header": "Rebalanseringsresultat",
+        "close": "lukk"
     }
 }

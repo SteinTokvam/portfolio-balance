@@ -79,6 +79,12 @@
     },
     "rebalancer": {
         "textbox": "Sum to invest:",
-        "header": "Portfolio rebalancing"
+        "header": "Portfolio rebalancing",
+        "rebalanceButton": "Rebalance portfolio",
+        "text": "New deposit?"
+    },
+    "rebalancingModal": {
+        "header": "Rebalancing result",
+        "close": "close"
     }
 }
