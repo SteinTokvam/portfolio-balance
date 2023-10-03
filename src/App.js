@@ -28,7 +28,7 @@ function App() {
   const isDark = false
   return (
     <>
-      <div className={isDark ? "App dark bg-background h-screen" : "App h-screen"}>
+      <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
         <MyNavbar />
         <Routes>
           <Route path={routes.dashboard} element={
