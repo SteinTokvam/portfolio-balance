@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Input, Spacer, useDisclosure } from "@nextui-org/react";
 import { textInputStyle } from "../Util/Global";
 import { useTranslation } from "react-i18next";

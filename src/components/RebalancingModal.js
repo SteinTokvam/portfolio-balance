@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 export default function RebalancingModal({isOpen, onOpenChange}) {
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
     const investments = useSelector(state => state.rootReducer.investments.investments);
-    const investmentSum = useSelector(state => state.rootReducer.rebalancing.sum)//TODO: Ta i bruk denne summen i rebalanseringen
+    //const investmentSum = useSelector(state => state.rootReducer.rebalancing.sum)//TODO: Ta i bruk denne summen i rebalanseringen
 
     const { t } = useTranslation()
 
