@@ -66,12 +66,14 @@
         "header": "Settings",
         "importButton": "Import data",
         "exportButton": "Export data",
+        "deleteTitle": "Danger zone!",
         "deleteButton": "Delete all user data!",
         "deleteAlert": "All user data deleted.",
         "closeButton": "Close",
         "selectType": "Language",
         "selectLabel": "Choose language",
         "accountType": "Account type",
+        "accountTypeGoalPercentage": "Goal percentage",
         "addAccountButton": "Add account"
     },
     "footer": {

@@ -19,7 +19,7 @@ export default function NewAccountType() {
                 //Her kommer mulighet for å legge til egne kontotyper. usikker på hvor den funksjonaliteten egentlig bør ligge, men legger den her for nå
             }
             <Input type="text" classNames={textInputStyle} label={t('settings.accountType')} value={accountTypeText} onValueChange={setAccountTypeText} />
-            <Input type="number" classNames={textInputStyle} label={t('settings.accountType')} value={accountTypeGoalPercentage} onValueChange={setAccountTypeGoalPercentage} />
+            <Input type="number" classNames={textInputStyle} label={t('settings.accountTypeGoalPercentage')} value={accountTypeGoalPercentage} onValueChange={setAccountTypeGoalPercentage} />
             <Button color="primary" variant="flat" onPress={() => {
                 dispatch(addNewAccountType({key: uuidv4(), name: accountTypeText, goalPercentage: accountTypeGoalPercentage}))
                 setAccountTypeText("")

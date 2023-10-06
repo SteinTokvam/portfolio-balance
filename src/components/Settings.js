@@ -87,6 +87,7 @@ export default function Settings({ isOpen, onOpenChange }) {
                             </Button>
 
                             <Divider />
+                            <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                             <Button color="danger" variant="light" onPress={() => {
                                 window.localStorage.clear()
                                 dispatch(deleteInvestments())
@@ -96,9 +97,6 @@ export default function Settings({ isOpen, onOpenChange }) {
                             }}>
                                 {t('settings.deleteButton')}
                             </Button>
-
-                            <Divider />
-                            <NewAccountType />
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" variant="flat" aria-label="close" onPress={() => {

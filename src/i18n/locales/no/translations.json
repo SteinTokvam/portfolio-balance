@@ -66,12 +66,14 @@
         "header": "Innstillinger",
         "importButton": "Importer data",
         "exportButton": "Eksporter data",
+        "deleteTitle": "Faresonen!",
         "deleteButton": "Slett all brukerdata!",
         "deleteAlert": "All brukerdata slettet.",
         "closeButton": "Lukk",
         "selectType": "Språk",
         "selectLabel": "Velg språk",
         "accountType": "Kontotype",
+        "accountTypeGoalPercentage": "Målprosent",
         "addAccountButton": "Legg til konto"
     },
     "footer": {
