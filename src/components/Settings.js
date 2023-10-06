@@ -1,10 +1,11 @@
-import { Avatar, Button, Divider, Input, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
+import { Avatar, Button, Divider, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteInvestments, importInvestments } from "../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { languages, textInputStyle } from "../Util/Global"
-import { addInitialAccountTypes, addNewAccountType, deleteAccountTypes } from "../actions/account"
+import { languages } from "../Util/Global"
+import { addInitialAccountTypes, deleteAccountTypes } from "../actions/account"
+import NewAccountType from "./NewAccountType"
 
 export default function Settings({ isOpen, onOpenChange }) {
     const dispatch = useDispatch()
@@ -16,7 +17,6 @@ export default function Settings({ isOpen, onOpenChange }) {
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
 
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
-    const [accountTypeText, setAccountTypeText] = useState("")
 
     const selectedLanguage = useMemo(
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
@@ -98,16 +98,7 @@ export default function Settings({ isOpen, onOpenChange }) {
                             </Button>
 
                             <Divider />
-                            {
-                                //Her kommer mulighet for å legge til egne kontotyper. usikker på hvor den funksjonaliteten egentlig bør ligge, men legger den her for nå
-                            }
-                            <Input type="text" classNames={textInputStyle} label={t('settings.accountType')} value={accountTypeText} onValueChange={setAccountTypeText} />
-                            <Button color="primary" variant="flat" onPress={() => {
-                                dispatch(addNewAccountType(accountTypeText))
-                                setAccountTypeText("")
-                            }} >
-                                {t('settings.addAccountButton')}
-                            </Button>
+                            <NewAccountType />
                         </ModalBody>
                         <ModalFooter>
                             <Button color="primary" variant="flat" aria-label="close" onPress={() => {

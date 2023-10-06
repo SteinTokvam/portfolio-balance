@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
 
-  const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+  const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name)
 
   const { t } = useTranslation();
 

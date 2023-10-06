@@ -30,7 +30,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
         }
     }, [investments, investmentToEdit])
 
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name);
 
     const totalValueByType = accountTypes.map(accountType => {
         return { accountType: accountType, value: investments.filter(investment => investment.type === accountType).reduce((sum, investment) => sum + investment.value, 0) }

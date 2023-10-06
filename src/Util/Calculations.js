@@ -1,16 +1,16 @@
-export function doRebalance(accountTypes, investments) {
+export function doRebalance(accountTypes, investments, investmentSum) {
     const ret = []
     ret.push(accountTypes
         .map(type => {
-            const ret = calculateRebalance(type, investments)
+            const ret = calculateRebalance(type, investments, investmentSum)
             return ret
         }))
 
     return ret.flat().flat()
 }
 
-function calculateRebalance(investmentType, investments) {
-    const typeOfInvestment = investments.filter(investment => investment.type === investmentType)
+function calculateRebalance(investmentType, investments, investmentSum) {
+    const typeOfInvestment = investments.filter(investment => investment.type === investmentType.name)
     const totalValueForType = typeOfInvestment.reduce((sum, investment) => sum + investment.value, 0);
 
     //(målprosent-nåværende prosent) * totalValueForType = mengde å kjøpe/selge

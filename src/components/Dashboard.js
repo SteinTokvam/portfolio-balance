@@ -9,7 +9,7 @@ export default function Dashboard() {
 
     const { t } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name)
 
     const [biggestInvestment, setBiggestInvestment] = useState({})
 

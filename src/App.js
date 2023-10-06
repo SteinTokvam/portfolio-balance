@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import MyNavbar from './components/MyNavbar';
 import './i18n/config';
+import { v4 as uuidv4 } from 'uuid';
 import { useDispatch } from 'react-redux';
 import { addInitialAccountTypes } from './actions/account';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +22,7 @@ function App() {
 
   useEffect(() => {
 
-    const defaultAccountType = window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [t('valuators.defaultAccountType')]
+    const defaultAccountType = window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [{key: uuidv4(), name: t('valuators.defaultAccountType'), goalPercentage: 0}]
     dispatch(addInitialAccountTypes(defaultAccountType))
   }, [dispatch, t])
 
