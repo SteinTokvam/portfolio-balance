@@ -34,6 +34,10 @@
         "note": "Kommentar:",
         "edit": "Rediger"
     },
+    "portfolio":{
+        "investmentsTab": "Investeringer",
+        "accountTypesTab": "Kontotyper"
+    },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
         "columnAccountLabel": "KONTO",
@@ -66,12 +70,14 @@
         "header": "Innstillinger",
         "importButton": "Importer data",
         "exportButton": "Eksporter data",
+        "deleteTitle": "Faresonen!",
         "deleteButton": "Slett all brukerdata!",
         "deleteAlert": "All brukerdata slettet.",
         "closeButton": "Lukk",
         "selectType": "Språk",
         "selectLabel": "Velg språk",
         "accountType": "Kontotype",
+        "accountTypeGoalPercentage": "Målprosent",
         "addAccountButton": "Legg til konto"
     },
     "footer": {

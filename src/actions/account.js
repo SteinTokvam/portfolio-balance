@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export const addNewAccountType = (account) => {
     return {
         type: 'ADD_NEW_ACCOUNT_TYPE',
@@ -5,10 +7,17 @@ export const addNewAccountType = (account) => {
     }
 }
 
-export const deleteAccountTypes = (defaultAccountType) => {
+export const deleteAllAccountTypes = (defaultAccountType) => {
     return {
         type: 'DELETE_ACCOUNT_TYPES',
-        payload: [defaultAccountType]
+        payload: [{key: uuidv4(), name: defaultAccountType, goalPercentage: 0}][defaultAccountType]
+    }
+}
+
+export const deleteAccountType = (accountType) => {
+    return {
+        type: 'DELETE_ACCOUNT_TYPE',
+        payload: accountType
     }
 }
 
@@ -16,5 +25,12 @@ export const addInitialAccountTypes = (accountTypes) => {
     return {
         type: 'ADD_INITIAL_ACCOUNT_TYPES',
         payload: accountTypes
+    }
+}
+
+export const setAccountToEdit = (account) => {
+    return {
+        type: 'SET_ACCOUNT_TYPE_TO_EDIT',
+        payload: account
     }
 }
