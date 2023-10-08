@@ -2,27 +2,44 @@ import { Spacer, Tab, Tabs } from "@nextui-org/react";
 import InvestmentTable from "./InvestmentTable";
 import Statistics from "./Statistics";
 import NewInvestment from "./NewInvestment";
-import EditIcon from "../icons/EditIcon";
-import DeleteIcon from "../icons/DeleteIcon";
-import NewAccountType from "./NewAccountType";
 import AccountsTable from "./AccountsTable";
+import { GraphIcon } from "../icons/GraphIcon";
+import AccountTypeIcon from "../icons/AccountTypeIcon";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 
 export default function Portfolio() {
+    const { t } = useTranslation();
+
+    const [isInvestment, setIsInvestment] = useState(true);
+
+    const [selected, setSelected] = useState("investments");
+
+    useEffect(() => {
+        setIsInvestment(selected === "investments");
+    }, [selected]);
+
     return (
         <>
             <div className='w-full mx-auto text-center'>
-                <NewInvestment />
+                <NewInvestment isInvestment={isInvestment}/>
                 <Spacer y={4} x={4} />
             </div>
             <div>
-                <Tabs aria-label="Investments" color="primary" variant="ghost" fullWidth={true}>
+                <Tabs 
+                aria-label="Investments" 
+                color="primary" 
+                variant="ghost" 
+                fullWidth={true} 
+                selectedKey={selected}
+                onSelectionChange={setSelected}>
                     <Tab
-                        key="photos"
+                        key="investments"
                         title={
                             <div className="flex items-center space-x-2">
-                                <EditIcon />
-                                <span>Investments</span>
+                                <GraphIcon />
+                                <span>{t('portfolio.investmentsTab')}</span>
                             </div>
                         }
                     >
@@ -37,13 +54,12 @@ export default function Portfolio() {
                         key="accounts"
                         title={
                             <div className="flex items-center space-x-2">
-                                <DeleteIcon />
-                                <span>Accounts</span>
+                                <AccountTypeIcon />
+                                <span>{t('portfolio.accountTypesTab')}</span>
                             </div>
                         }
                     >
                         <AccountsTable />
-                        <NewAccountType />
                     </Tab>
                 </Tabs>
             </div>

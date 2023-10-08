@@ -34,6 +34,10 @@
         "note": "Note:",
         "edit": "Edit"
     },
+    "portfolio":{
+        "investmentsTab": "Investments",
+        "accountTypesTab": "Account types"
+    },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
         "columnAccountLabel": "ACCOUNT",

@@ -38,10 +38,10 @@ export default function AccountModal({isAccountType, isOpen, onOpenChange}) {
                         <div className='grid grid-cols-2 gap-5 justify-between'>
                             <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.type')}</h4>
                             
-                            <b>{accountToEdit.name}</b>
+                            
                             
                             <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
-
+                            <b>{accountToEdit.name}</b>
                             <b>{accountToEdit.goalPercentage}%</b>
                             <Spacer y={4} />
                         </div>

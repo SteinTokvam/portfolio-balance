@@ -34,6 +34,10 @@
         "note": "Kommentar:",
         "edit": "Rediger"
     },
+    "portfolio":{
+        "investmentsTab": "Investeringer",
+        "accountTypesTab": "Kontotyper"
+    },
     "investmentTable": {
         "columnTypeLabel": "TYPE",
         "columnAccountLabel": "KONTO",
