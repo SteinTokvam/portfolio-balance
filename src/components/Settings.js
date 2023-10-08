@@ -4,8 +4,7 @@ import { deleteInvestments, importInvestments } from "../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../Util/Global"
-import { addInitialAccountTypes, deleteAccountTypes } from "../actions/account"
-import NewAccountType from "./NewAccountType"
+import { addInitialAccountTypes, deleteAllAccountTypes } from "../actions/account"
 
 export default function Settings({ isOpen, onOpenChange }) {
     const dispatch = useDispatch()
@@ -91,7 +90,7 @@ export default function Settings({ isOpen, onOpenChange }) {
                             <Button color="danger" variant="light" onPress={() => {
                                 window.localStorage.clear()
                                 dispatch(deleteInvestments())
-                                dispatch(deleteAccountTypes(t('valuators.defaultAccountType')))
+                                dispatch(deleteAllAccountTypes(t('valuators.defaultAccountType')))
                                 alert(t('settings.deleteAlert'))
                                 onClose()
                             }}>

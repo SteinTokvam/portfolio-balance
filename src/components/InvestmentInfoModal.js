@@ -54,7 +54,6 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
 
     return (
         <Modal isOpen={isOpenInfo} onOpenChange={onOpenChangeInfo} backdrop='blur' scrollBehavior='inside' hideCloseButton={true}>
-
             <ModalContent>
                 {(onCloseInfo) => (
                     <>
@@ -112,6 +111,5 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                 )}
             </ModalContent>
         </Modal>
-
     )
 }

@@ -14,6 +14,8 @@ export default function Portfolio() {
             <div className='w-full mx-auto text-center'>
                 <NewInvestment />
                 <Spacer y={4} x={4} />
+            </div>
+            <div>
                 <Tabs aria-label="Investments" color="primary" variant="ghost" fullWidth={true}>
                     <Tab
                         key="photos"

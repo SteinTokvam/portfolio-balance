@@ -21,9 +21,6 @@ function App() {
   const { t } = useTranslation()
 
   useEffect(() => {
-
-    const defaultAccountType = window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [{key: uuidv4(), name: t('valuators.defaultAccountType'), goalPercentage: 0}]
-    dispatch(addInitialAccountTypes(defaultAccountType))
   }, [dispatch, t])
 
   const isDark = false
