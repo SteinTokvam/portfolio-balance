@@ -34,7 +34,7 @@ export default function MyNavbar() {
       className="text-foreground">
       <NavbarContent>
         <NavbarBrand>
-          <Button variant="light" onPress={() => navigate('/')}>
+          <Button variant="light" onPress={() => navigate(routes.dashboard)}>
             <Logo />
             <p className="font-bold text-inherit">{t('navbar.brand')}</p>
           </Button>
