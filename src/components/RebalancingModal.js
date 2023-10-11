@@ -9,6 +9,7 @@ export default function RebalancingModal({isOpen, onOpenChange, investmentByType
 
     const { t } = useTranslation()
 
+    var counter = 0
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop={'blur'}>
             <ModalContent>
@@ -17,11 +18,12 @@ export default function RebalancingModal({isOpen, onOpenChange, investmentByType
                         <ModalHeader className="flex flex-col gap-1">{t('rebalancingModal.header')}</ModalHeader>
                         <ModalBody>
                             <div className="w-full text-center flex flex-col justify-center">
-                                {
+                                {   
                                     doRebalance(accountTypes, investmentByType, parseInt(investmentSum)).map(transaction => {
-                                        return transaction.toBuy === 0 ? "" : <li key={transaction.key}>{transaction.name}: {transaction.toBuy}. Ny verdi: {transaction.newSum}</li>
+                                        return transaction.toBuy === 0 ? "" : counter++ && <li key={transaction.key}>{transaction.name} {t('rebalancingModal.toBuy')} {transaction.toBuy}. {t('rebalancingModal.newValue')} {transaction.newSum}</li>
                                     })
                                 }
+                                {counter === 0 ? t('rebalancingModal.noRebalancing') : ""}
                             </div>
                         </ModalBody>
                         <ModalFooter>

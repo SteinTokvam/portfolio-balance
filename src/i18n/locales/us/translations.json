@@ -86,11 +86,15 @@
     "rebalancer": {
         "textbox": "Sum to invest:",
         "header": "Portfolio rebalancing",
+        "subTitle": "Current allocations:",
         "rebalanceButton": "Rebalance portfolio",
-        "text": "New deposit?"
+        "text": "To rebalance the portfolio, click on the investment category you want to rebalance according to the target percentage set. Remember to enter any new deposits."
     },
     "rebalancingModal": {
         "header": "Rebalancing result",
-        "close": "close"
+        "close": "close",
+        "toBuy": "To buy/sell:",
+        "newValue": "New value:",
+        "noRebalancing": "No rebalancing necessary."
     }
 }

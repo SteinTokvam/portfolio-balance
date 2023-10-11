@@ -86,11 +86,15 @@
     "rebalancer": {
         "textbox": "Sum å investere:",
         "header": "Rebalansering av portfolio",
+        "subTitle": "Nåværende fordeling:",
         "rebalanceButton": "Rebalanser portfolio",
-        "text": "Nytt innskudd?"
+        "text": "For å rebalansere proteføljen så trykker man på den investeringskategorien man ønsker å rebalansere i henhold til satt målprosent. Husk å skrive inn eventuelle nye innskudd."
     },
     "rebalancingModal": {
         "header": "Rebalanseringsresultat",
-        "close": "lukk"
+        "close": "lukk",
+        "toBuy": "Å kjøpe/selge:",
+        "newValue": "Ny verdi:",
+        "noRebalancing": "Ingen rebalansering nødvendig."
     }
 }

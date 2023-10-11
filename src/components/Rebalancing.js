@@ -37,11 +37,18 @@ export default function Rebalancing() {
 
     return (
         <>
-            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType}/>
+            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} />
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />
-                <h4 className="text-small font-semibold leading-none text-default-600">Nåværende fordeling:</h4>
+                <div className="w-1/4">
+                    <Spacer y={10} />
+                    <h4 className="text-small font-semibold leading-none text-default-800">{t('rebalancer.text')}</h4>
+                    <Spacer y={2} />
+                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={selectedSum} onValueChange={s => dispatch(setSumToInvest(s))} />
+                    <Spacer y={10} />
+                </div>
+                <h4 className="text-small font-semibold leading-none text-default-600">{t('rebalancer.subTitle')}</h4>
                 <Spacer y={4} />
                 <div className="grid grid-cols-2 gap-20 justify-between">
                     {
@@ -50,22 +57,11 @@ export default function Rebalancing() {
                                 <Button key={type} onPress={() => handleInvestmentTypeRebalance(type.accountType)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
                                     <Spacer y={2} />
-                                    <h4 className="text-large font-bold leading-none text-default-400">{((type.value/totalValue)*100).toFixed(2)}{t('valuators.percentage')}</h4>
+                                    <h4 className="text-large font-bold leading-none text-default-400">{((type.value / totalValue) * 100).toFixed(2)}{t('valuators.percentage')}</h4>
                                 </Button>)
                         })
                     }
                     <Spacer y={10} />
-                </div>
-                <div className="w-1/4">
-                <h4 className="text-small font-semibold leading-none text-default-800">{t('rebalancer.text')}</h4>
-                <Spacer y={2} />
-                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={selectedSum} onValueChange={s => dispatch(setSumToInvest(s))} />
-                </div>
-                <div className="w-full mx-auto text-center">
-                    <Spacer y={4} />
-                    <Button color="success" aria-label={t('rebalancer.rebalanceButton')} onPress={handleSubmit}>
-                        {t('rebalancer.rebalanceButton')}
-                    </Button>
                 </div>
             </div>
         </>
