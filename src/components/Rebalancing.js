@@ -24,11 +24,6 @@ export default function Rebalancing() {
 
     const [investmentByType, setInvestmentByType] = useState([])
 
-    function handleSubmit() {
-        onOpen()
-        console.log("submitted rebalancer")
-    }
-
     function handleInvestmentTypeRebalance(investmentType) {
         setInvestmentByType(investments.filter(investment => investment.type === investmentType))
         onOpen()
