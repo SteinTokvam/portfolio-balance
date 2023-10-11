@@ -13,11 +13,11 @@ export default function MyNavbar() {
   const { t } = useTranslation();
 
   const menuItems = [
-      { name: t('navbar.dashboard'), link: routes.dashboard },
-      { name: t('navbar.portfolio'), link: routes.portfolio },
-      { name: t('navbar.rebalancing'), link: routes.rebalancing },
-      { name: t('navbar.settings'), link: onOpen },
-    ];
+    { name: t('navbar.dashboard'), link: routes.dashboard },
+    { name: t('navbar.portfolio'), link: routes.portfolio },
+    { name: t('navbar.rebalancing'), link: routes.rebalancing },
+    { name: t('navbar.settings'), link: onOpen },
+  ];
 
   const navigate = useNavigate()
 
@@ -34,8 +34,10 @@ export default function MyNavbar() {
       className="text-foreground">
       <NavbarContent>
         <NavbarBrand>
-          <Logo />
-          <p className="font-bold text-inherit">{t('navbar.brand')}</p>
+          <Button variant="light" onPress={() => navigate('/')}>
+            <Logo />
+            <p className="font-bold text-inherit">{t('navbar.brand')}</p>
+          </Button>
         </NavbarBrand>
       </NavbarContent>
 

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import NewInvestment from "./NewInvestment";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function Dashboard() {
@@ -41,7 +42,7 @@ export default function Dashboard() {
                     {
                         totalValueByType.map(type => {
                             return (
-                                <div key={type}>
+                                <div key={type + uuidv4()}>
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{type.value} {t('valuators.currency')}</h4>
@@ -50,7 +51,6 @@ export default function Dashboard() {
                     }
                 </div>
             </div>
-            {console.log(biggestInvestment)}
             {
                 biggestInvestment !== null && biggestInvestment !== undefined && Object.keys(biggestInvestment).length > 0 ?
                 <div className="full text-center mx-auto flex flex-col justify-center">

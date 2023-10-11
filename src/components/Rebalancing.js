@@ -36,7 +36,7 @@ export default function Rebalancing() {
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />
-                <div className="w-1/4">
+                <div className="w-3/4 md:w-1/2 lg:w-1/2 ">
                     <Spacer y={10} />
                     <h4 className="text-small font-semibold leading-none text-default-800">{t('rebalancer.text')}</h4>
                     <Spacer y={2} />
