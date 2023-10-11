@@ -1,13 +1,13 @@
-export function doRebalance(accountTypes, investments, investmentSum) {
+export function doRebalance(accountTypes, investments, investmentSum, minimumSumToInvest) {
     const ret = []
     ret.push(accountTypes
-        .map(type => calculateRebalance(type.name, investments, investmentSum)
+        .map(type => calculateRebalance(type.name, investments, investmentSum, minimumSumToInvest)
         ))
 
     return ret.flat().flat()
 }
 
-function calculateRebalance(investmentType, investments, investmentSum) {
+function calculateRebalance(investmentType, investments, investmentSum, minimumSumToInvest) {
     const typeOfInvestment = investments.filter(investment => investment.type === investmentType)
     var totalValueForType = 0
     if(investmentSum === 0 || investmentSum === undefined || isNaN(investmentSum)) {
@@ -20,7 +20,9 @@ function calculateRebalance(investmentType, investments, investmentSum) {
         const percentageDiff = ((investment.percentage / 100) - ((investment.value / totalValueForType)).toFixed(2))
         var toBuy = parseInt((percentageDiff * totalValueForType).toFixed(0))
 
-        if (toBuy < 99 && toBuy > -99) {
+        const currMinimum = minimumSumToInvest === undefined || isNaN(minimumSumToInvest) ? 99 : minimumSumToInvest
+        console.log(currMinimum)
+        if (toBuy < currMinimum && toBuy > -currMinimum) {
             toBuy = 0
         } 
         

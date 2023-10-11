@@ -5,7 +5,8 @@ import { useSelector } from "react-redux";
 
 export default function RebalancingModal({isOpen, onOpenChange, investmentByType}) {
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
-    const investmentSum = useSelector(state => state.rootReducer.rebalancing.sum)//TODO: Ta i bruk denne summen i rebalanseringen
+    const investmentSum = useSelector(state => state.rootReducer.rebalancing.sum)
+    const minimumSumToInvest = useSelector(state => state.rootReducer.rebalancing.minimumSum)
 
     const { t } = useTranslation()
 
@@ -19,7 +20,7 @@ export default function RebalancingModal({isOpen, onOpenChange, investmentByType
                         <ModalBody>
                             <div className="w-full text-center flex flex-col justify-center">
                                 {   
-                                    doRebalance(accountTypes, investmentByType, parseInt(investmentSum)).map(transaction => {
+                                    doRebalance(accountTypes, investmentByType, parseInt(investmentSum), parseInt(minimumSumToInvest)).map(transaction => {
                                         return transaction.toBuy === 0 ? "" : counter++ && <li key={transaction.key}>{transaction.name} {t('rebalancingModal.toBuy')} {transaction.toBuy}. {t('rebalancingModal.newValue')} {transaction.newSum}</li>
                                     })
                                 }

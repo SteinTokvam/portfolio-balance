@@ -85,6 +85,7 @@
     },
     "rebalancer": {
         "textbox": "Sum to invest:",
+        "minimumSum": "Minimum to invest:",
         "header": "Portfolio rebalancing",
         "subTitle": "Current allocations:",
         "rebalanceButton": "Rebalance portfolio",

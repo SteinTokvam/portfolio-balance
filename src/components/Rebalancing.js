@@ -3,7 +3,7 @@ import { textInputStyle } from "../Util/Global";
 import { useTranslation } from "react-i18next";
 import RebalancingModal from "./RebalancingModal";
 import { useDispatch, useSelector } from "react-redux";
-import { setSumToInvest } from "../actions/rebalancing";
+import { setMinimumSumToInvest, setSumToInvest } from "../actions/rebalancing";
 import { useState } from "react";
 
 export default function Rebalancing() {
@@ -13,6 +13,7 @@ export default function Rebalancing() {
     const { t } = useTranslation()
 
     const selectedSum = useSelector(state => state.rootReducer.rebalancing.sum)
+    const selectedMinimumSum = useSelector(state => state.rootReducer.rebalancing.minimumSum)
     const dispatch = useDispatch()
 
     const investments = useSelector(state => state.rootReducer.investments.investments)
@@ -41,6 +42,8 @@ export default function Rebalancing() {
                     <h4 className="text-small font-semibold leading-none text-default-800">{t('rebalancer.text')}</h4>
                     <Spacer y={2} />
                     <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={selectedSum} onValueChange={s => dispatch(setSumToInvest(s))} />
+                    <Spacer y={2} />
+                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.minimumSum')} value={selectedMinimumSum} onValueChange={s => dispatch(setMinimumSumToInvest(s))} />
                     <Spacer y={10} />
                 </div>
                 <h4 className="text-small font-semibold leading-none text-default-600">{t('rebalancer.subTitle')}</h4>

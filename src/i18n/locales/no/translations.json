@@ -85,6 +85,7 @@
     },
     "rebalancer": {
         "textbox": "Sum å investere:",
+        "minimumSum": "Minstesum å investere:",
         "header": "Rebalansering av portfolio",
         "subTitle": "Nåværende fordeling:",
         "rebalanceButton": "Rebalanser portfolio",
