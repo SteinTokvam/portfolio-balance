@@ -18,8 +18,8 @@ export default function RebalancingModal({isOpen, onOpenChange, investmentByType
                         <ModalBody>
                             <div className="w-full text-center flex flex-col justify-center">
                                 {
-                                    doRebalance(accountTypes, investmentByType, investmentSum).map(transaction => {
-                                        return transaction.toBuy === 0 ? "" : <li key={transaction.key}>{transaction.name}: {transaction.toBuy}</li>
+                                    doRebalance(accountTypes, investmentByType, parseInt(investmentSum)).map(transaction => {
+                                        return transaction.toBuy === 0 ? "" : <li key={transaction.key}>{transaction.name}: {transaction.toBuy}. Ny verdi: {transaction.newSum}</li>
                                     })
                                 }
                             </div>
