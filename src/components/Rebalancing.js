@@ -18,7 +18,7 @@ export default function Rebalancing() {
 
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
-    const totalValueByType = accountTypes.map(accountType => {//Denne må endres til å hente målprosent. dette er noe jeg ikke har pr i dag.
+    const totalValueByType = accountTypes.map(accountType => {
         return { accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
@@ -28,7 +28,6 @@ export default function Rebalancing() {
     function handleInvestmentTypeRebalance(investmentType) {
         setInvestmentByType(investments.filter(investment => investment.type === investmentType))
         onOpen()
-        //TODO: legg investmentByType inn i state som kan sendes med modal
     }
 
     return (
