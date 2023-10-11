@@ -1,6 +1,6 @@
 const initialState = {
     sum: 0,
-    minimumSum: 99
+    minimumSum: 100
 }
 
 const rebalancingReducer = (state = initialState, action) => {

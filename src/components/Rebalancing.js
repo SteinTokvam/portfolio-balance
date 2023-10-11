@@ -5,6 +5,7 @@ import RebalancingModal from "./RebalancingModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setMinimumSumToInvest, setSumToInvest } from "../actions/rebalancing";
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Rebalancing() {
 
@@ -51,7 +52,7 @@ export default function Rebalancing() {
                     {
                         totalValueByType.map(type => {
                             return (
-                                <Button key={type} onPress={() => handleInvestmentTypeRebalance(type.accountType)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
+                                <Button key={type + uuidv4()} onPress={() => handleInvestmentTypeRebalance(type.accountType)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{((type.value / totalValue) * 100).toFixed(2)}{t('valuators.percentage')}</h4>
