@@ -6,6 +6,7 @@ import InvestmentModal from './InvestmentModal';
 import { useEffect, useState } from 'react';
 import { deleteInvestment } from '../actions/investments';
 import DeleteIcon from '../icons/DeleteIcon';
+import CompanyIcon from '../icons/CompanyIcon';
 
 export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEdit }) {
 
@@ -60,7 +61,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                         <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                         <ModalHeader className="justify-between">
                             <div className="flex gap-5">
-                                <Avatar isBordered radius="full" size="md" src={`https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} />
+                                <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} fallback={<CompanyIcon />} />
                                 {
                                     //TODO: for å bruke logoer fra uplead.com så må jeg lenke til de der jeg bruker de
                                 }
