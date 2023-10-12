@@ -60,7 +60,10 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                         <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                         <ModalHeader className="justify-between">
                             <div className="flex gap-5">
-                                <Avatar isBordered radius="full" size="md" src="finnesIkke" />
+                                <Avatar isBordered radius="full" size="md" src={`https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} />
+                                {
+                                    //TODO: for å bruke logoer fra uplead.com så må jeg lenke til de der jeg bruker de
+                                }
                                 <div className="flex flex-col gap-1 items-start justify-center">
                                     <h4 className="text-small font-semibold leading-none text-default-600">{investmentToView.name}</h4>
                                     <h5 className="text-small tracking-tight text-default-400">{investmentToView.account}</h5>
