@@ -34,7 +34,7 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
     const percentageDiff = ((investment.percentage / 100) - ((investment.value / totalValueForType)).toFixed(2))
     var toBuy = 0
 
-    toBuy = parseInt((percentageDiff * totalValueForType).toFixed(0))
+    toBuy = parseFloat((percentageDiff * totalValueForType).toFixed(0))
     const currMinimum = minimumSumToInvest === undefined || isNaN(minimumSumToInvest) ? 99 : minimumSumToInvest
     console.log(currMinimum)
     if (toBuy < currMinimum && toBuy > -currMinimum) {
@@ -43,7 +43,7 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
 
     const key = investment.key
 
-    if (parseInt(investment.percentage) === 0) {
+    if (parseFloat(investment.percentage) === 0) {
         return { key: key, name: investment.name, toBuy: -investment.value, newSum: 0 }
     }
 
@@ -53,6 +53,6 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
 function filtrerElementer(liste, maksSum, investments, minimumSumToInvest) {
     return liste.reduce((akkumulator, element) => {
       const sum = akkumulator.reduce((total, e) => total + e.toBuy, 0);
-      return sum + parseInt(element.toBuy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, toBuy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
+      return sum + parseFloat(element.toBuy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, toBuy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
     }, []);
   }
