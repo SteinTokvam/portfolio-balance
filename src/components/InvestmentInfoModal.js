@@ -61,7 +61,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                         <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                         <ModalHeader className="justify-between">
                             <div className="flex gap-5">
-                                <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} fallback={<CompanyIcon />} />
+                                <Avatar isBordered showFallback radius="full" size="md" src={investmentToView !== undefined && investmentToView.name !== undefined && `https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} fallback={<CompanyIcon />} />
                                 {
                                     //TODO: for å bruke logoer fra uplead.com så må jeg lenke til de der jeg bruker de
                                 }
