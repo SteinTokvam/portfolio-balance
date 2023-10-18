@@ -11,10 +11,10 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
     const { t } = useTranslation()
 
     const rows = doRebalance(accountTypes, investmentByType, parseFloat(investmentSum), parseFloat(minimumSumToInvest), true)
-    .filter(elem => elem.buy !== 0)
-    .map(elem => ({
-        key: elem.key, name: elem.name, buy: elem.buy + t('valuators.currency'), newSum: elem.newSum + t('valuators.currency') 
-    }))
+        .filter(elem => elem.buy !== 0)
+        .map(elem => ({
+            key: elem.key, name: elem.name, buy: elem.buy + t('valuators.currency'), newSum: elem.newSum + t('valuators.currency')
+        }))
 
     const columns = [
         {
@@ -31,7 +31,6 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
         },
     ]
 
-    var counter = 0
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop={'blur'} size="5xl">
             <ModalContent>
@@ -45,13 +44,13 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
                                         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                                     </TableHeader>
                                     <TableBody items={rows} emptyContent={t('rebalancingModal.noRebalancing')}>
-                                        {(item) => item.buy !== 0 &&(
+                                        {(item) =>
                                             <TableRow key={item.key}>
                                                 {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
                                             </TableRow>
-                                        )}
+                                        }
                                     </TableBody>
-                                </Table>    
+                                </Table>
                             </div>
                         </ModalBody>
                         <ModalFooter>
