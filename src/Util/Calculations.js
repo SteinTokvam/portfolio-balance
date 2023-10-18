@@ -44,10 +44,10 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
     const key = investment.key
 
     if (parseFloat(investment.percentage) === 0) {
-        return { key: key, name: investment.name, toBuy: -investment.value, newSum: 0 }
+        return { key: key, name: investment.name, buy: -investment.value, newSum: 0 }
     }
 
-    return { key: key, name: investment.name, toBuy: toBuy, newSum: toBuy + investment.value }
+    return { key: key, name: investment.name, buy: toBuy, newSum: toBuy + investment.value }
 }
 
 function filtrerElementer(liste, maksSum, investments, minimumSumToInvest) {
