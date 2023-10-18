@@ -45,7 +45,7 @@ export default function AccountsTable() {
 
     return (
         <>
-            <AccountModal isOpen={isOpen} onOpenChange={onOpenChange} isAccountType={isAccountType} />
+            <AccountModal isOpenInfo={isOpen} onOpenChangeInfo={onOpenChange} isAccountType={isAccountType} />
             <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}

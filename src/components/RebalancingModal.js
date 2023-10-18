@@ -20,7 +20,7 @@ export default function RebalancingModal({isOpen, onOpenChange, investmentByType
                         <ModalBody>
                             <div className="w-full text-center flex flex-col justify-center">
                                 {   
-                                    doRebalance(accountTypes, investmentByType, parseFloat(investmentSum), parseFloat(minimumSumToInvest), false).map(transaction => {
+                                    doRebalance(accountTypes, investmentByType, parseFloat(investmentSum), parseFloat(minimumSumToInvest), true).map(transaction => {
                                         return transaction.toBuy === 0 ? "" : counter++ && <li key={transaction.key}>{transaction.name} {t('rebalancingModal.toBuy')} {transaction.toBuy % 1 !== 0 ? transaction.toBuy.toFixed(2) : transaction.toBuy}. {t('rebalancingModal.newValue')} {transaction.newSum % 1 !== 0 ? transaction.newSum.toFixed(2) : transaction.newSum}</li>
                                     })
                                 }

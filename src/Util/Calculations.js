@@ -1,3 +1,12 @@
+
+export function getAvailableGoalPercentages(accountTypes) {
+    console.log(accountTypes)
+    //investments.reduce((sum, investment) => sum + investment.value, 0);
+    const ret = 100 - accountTypes.reduce((sum, account) => sum + parseInt( account.goalPercentage), 0)
+    console.log(ret)
+    return ret
+}
+
 export function doRebalance(accountTypes, investments, investmentSum, minimumSumToInvest, canSell) {
     const ret = []
     ret.push(accountTypes
