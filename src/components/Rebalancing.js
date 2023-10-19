@@ -26,6 +26,7 @@ export default function Rebalancing() {
 
     const [investmentByType, setInvestmentByType] = useState([])
     const [canSell, setCanSell] = useState(false);
+    const [closestToTarget, setClosestToTarget] = useState(false);
 
     function handleInvestmentTypeRebalance(investmentType) {
         setInvestmentByType(investments.filter(investment => investment.type === investmentType))
@@ -34,7 +35,7 @@ export default function Rebalancing() {
 
     return (
         <>
-            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} canSell={canSell}/>
+            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} canSell={canSell} closestToTarget={closestToTarget} />
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />
@@ -49,6 +50,15 @@ export default function Rebalancing() {
                     <Checkbox isSelected={canSell} onValueChange={setCanSell}>
                         Ønsker du å selge unna investeringer for å rebalansere?
                     </Checkbox>
+                    {
+                        !canSell &&
+                        <>
+                            <Spacer y={2} />
+                            <Checkbox isSelected={closestToTarget} onValueChange={setClosestToTarget}>
+                                Ønsker du å kjøpe investeringer nærmest målet?
+                            </Checkbox>
+                        </>
+                    }
                     <Spacer y={10} />
                 </div>
                 <h4 className="text-small font-semibold leading-none text-default-600">{t('rebalancer.subTitle')}</h4>

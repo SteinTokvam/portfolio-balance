@@ -3,14 +3,14 @@ import { doRebalance } from "../Util/Calculations";
 import { useTranslation } from "react-i18next"
 import { useSelector } from "react-redux";
 
-export default function RebalancingModal({ isOpen, onOpenChange, investmentByType, canSell }) {
+export default function RebalancingModal({ isOpen, onOpenChange, investmentByType, canSell, closestToTarget }) {
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
     const investmentSum = useSelector(state => state.rootReducer.rebalancing.sum)
     const minimumSumToInvest = useSelector(state => state.rootReducer.rebalancing.minimumSum)
 
     const { t } = useTranslation()
 
-    const rows = doRebalance(accountTypes, investmentByType, parseFloat(investmentSum), parseFloat(minimumSumToInvest), canSell)
+    const rows = doRebalance(accountTypes, investmentByType, parseFloat(investmentSum), parseFloat(minimumSumToInvest), canSell, closestToTarget)
         .filter(elem => elem.buy !== 0)
         .map(elem => ({
             key: elem.key, name: elem.name, buy: elem.buy + t('valuators.currency'), newSum: elem.newSum + t('valuators.currency')

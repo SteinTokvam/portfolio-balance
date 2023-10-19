@@ -1,13 +1,13 @@
-export function doRebalance(accountTypes, investments, investmentSum, minimumSumToInvest, canSell) {
+export function doRebalance(accountTypes, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget) {
     const ret = []
     ret.push(accountTypes
-        .map(type => calculateRebalance(type.name, investments, investmentSum, minimumSumToInvest, canSell)
+        .map(type => calculateRebalance(type.name, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget)
         ))
 
     return ret.flat().flat()
 }
 
-function calculateRebalance(investmentType, investments, investmentSum, minimumSumToInvest, canSell) {
+function calculateRebalance(investmentType, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget) {
     const typeOfInvestment = investments.filter(investment => investment.type === investmentType)
     
     var totalValueForType = 0
@@ -24,9 +24,9 @@ function calculateRebalance(investmentType, investments, investmentSum, minimumS
     }
 
     investmentsToRebalance = investmentsToRebalance.filter(elem => elem.buy > 0)
-    console.log(investmentsToRebalance)
-    const ret = filtrerElementer(investmentsToRebalance.sort((a, b) => b['buy'] - a['buy']), investmentSum, investments, minimumSumToInvest)
-    console.log(ret)
+    const sorted = closestToTarget ? investmentsToRebalance.sort((a, b) => a['buy'] - b['buy']) : investmentsToRebalance.sort((a, b) => b['buy'] - a['buy'])
+    const ret = filtrerElementer(sorted, investmentSum, investments, minimumSumToInvest, closestToTarget)
+
     return ret
 }
 
@@ -36,7 +36,7 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
 
     toBuy = parseFloat((percentageDiff * totalValueForType).toFixed(0))
     const currMinimum = minimumSumToInvest === undefined || isNaN(minimumSumToInvest) ? 99 : minimumSumToInvest
-    console.log(currMinimum)
+
     if (toBuy < currMinimum && toBuy > -currMinimum) {
         toBuy = 0
     }
@@ -52,7 +52,8 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
 
 function filtrerElementer(liste, maksSum, investments, minimumSumToInvest) {
     return liste.reduce((akkumulator, element) => {
-      const sum = akkumulator.reduce((total, e) => total + e.toBuy, 0);
-      return sum + parseFloat(element.toBuy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, buy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
+      const sum = akkumulator.reduce((total, e) => total + e.buy, 0);
+      console.log(`${element.name} buy: ${element.buy} sum: ${sum}`)
+      return sum + parseFloat(element.buy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, buy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
     }, []);
   }
