@@ -1,4 +1,4 @@
-import { Button, Input, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Checkbox, Input, Spacer, useDisclosure } from "@nextui-org/react";
 import { textInputStyle } from "../Util/Global";
 import { useTranslation } from "react-i18next";
 import RebalancingModal from "./RebalancingModal";
@@ -25,6 +25,7 @@ export default function Rebalancing() {
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
 
     const [investmentByType, setInvestmentByType] = useState([])
+    const [canSell, setCanSell] = useState(false);
 
     function handleInvestmentTypeRebalance(investmentType) {
         setInvestmentByType(investments.filter(investment => investment.type === investmentType))
@@ -33,7 +34,7 @@ export default function Rebalancing() {
 
     return (
         <>
-            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} />
+            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} canSell={canSell}/>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />
@@ -44,6 +45,10 @@ export default function Rebalancing() {
                     <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={selectedSum} onValueChange={s => dispatch(setSumToInvest(s))} />
                     <Spacer y={2} />
                     <Input type="number" classNames={textInputStyle} label={t('rebalancer.minimumSum')} value={selectedMinimumSum} onValueChange={s => dispatch(setMinimumSumToInvest(s))} />
+                    <Spacer y={2} />
+                    <Checkbox isSelected={canSell} onValueChange={setCanSell}>
+                        Ønsker du å selge unna investeringer for å rebalansere?
+                    </Checkbox>
                     <Spacer y={10} />
                 </div>
                 <h4 className="text-small font-semibold leading-none text-default-600">{t('rebalancer.subTitle')}</h4>

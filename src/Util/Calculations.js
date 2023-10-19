@@ -23,9 +23,9 @@ function calculateRebalance(investmentType, investments, investmentSum, minimumS
         return investmentsToRebalance
     }
 
-    investmentsToRebalance = investmentsToRebalance.filter(elem => elem.toBuy > 0)
+    investmentsToRebalance = investmentsToRebalance.filter(elem => elem.buy > 0)
     console.log(investmentsToRebalance)
-    const ret = filtrerElementer(investmentsToRebalance.sort((a, b) => b['toBuy'] - a['toBuy']), investmentSum, investments, minimumSumToInvest)
+    const ret = filtrerElementer(investmentsToRebalance.sort((a, b) => b['buy'] - a['buy']), investmentSum, investments, minimumSumToInvest)
     console.log(ret)
     return ret
 }
@@ -53,6 +53,6 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
 function filtrerElementer(liste, maksSum, investments, minimumSumToInvest) {
     return liste.reduce((akkumulator, element) => {
       const sum = akkumulator.reduce((total, e) => total + e.toBuy, 0);
-      return sum + parseFloat(element.toBuy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, toBuy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
+      return sum + parseFloat(element.toBuy) <= maksSum ? [...akkumulator, element] : maksSum-sum >= minimumSumToInvest ? [...akkumulator, { key: element.key, name: element.name, buy: maksSum-sum, newSum: investments.filter(e => e.key === element.key)[0].value + maksSum-sum }] : akkumulator;
     }, []);
   }
