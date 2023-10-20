@@ -37,7 +37,7 @@ function findRebalancing(investment, totalValueForType, minimumSumToInvest) {
     toBuy = parseFloat((percentageDiff * totalValueForType).toFixed(0))
     const currMinimum = minimumSumToInvest === undefined || isNaN(minimumSumToInvest) ? 99 : minimumSumToInvest
 
-    if (toBuy <= currMinimum && toBuy >= -currMinimum) {
+    if (toBuy < currMinimum-1 && toBuy > -currMinimum+1) {
         toBuy = 0
     }
 
