@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react"
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react"
 import { doRebalance } from "../Util/Calculations";
 import { useTranslation } from "react-i18next"
 import { useSelector } from "react-redux";
@@ -31,6 +31,8 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
         },
     ]
 
+    const totalRebalance = rows.map(elem => parseFloat(elem.buy.substring(0, elem.buy.length-2))).reduce((sum, elem) => sum + elem, 0)
+
     return (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange} backdrop={'blur'} size="5xl">
             <ModalContent>
@@ -51,6 +53,9 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
                                         }
                                     </TableBody>
                                 </Table>
+                                <Spacer y={2} />
+                                {investmentSum-totalRebalance > 0 ? <h4 className="text-small font-semibold leading-none text-default-800">Har investert {totalRebalance + t('valuators.currency')} av et innskudd på {investmentSum + t('valuators.currency')}. Har derfor igjen {investmentSum-totalRebalance+t('valuators.currency')} å investere for.</h4> : <h4 className="text-small font-semibold leading-none text-default-800">Hele investeringen ble investert i denne rebalanseringen.</h4>}
+                                
                             </div>
                         </ModalBody>
                         <ModalFooter>
