@@ -7,8 +7,9 @@ import { useEffect, useState } from 'react';
 import { deleteInvestment } from '../actions/investments';
 import DeleteIcon from '../icons/DeleteIcon';
 import CompanyIcon from '../icons/CompanyIcon';
+import { findAccountType } from "../Util/Formatting";
 
-export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEdit }) {
+export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch()
@@ -26,15 +27,16 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
 
         if (foundInvestment.length !== 0) {
             setInvestmentToView(foundInvestment[0])
+            console.log(foundInvestment[0])
         } else {
             setInvestmentToView({})
         }
     }, [investments, investmentToEdit])
 
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name);
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes);
 
     const totalValueByType = accountTypes.map(accountType => {
-        return { accountType: accountType, value: investments.filter(investment => investment.type === accountType).reduce((sum, investment) => sum + investment.value, 0) }
+        return { accountType: accountType.key, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     });
     
 
@@ -86,7 +88,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo, isEd
                             <div className='grid grid-cols-2 gap-5 justify-between'>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.type')}</h4>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.value')}</h4>
-                                <b>{investmentToView.type}</b>
+                                <b>{findAccountType(investmentToView.type, accountTypes)}</b>
                                 <b>{investmentToView.value}{t('valuators.currency')}</b>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.currentPercentage')}</h4>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
