@@ -1,13 +1,13 @@
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
 import { textInputStyle } from "./Util/Global"
-import { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addNewAccountType } from "./actions/account"
+import { addNewAccountType, editAccount } from "./actions/account"
 
 
-export function NewAccountTypeModal({ isOpen, onOpenChange }) {
+export function NewAccountTypeModal({ isOpen, onOpenChange, isEdit }) {
 
     const { t } = useTranslation()
 
@@ -15,10 +15,22 @@ export function NewAccountTypeModal({ isOpen, onOpenChange }) {
 
     const [accountTypeText, setAccountTypeText] = useState("")
     const [accountTypeGoalPercentage, setAccountTypeGoalPercentage] = useState(0)
+    const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
+
+    useEffect(() => {
+        if (isEdit && accountToEdit !== undefined) {
+          setAccountTypeText(accountToEdit.name)
+          setAccountTypeGoalPercentage(accountToEdit.goalPercentage)
+        }
+      }, [accountToEdit, isEdit])
 
     function handleSubmit() {
-        dispatch(addNewAccountType({ key: uuidv4(), name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
-        setAccountTypeText("")
+        if(isEdit) {
+            dispatch(editAccount({ key: accountToEdit.key, name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
+        } else {
+            dispatch(addNewAccountType({ key: uuidv4(), name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
+            setAccountTypeText("")    
+        }
     }
 
     return (
@@ -47,11 +59,11 @@ export function NewAccountTypeModal({ isOpen, onOpenChange }) {
                             <Button color="primary" variant="light" onPress={onClose}>
                                 {t('investmentModal.close')}
                             </Button>
-                            <Button color="success" variant="light" aria-label={t('investmentModal.save')} onPress={() => {
+                            <Button color="success" variant="light" aria-label={isEdit ? t('investmentModal.saveChanges') : t('investmentModal.save')} onPress={() => {
                                 onClose()
                                 handleSubmit()
                             }}>
-                                {t('settings.addAccountButton')}
+                                {isEdit ? t('investmentModal.saveChanges') : t('settings.addAccountButton')}
                             </Button>
                         </ModalFooter>
                     </>

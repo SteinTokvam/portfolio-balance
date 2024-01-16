@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import AccountModal from "./AccountModal";
 import { setAccountToEdit } from "../actions/account";
-import { useState } from "react";
-
 
 export default function AccountsTable() {
     const { t } = useTranslation();
@@ -15,8 +13,6 @@ export default function AccountsTable() {
     const totalValueByType = accounts.map(accountType => {
         return { accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
     })
-
-    const [isAccountType, setIsAccountType] = useState(true)
 
     const columns = [
         {
@@ -37,19 +33,18 @@ export default function AccountsTable() {
 
     const dispatch = useDispatch()
 
-    function editAccount(investment, isAccountType) {
+    function editAccount(investment) {
         onOpen()
         dispatch(setAccountToEdit(investment))
-        setIsAccountType(isAccountType)
     }
 
     return (
         <>
-            <AccountModal isOpen={isOpen} onOpenChange={onOpenChange} isAccountType={isAccountType} />
+            <AccountModal isOpenAccount={isOpen} onOpenChangeAccount={onOpenChange} />
             <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}
-                onRowAction={(key) => editAccount(accounts.filter(elem => elem.key === key)[0], true)}>
+                onRowAction={(key) => editAccount(accounts.filter(elem => elem.key === key)[0])}>
                 <TableHeader columns={columns}>
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
