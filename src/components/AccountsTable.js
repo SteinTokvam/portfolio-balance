@@ -11,7 +11,7 @@ export default function AccountsTable() {
     const investments = useSelector(state => state.rootReducer.investments.investments);
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
     const totalValueByType = accounts.map(accountType => {
-        return { accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
+        return { accountType: accountType.key, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
 
     const columns = [
@@ -49,7 +49,7 @@ export default function AccountsTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={accounts.map(elem => {
-                    return { key: elem.key, type: elem.name, goalPercent: elem.goalPercentage, currentPercent: (totalValueByType.filter(item => item.accountType === elem.name)[0].value / totalValue * 100).toFixed(2) + "%" }
+                    return { key: elem.key, type: elem.name, goalPercent: elem.goalPercentage, currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + "%" }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (
