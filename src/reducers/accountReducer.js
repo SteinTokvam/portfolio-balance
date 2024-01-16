@@ -22,6 +22,15 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accountTypes: [...state.accountTypes, action.payload]
             }
+        case 'EDIT_ACCOUNT':
+            currentAccountTypes = [...state.accountTypes]
+            index = currentAccountTypes.findIndex(account => account.key === action.payload.key)
+            currentAccountTypes[index] = action.payload
+            window.localStorage.setItem("accountTypes", JSON.stringify(currentAccountTypes))
+            return {
+                ...state,
+                accountTypes: currentAccountTypes
+            }
         case 'SET_ACCOUNT_TYPE_TO_EDIT':
             return {
                 ...state,

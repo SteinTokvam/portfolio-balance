@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
 
-  const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name)
+  const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
 
   const { t } = useTranslation();
 
@@ -60,9 +60,9 @@ export default function InvestmentModal({ isOpen, onOpenChange, isEdit }) {
                 onSelectionChange={setSelectedKeys}
                 selectedKeys={selectedKeys}
               >
-                {accountTypes.map((investering) => (
-                  <SelectItem key={investering} value={investering}>
-                    {investering}
+                {accountTypes.map(investering => (
+                  <SelectItem key={investering.key} value={investering.name}>
+                    {investering.name}
                   </SelectItem>
                 ))}
               </Select>

@@ -7,6 +7,13 @@ export const addNewAccountType = (account) => {
     }
 }
 
+export const editAccount = (account) => {
+    return {
+        type: 'EDIT_ACCOUNT',
+        payload: account
+    }
+}
+
 export const deleteAllAccountTypes = (defaultAccountType) => {
     return {
         type: 'DELETE_ACCOUNT_TYPES',

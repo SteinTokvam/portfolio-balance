@@ -15,7 +15,7 @@ export default function NewInvestment({ isInvestment }) {
           <Spacer y={4} />
           <Button onPress={onOpen} color='primary'>{t('newInvestment.add')}</Button>
           {
-          isInvestment ? <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} /> : <NewAccountTypeModal isOpen={isOpen} onOpenChange={onOpenChange} />
+          isInvestment ? <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} /> : <NewAccountTypeModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} />
         }
     </>
   )

@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setInvestmentToEdit } from "../actions/investments";
 import { useTranslation } from "react-i18next";
 import InvestmentInfoModal from "./InvestmentInfoModal";
+import { findAccountType } from "../Util/Formatting";
 
 export default function InvestmentTable() {
 
     const { t } = useTranslation();
 
     const investments = useSelector(state => state.rootReducer.investments.investments);
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes);
     var totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
     
 
@@ -51,7 +53,7 @@ export default function InvestmentTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={investments.map(elem => {
-                    return { key: elem.key, type: elem.type, account: elem.account, name: elem.name, current_percent: (elem.value / totalValue * 100).toFixed(2) + "%" }
+                    return { key: elem.key, type: findAccountType(elem.type, accountTypes), account: elem.account, name: elem.name, current_percent: (elem.value / totalValue * 100).toFixed(2) + "%" }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (
