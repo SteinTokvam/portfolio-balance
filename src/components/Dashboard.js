@@ -10,7 +10,7 @@ export default function Dashboard() {
 
     const { t } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes).map(elem => elem.name)
+    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
 
     const [biggestInvestment, setBiggestInvestment] = useState({})
 
@@ -24,7 +24,7 @@ export default function Dashboard() {
     }, [setBiggestInvestment, investments])
 
     const totalValueByType = accountTypes.map(accountType => {
-        return { accountType: accountType, value: investments.filter(investment => investment.type === accountType).reduce((sum, investment) => sum + investment.value, 0) }
+        return { accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
 
