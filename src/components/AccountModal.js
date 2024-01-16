@@ -34,7 +34,7 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
     }, [accounts, accountToEdit])
 
     function handleDelete() {
-        if(investments.filter(investment => investment.type === accountToEdit.name).length !== 0){
+        if(investments.filter(investment => investment.type === accountToEdit.key).length !== 0){
             console.log("Du må slette alle invvesteringer med denne kontotypen først")
             return
         }
