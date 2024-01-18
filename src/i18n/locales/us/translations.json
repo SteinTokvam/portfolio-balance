@@ -44,6 +44,7 @@
         "columnNameLabel": "NAME",
         "columnValueLabel": "VALUE",
         "columnCurrentPercentLabel": "CURRENT PERCENT",
+        "columnGoalPercentLabel": "GOAL PERCENT",
         "tableLabel": "Table over different investments.",
         "emptyTable": "No investments added yet."
     },
@@ -89,6 +90,8 @@
         "header": "Portfolio rebalancing",
         "subTitle": "Current allocations:",
         "rebalanceButton": "Rebalance portfolio",
+        "canSellInvestmentsCheck": "Do you wish to sell investments to rebalance protfolio?",
+        "closestToGoalCheck": "Do you wish to purchase investments closest to allocation target?",
         "text": "To rebalance the portfolio, click on the investment category you want to rebalance according to the target percentage set. Remember to enter any new deposits."
     },
     "rebalancingModal": {
@@ -96,6 +99,11 @@
         "close": "close",
         "toBuy": "To buy/sell:",
         "newValue": "New value:",
-        "noRebalancing": "No rebalancing necessary."
+        "noRebalancing": "No rebalancing necessary.",
+        "table": {
+            "name": "NAME",
+            "buySell": "BUY/SELL",
+            "newValue": "NEW VALUE"
+        }
     }
 }

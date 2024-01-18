@@ -21,7 +21,7 @@ export default function AccountsTable() {
         },
         {
             key: "goalPercent",
-            label: "Goal percentage",
+            label: t('investmentTable.columnGoalPercentLabel'),
         },
         {
             key: "currentPercent",
@@ -49,7 +49,7 @@ export default function AccountsTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={accounts.map(elem => {
-                    return { key: elem.key, type: elem.name, goalPercent: elem.goalPercentage, currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + "%" }
+                    return { key: elem.key, type: elem.name, goalPercent: elem.goalPercentage, currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + t('valuators.percentage') }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (

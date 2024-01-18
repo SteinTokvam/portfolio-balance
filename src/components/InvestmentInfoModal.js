@@ -93,7 +93,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.currentPercentage')}</h4>
                                 <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
                                 <b>{calulatePercentageByType()}{t('valuators.percentage')}</b>
-                                <b>{investmentToView.percentage}%</b>
+                                <b>{investmentToView.percentage}{t('valuators.percentage')}</b>
                                 <Spacer y={4} />
                             </div>
                             <div>

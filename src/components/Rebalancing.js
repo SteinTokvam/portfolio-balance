@@ -20,7 +20,10 @@ export default function Rebalancing() {
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
     const totalValueByType = accountTypes.map(accountType => {
-        return { accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
+        return { 
+            accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, 
+            accountType: accountType.name, 
+            value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
 
@@ -48,14 +51,14 @@ export default function Rebalancing() {
                     <Input type="number" classNames={textInputStyle} label={t('rebalancer.minimumSum')} value={selectedMinimumSum} onValueChange={s => dispatch(setMinimumSumToInvest(s))} />
                     <Spacer y={2} />
                     <Checkbox isSelected={canSell} onValueChange={setCanSell}>
-                        Ønsker du å selge unna investeringer for å rebalansere?
+                        {t('rebalancer.canSellInvestmentsCheck')}
                     </Checkbox>
                     {
                         !canSell &&
                         <>
                             <Spacer y={2} />
                             <Checkbox isSelected={closestToTarget} onValueChange={setClosestToTarget}>
-                                Ønsker du å kjøpe investeringer nærmest målet?
+                                {t('rebalancer.closestToGoalCheck')}
                             </Checkbox>
                         </>
                     }

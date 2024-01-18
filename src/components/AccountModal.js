@@ -35,7 +35,7 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
 
     function handleDelete() {
         if(investments.filter(investment => investment.type === accountToEdit.key).length !== 0){
-            console.log("Du må slette alle invvesteringer med denne kontotypen først")
+            console.log("Du må slette alle invvesteringer med denne kontotypen først")//TODO: legg dette inn i en toast
             return
         }
         dispatch(deleteAccountType(accountToEdit))
@@ -72,7 +72,7 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
                             <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.type')}</h4>
                             <h4 className="text-small font-semibold leading-none text-default-600">{t('investmentInfoModal.goalPercentage')}</h4>
                             <b>{accountToView.name}</b>
-                            <b>{accountToView.goalPercentage}%</b>
+                            <b>{accountToView.goalPercentage}{t('valuators.percentage')}</b>
                             <Spacer y={4} />
                         </div>
                         

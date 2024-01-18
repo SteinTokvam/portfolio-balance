@@ -44,6 +44,7 @@
         "columnNameLabel": "NAVN",
         "columnValueLabel": "VERDI",
         "columnCurrentPercentLabel": "NÅVÆRENDE PROSENTANDEL",
+        "columnGoalPercentLabel": "MÅLPROSENT",
         "tableLabel": "Tabell over forskjellige investeringer.",
         "emptyTable": "Ingen investeringer lagt til enda."
     },
@@ -89,6 +90,8 @@
         "header": "Rebalansering av portfolio",
         "subTitle": "Nåværende fordeling:",
         "rebalanceButton": "Rebalanser portfolio",
+        "canSellInvestmentsCheck": "Ønsker du å selge unna investeringer for å rebalansere?",
+        "closestToGoalCheck": "Ønsker du å kjøpe investeringer nærmest målet?",
         "text": "For å rebalansere proteføljen så trykker man på den investeringskategorien man ønsker å rebalansere i henhold til satt målprosent. Husk å skrive inn eventuelle nye innskudd."
     },
     "rebalancingModal": {
@@ -96,6 +99,11 @@
         "close": "lukk",
         "toBuy": "Å kjøpe/selge:",
         "newValue": "Ny verdi:",
-        "noRebalancing": "Ingen rebalansering nødvendig."
+        "noRebalancing": "Ingen rebalansering nødvendig.",
+        "table": {
+            "name": "NAVN",
+            "buySell": "KJØPE/SELGE",
+            "newValue": "NY VERDI"
+        }
     }
 }

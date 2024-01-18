@@ -19,15 +19,15 @@ export default function RebalancingModal({ isOpen, onOpenChange, investmentByTyp
     const columns = [
         {
             key: "name",
-            label: "NAME"
+            label: t('rebalancingModal.table.name'),
         },
         {
             key: "buy",
-            label: "BUY/SELL"
+            label: t('rebalancingModal.table.buySell')
         },
         {
             key: "newSum",
-            label: "NEW VALUE"
+            label: t('rebalancingModal.table.newValue')
         },
     ]
 

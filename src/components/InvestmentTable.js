@@ -53,7 +53,7 @@ export default function InvestmentTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={investments.map(elem => {
-                    return { key: elem.key, type: findAccountType(elem.type, accountTypes), account: elem.account, name: elem.name, current_percent: (elem.value / totalValue * 100).toFixed(2) + "%" }
+                    return { key: elem.key, type: findAccountType(elem.type, accountTypes), account: elem.account, name: elem.name, current_percent: (elem.value / totalValue * 100).toFixed(2) + t('valuators.percentage') }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (
