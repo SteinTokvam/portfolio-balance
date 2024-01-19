@@ -23,7 +23,7 @@ export default function Rebalancing() {
         return { 
             accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, 
             accountType: accountType.name, 
-            value: investments.filter(investment => investment.type === accountType.name).reduce((sum, investment) => sum + investment.value, 0) }
+            value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
 
