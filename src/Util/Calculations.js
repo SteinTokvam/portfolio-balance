@@ -1,7 +1,7 @@
 export function doRebalance(accountTypes, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget) {
     const ret = []
     ret.push(accountTypes
-        .map(type => calculateRebalance(type.name, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget)
+        .map(type => calculateRebalance(type.key, investments, investmentSum, minimumSumToInvest, canSell, closestToTarget)
         ))
 
     return ret.flat().flat()
