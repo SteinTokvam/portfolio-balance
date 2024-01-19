@@ -22,7 +22,8 @@ export default function Rebalancing() {
     const totalValueByType = accountTypes.map(accountType => {
         return { 
             accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, 
-            accountType: accountType.name, 
+            accountType: accountType.name,
+            accountTypeKey: accountType.key, 
             value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
@@ -70,7 +71,7 @@ export default function Rebalancing() {
                     {
                         totalValueByType.map(type => {
                             return (
-                                <Button key={type + uuidv4()} onPress={() => handleInvestmentTypeRebalance(type.accountType)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
+                                <Button key={type + uuidv4()} onPress={() => handleInvestmentTypeRebalance(type.accountTypeKey)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{((type.value / totalValue) * 100).toFixed(2)}{t('valuators.percentage')}</h4>
