@@ -45,6 +45,7 @@
         "columnValueLabel": "VERDI",
         "columnCurrentPercentLabel": "NÅVÆRENDE PROSENTANDEL",
         "columnGoalPercentLabel": "MÅLPROSENT",
+        "columnDistanceToTargetLabel": "NØDVENDIGE KJØP",
         "tableLabel": "Tabell over forskjellige investeringer.",
         "emptyTable": "Ingen investeringer lagt til enda."
     },
@@ -82,7 +83,12 @@
         "addAccountButton": "Legg til konto"
     },
     "footer": {
-        "github": "Vis kildekoden på GitHub"
+        "github": "Vis kildekoden på GitHub",
+        "supportButton": "Støtt utviklingen."
+    },
+    "supportDevelopment": {
+        "header": "Støtt utviklingen",
+        "ethAdress": "Ethereum adresse:"
     },
     "rebalancer": {
         "textbox": "Sum å investere:",

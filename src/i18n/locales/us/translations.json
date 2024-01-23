@@ -45,6 +45,7 @@
         "columnValueLabel": "VALUE",
         "columnCurrentPercentLabel": "CURRENT PERCENT",
         "columnGoalPercentLabel": "GOAL PERCENT",
+        "columnDistanceToTargetLabel": "NECESSARY BUYS",
         "tableLabel": "Table over different investments.",
         "emptyTable": "No investments added yet."
     },
@@ -82,7 +83,12 @@
         "addAccountButton": "Add account"
     },
     "footer": {
-        "github": "View source on GitHub"
+        "github": "View source on GitHub",
+        "supportButton": "Support development."
+    },
+    "supportDevelopment": {
+        "header": "Support development",
+        "ethAdress": "Ethereum adress:"
     },
     "rebalancer": {
         "textbox": "Sum to invest:",
