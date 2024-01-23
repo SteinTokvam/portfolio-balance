@@ -42,6 +42,14 @@ export default function AccountsTable() {
         dispatch(setAccountToEdit(investment))
     }
 
+    function getDistanceToTarget(elem) {
+        const distanceToTarget = parseInt((totalValue*(elem.goalPercentage/100)-(totalValueByType.filter(item => item.accountType === elem.key)[0].value)).toFixed(0))
+        if(Math.abs(distanceToTarget) === 0) {
+            return 0
+        }
+        else return distanceToTarget
+    }
+
     return (
         <>
             <AccountModal isOpenAccount={isOpen} onOpenChangeAccount={onOpenChange} />
@@ -56,9 +64,9 @@ export default function AccountsTable() {
                     return { 
                         key: elem.key, 
                         type: elem.name, 
-                        goalPercent: elem.goalPercentage, 
+                        goalPercent: elem.goalPercentage + t('valuators.percentage'), 
                         currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + t('valuators.percentage'), 
-                        distanceToTarget: (totalValue*(elem.goalPercentage/100)-(totalValueByType.filter(item => item.accountType === elem.key)[0].value)).toFixed(0)+t('valuators.currency') }
+                        distanceToTarget: getDistanceToTarget(elem) + " " + t('valuators.currency') }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (
