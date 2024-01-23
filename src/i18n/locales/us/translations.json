@@ -45,7 +45,7 @@
         "columnValueLabel": "VALUE",
         "columnCurrentPercentLabel": "CURRENT PERCENT",
         "columnGoalPercentLabel": "GOAL PERCENT",
-        "columnDistanceToTargetLabel": "NECESSARY BUYS",
+        "columnDistanceToTargetLabel": "DISTANCE TO TARGET PERCENT",
         "tableLabel": "Table over different investments.",
         "emptyTable": "No investments added yet."
     },

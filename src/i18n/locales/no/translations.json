@@ -45,7 +45,7 @@
         "columnValueLabel": "VERDI",
         "columnCurrentPercentLabel": "NÅVÆRENDE PROSENTANDEL",
         "columnGoalPercentLabel": "MÅLPROSENT",
-        "columnDistanceToTargetLabel": "NØDVENDIGE KJØP",
+        "columnDistanceToTargetLabel": "AVSTAND TIL MÅLPROSENT",
         "tableLabel": "Tabell over forskjellige investeringer.",
         "emptyTable": "Ingen investeringer lagt til enda."
     },
