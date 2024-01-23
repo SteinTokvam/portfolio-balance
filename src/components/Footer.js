@@ -1,4 +1,4 @@
-import { Link, Button, useDisclosure, Spacer } from "@nextui-org/react";
+import { Link, Button, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import SupportModal from "./SupportModal";
 
