@@ -42,7 +42,7 @@ export default function AccountsTable() {
         dispatch(setAccountToEdit(investment))
     }
 
-    function getDistanceToTarget(elem) {
+    function getDistanceToTarget(elem) {//TODO: kan se på rebalanseringskoden om man kan bruke den til å beregne hvor mye som må kjøpes for at den skal være på målprosenten uavhengig av andre investeringstyper.
         const distanceToTarget = parseInt((totalValue*(elem.goalPercentage/100)-(totalValueByType.filter(item => item.accountType === elem.key)[0].value)).toFixed(0))
         if(Math.abs(distanceToTarget) === 0) {
             return 0
