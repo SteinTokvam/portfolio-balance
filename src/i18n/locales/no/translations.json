@@ -63,10 +63,12 @@
     },
     "navbar": {
         "brand": "Portfolio rebalancer",
+        "accounts": "Kontoer",
         "dashboard": "Dashboard",
         "portfolio": "Portfolio",
         "rebalancing": "Rebalansering",
-        "settings": "Innstillinger"
+        "settings": "Innstillinger",
+        "allAccounts": "Se alle kontoer"
     },
     "settings": {
         "header": "Innstillinger",

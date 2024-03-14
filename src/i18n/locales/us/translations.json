@@ -64,9 +64,11 @@
     "navbar": {
         "brand": "Portfolio rebalancer",
         "dashboard": "Dashboard",
+        "accounts": "Accounts",
         "portfolio": "Portfolio",
         "rebalancing": "Rebalancing",
-        "settings": "Settings"
+        "settings": "Settings",
+        "allAccounts": "See all accounts"
     },
     "settings": {
         "header": "Settings",
