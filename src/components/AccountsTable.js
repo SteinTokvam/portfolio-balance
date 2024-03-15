@@ -1,10 +1,10 @@
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import AccountModal from "./AccountModal";
+import AccountModalContent from "./Modal/AccountModalContent";
 import { setAccountToEdit } from "../actions/account";
-import EmptyModal from "./EmptyModal";
-import { NewAccountTypeModal } from "../NewAccountTypeModal";
+import EmptyModal from "./Modal/EmptyModal";
+import { NewAccountTypeModalContent } from "./Modal/NewAccountTypeModalContent";
 import { useState } from "react";
 import EditIcon from "../icons/EditIcon";
 
@@ -60,7 +60,7 @@ export default function AccountsTable() {
         <>
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} >
                 {
-                    screen ? <AccountModal>
+                    screen ? <AccountModalContent>
                         <Button
                             className={""}
                             color="primary"
@@ -72,8 +72,8 @@ export default function AccountsTable() {
                             <EditIcon />
                             {t('investmentInfoModal.edit')}
                         </Button>
-                    </AccountModal> :
-                        <NewAccountTypeModal isEdit={true} setScreen={setSceen} />
+                    </AccountModalContent> :
+                        <NewAccountTypeModalContent isEdit={true} setScreen={setSceen} />
                 }
             </EmptyModal>
 

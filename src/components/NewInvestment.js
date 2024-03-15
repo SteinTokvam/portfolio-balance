@@ -1,8 +1,8 @@
 import { Button, useDisclosure, Spacer } from '@nextui-org/react';
 import InvestmentModal from './InvestmentModal';
 import { useTranslation } from 'react-i18next';
-import { NewAccountTypeModal } from '../NewAccountTypeModal';
-import EmptyModal from './EmptyModal';
+import { NewAccountTypeModalContent } from './Modal/NewAccountTypeModalContent';
+import EmptyModal from './Modal/EmptyModal';
 
 export default function NewInvestment({ isInvestment }) {
 
@@ -18,7 +18,7 @@ export default function NewInvestment({ isInvestment }) {
       {
         isInvestment ? <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} /> :
           <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} >
-            <NewAccountTypeModal isEdit={false} />
+            <NewAccountTypeModalContent isEdit={false} />
           </EmptyModal>
       }
     </>

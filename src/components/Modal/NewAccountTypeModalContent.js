@@ -1,12 +1,12 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
-import { textInputStyle } from "./Util/Global"
+import { textInputStyle } from "../../Util/Global"
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addNewAccountType, editAccount } from "./actions/account"
+import { addNewAccountType, editAccount } from "../../actions/account"
 
-export function NewAccountTypeModal({ isEdit, setScreen }) {
+export function NewAccountTypeModalContent({ isEdit, setScreen }) {
 
     const { t } = useTranslation()
 

@@ -2,10 +2,10 @@ import { Avatar, Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Spac
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next"
-import DeleteIcon from "../icons/DeleteIcon";
-import { deleteAccountType } from "../actions/account";
+import DeleteIcon from "../../icons/DeleteIcon";
+import { deleteAccountType } from "../../actions/account";
 
-export default function AccountModal({children}) {
+export default function AccountModalContent({children}) {
     const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit);
     const investments = useSelector(state => state.rootReducer.investments.investments);
     const accounts = useSelector(state => state.rootReducer.accounts.accountTypes)
