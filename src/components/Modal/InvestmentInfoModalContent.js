@@ -1,15 +1,13 @@
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Avatar, useDisclosure, Spacer } from '@nextui-org/react';
+import { Button, ModalContent, ModalHeader, ModalBody, ModalFooter, Avatar, Spacer } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import EditIcon from '../icons/EditIcon';
-import InvestmentModal from './InvestmentModal';
 import { useEffect, useState } from 'react';
-import { deleteInvestment } from '../actions/investments';
-import DeleteIcon from '../icons/DeleteIcon';
-import CompanyIcon from '../icons/CompanyIcon';
-import { findAccountType } from "../Util/Formatting";
+import { deleteInvestment } from '../../actions/investments';
+import DeleteIcon from '../../icons/DeleteIcon';
+import CompanyIcon from '../../icons/CompanyIcon';
+import { findAccountType } from "../../Util/Formatting";
 
-export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
+export default function InvestmentInfoModalContent({children}) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch()
@@ -38,9 +36,6 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
     const totalValueByType = accountTypes.map(accountType => {
         return { accountType: accountType.key, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     });
-    
-
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     function handleDelete() {
         dispatch(deleteInvestment(investmentToEdit))
@@ -56,11 +51,9 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
       }
 
     return (
-        <Modal isOpen={isOpenInfo} onOpenChange={onOpenChangeInfo} backdrop='blur' scrollBehavior='inside' hideCloseButton={true}>
             <ModalContent>
                 {(onCloseInfo) => (
                     <>
-                        <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                         <ModalHeader className="justify-between">
                             <div className="flex gap-5">
                                 <Avatar isBordered showFallback radius="full" size="md" src={investmentToView !== undefined && investmentToView.name !== undefined && `https://logo.uplead.com/${investmentToView.name.split(' ')[0].toLowerCase()}.no`} fallback={<CompanyIcon />} />
@@ -72,17 +65,7 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
                                     <h5 className="text-small tracking-tight text-default-400">{investmentToView.account}</h5>
                                 </div>
                             </div>
-                            <Button
-                                className={""}
-                                color="primary"
-                                radius="full"
-                                size="sm"
-                                variant={"bordered"}
-                                onPress={onOpen}
-                            >
-                                <EditIcon />
-                                {t('investmentInfoModal.edit')}
-                            </Button>
+                            {children}
                         </ModalHeader>
                         <ModalBody>
                             <div className='grid grid-cols-2 gap-5 justify-between'>
@@ -116,6 +99,5 @@ export default function InvestmentInfoModal({ isOpenInfo, onOpenChangeInfo }) {
                     </>
                 )}
             </ModalContent>
-        </Modal>
     )
 }

@@ -18,7 +18,7 @@ export default function AccountsTable() {
         return { accountType: accountType.key, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
 
-    const [screen, setSceen] = useState(true)
+    const [screen, setScreen] = useState(true)
 
     const columns = [
         {
@@ -67,13 +67,13 @@ export default function AccountsTable() {
                             radius="full"
                             size="sm"
                             variant={"bordered"}
-                            onPress={() => setSceen(false)}
+                            onPress={() => setScreen(false)}
                         >
                             <EditIcon />
                             {t('investmentInfoModal.edit')}
                         </Button>
                     </AccountModalContent> :
-                        <NewAccountTypeModalContent isEdit={true} setScreen={setSceen} />
+                        <NewAccountTypeModalContent isEdit={true} setScreen={setScreen} />
                 }
             </EmptyModal>
 
