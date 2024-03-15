@@ -2,12 +2,14 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKey
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import AccountModal from "./AccountModal";
-import { setAccountToEdit } from "../actions/account";
+import { deleteAccountType, setAccountToEdit } from "../actions/account";
+import EmptyModal from "./EmptyModal";
 
 export default function AccountsTable() {
     const { t } = useTranslation();
 
     const accounts = useSelector(state => state.rootReducer.accounts.accountTypes);
+    const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit);
     const investments = useSelector(state => state.rootReducer.investments.investments);
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
     const totalValueByType = accounts.map(accountType => {
@@ -50,9 +52,20 @@ export default function AccountsTable() {
         else return distanceToTarget
     }
 
+    function handleModalClose() {
+        if (investments.filter(investment => investment.type === accountToEdit.key).length !== 0) {
+            console.log("Du må slette alle invvesteringer med denne kontotypen først")//TODO: legg dette inn i en toast
+            return
+        }
+        dispatch(deleteAccountType(accountToEdit))
+    }
+
     return (
         <>
-            <AccountModal isOpenAccount={isOpen} onOpenChangeAccount={onOpenChange} />
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} handleClose={handleModalClose} >
+                <AccountModal />
+            </EmptyModal>
+            
             <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}
