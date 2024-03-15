@@ -1,6 +1,7 @@
 import { Link, Button, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
-import SupportModal from "./SupportModal";
+import SupportModalContent from "./Modal/SupportModalContent";
+import EmptyModal from "./Modal/EmptyModal";
 
 export default function Footer() {
     const { t } = useTranslation()
@@ -9,7 +10,9 @@ export default function Footer() {
 
     return (
         <footer class="rounded-lg shadow m-4 dark:bg-gray-800">
-            <SupportModal isOpen={isOpen} onOpenChange={onOpenChange} />
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} size="5xl">
+                <SupportModalContent />
+            </EmptyModal>
             <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                 <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© {new Date().getFullYear()} Portfolio Rebalancer</span>
                 <Button color="primary" variant="faded" onPress={onOpen}>{t('footer.supportButton')}</Button>

@@ -6,7 +6,7 @@ import EmptyModal from './Modal/EmptyModal';
 
 export default function NewInvestment({ isInvestment }) {
 
-  const { t } = useTranslation();//trenger i18n for å kunne skfte språk, og t til å hente ut rett tekst. i18n kommer til å ligge på navbar
+  const { t } = useTranslation();
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 

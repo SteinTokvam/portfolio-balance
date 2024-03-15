@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addNewAccountType, editAccount } from "../../actions/account"
 
-export function NewAccountTypeModalContent({ isEdit, setScreen }) {
+export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
 
     const { t } = useTranslation()
 

@@ -1,11 +1,12 @@
 import { Button, Checkbox, Input, Spacer, useDisclosure } from "@nextui-org/react";
 import { textInputStyle } from "../Util/Global";
 import { useTranslation } from "react-i18next";
-import RebalancingModal from "./RebalancingModal";
+import RebalancingModalContent from "./Modal/RebalancingModalContent";
 import { useDispatch, useSelector } from "react-redux";
 import { setMinimumSumToInvest, setSumToInvest } from "../actions/rebalancing";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import EmptyModal from "./Modal/EmptyModal";
 
 export default function Rebalancing() {
 
@@ -20,11 +21,12 @@ export default function Rebalancing() {
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
     const totalValueByType = accountTypes.map(accountType => {
-        return { 
-            accountTypeGoalPercentage: accountType.accountTypeGoalPercentage, 
+        return {
+            accountTypeGoalPercentage: accountType.accountTypeGoalPercentage,
             accountType: accountType.name,
-            accountTypeKey: accountType.key, 
-            value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
+            accountTypeKey: accountType.key,
+            value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0)
+        }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
 
@@ -39,7 +41,9 @@ export default function Rebalancing() {
 
     return (
         <>
-            <RebalancingModal isOpen={isOpen} onOpenChange={onOpenChange} investmentByType={investmentByType} canSell={canSell} closestToTarget={closestToTarget} />
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} size='5xl'>
+                <RebalancingModalContent investmentByType={investmentByType} canSell={canSell} closestToTarget={closestToTarget} />
+            </EmptyModal>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />

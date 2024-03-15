@@ -68,6 +68,9 @@
         "rebalancing": "Rebalansering",
         "settings": "Innstillinger"
     },
+    "accountModal": {
+        "title": "Legg til kontotype:"
+    },
     "settings": {
         "header": "Innstillinger",
         "importButton": "Importer data",

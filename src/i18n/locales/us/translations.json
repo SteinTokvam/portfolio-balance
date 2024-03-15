@@ -68,6 +68,9 @@
         "rebalancing": "Rebalancing",
         "settings": "Settings"
     },
+    "accountModal": {
+        "title": "Add new account type:"
+    },
     "settings": {
         "header": "Settings",
         "importButton": "Import data",
