@@ -1,9 +1,13 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, useDisclosure } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, useDisclosure, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { setInvestmentToEdit } from "../actions/investments";
 import { useTranslation } from "react-i18next";
-import InvestmentInfoModal from "./InvestmentInfoModal";
+import InvestmentInfoModalContent from "./Modal/InvestmentInfoModalContent";
 import { findAccountType } from "../Util/Formatting";
+import EmptyModal from "./Modal/EmptyModal";
+import { useState } from "react";
+import NewInvestmentModalContent from "./Modal/NewInvestmentModalContent";
+import EditIcon from "../icons/EditIcon";
 
 export default function InvestmentTable() {
 
@@ -12,7 +16,7 @@ export default function InvestmentTable() {
     const investments = useSelector(state => state.rootReducer.investments.investments);
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes);
     var totalValue = investments.reduce((sum, investment) => sum + investment.value, 0)
-    
+
 
     const columns = [
         {
@@ -36,6 +40,7 @@ export default function InvestmentTable() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const dispatch = useDispatch()
+    const [screen, setScreen] = useState(true)
 
     function editInvestment(investment) {
         onOpen()
@@ -44,7 +49,24 @@ export default function InvestmentTable() {
 
     return (
         <>
-            <InvestmentInfoModal isOpenInfo={isOpen} onOpenChangeInfo={onOpenChange}/>
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} >
+                {
+                    screen ? <InvestmentInfoModalContent>
+                        <Button
+                            className={""}
+                            color="primary"
+                            radius="full"
+                            size="sm"
+                            variant={"bordered"}
+                            onPress={() => setScreen(false)}
+                        >
+                            <EditIcon />
+                            {t('investmentInfoModal.edit')}
+                        </Button>
+                    </InvestmentInfoModalContent> :
+                        <NewInvestmentModalContent isEdit={true} setScreen={setScreen} />
+                }
+            </EmptyModal>
             <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}

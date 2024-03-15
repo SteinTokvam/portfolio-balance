@@ -1,26 +1,22 @@
-import { Avatar, Button, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Spacer, useDisclosure } from "@nextui-org/react"
+import { Avatar, Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next"
-import DeleteIcon from "../icons/DeleteIcon"
-import { deleteAccountType } from "../actions/account"
-import EditIcon from "../icons/EditIcon"
-import { NewAccountTypeModal } from "../NewAccountTypeModal"
+import DeleteIcon from "../../icons/DeleteIcon";
+import { deleteAccountType } from "../../actions/account";
 
-export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
-    const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
+export default function AccountModalContent({children}) {
+    const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit);
+    const investments = useSelector(state => state.rootReducer.investments.investments);
     const accounts = useSelector(state => state.rootReducer.accounts.accountTypes)
-    const investments = useSelector(state => state.rootReducer.investments.investments)
     const [accountToView, setAccountToView] = useState({})
 
     const { t } = useTranslation()
 
-    const dispatch = useDispatch()
-
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if(accountToEdit === undefined) {
+        if (accountToEdit === undefined) {
             return
         }
 
@@ -33,8 +29,8 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
         }
     }, [accounts, accountToEdit])
 
-    function handleDelete() {
-        if(investments.filter(investment => investment.type === accountToEdit.key).length !== 0){
+    function handleClose() {
+        if (investments.filter(investment => investment.type === accountToEdit.key).length !== 0) {
             console.log("Du må slette alle invvesteringer med denne kontotypen først")//TODO: legg dette inn i en toast
             return
         }
@@ -42,12 +38,9 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
     }
 
     return (
-        <Modal isOpen={isOpenAccount} onOpenChange={onOpenChangeAccount} backdrop='blur' scrollBehavior='inside' hideCloseButton={true}>
-
         <ModalContent>
-            {(onCloseAccount) => (
+            {(onClose) => (
                 <>
-                    <NewAccountTypeModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={true} />
                     <ModalHeader className="justify-between">
                         <div className="flex gap-5">
                             <Avatar isBordered radius="full" size="md" src="finnesIkke" />
@@ -55,17 +48,7 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
                                 <h4 className="text-small font-semibold leading-none text-default-600">{accountToEdit.name}</h4>
                             </div>
                         </div>
-                        <Button
-                                className={""}
-                                color="primary"
-                                radius="full"
-                                size="sm"
-                                variant={"bordered"}
-                                onPress={onOpen}
-                            >
-                                <EditIcon />
-                                {t('investmentInfoModal.edit')}
-                            </Button>
+                        {children}
                     </ModalHeader>
                     <ModalBody>
                         <div className='grid grid-cols-2 gap-5 justify-between'>
@@ -75,22 +58,20 @@ export default function AccountModal({isOpenAccount, onOpenChangeAccount}) {
                             <b>{accountToView.goalPercentage}{t('valuators.percentage')}</b>
                             <Spacer y={4} />
                         </div>
-                        
                     </ModalBody>
                     <ModalFooter>
                         <Button isIconOnly color="danger" variant="solid" onPress={() => {
-                            onCloseAccount()
-                            handleDelete()
+                            onClose()
+                            handleClose()
                         }}>
                             <DeleteIcon />
                         </Button>
-                        <Button color="primary" variant="light" onPress={onCloseAccount}>
+                        <Button color="primary" variant="light" onPress={onClose}>
                             {t('investmentModal.close')}
                         </Button>
                     </ModalFooter>
                 </>
             )}
         </ModalContent>
-    </Modal>
     )
 }

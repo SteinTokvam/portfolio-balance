@@ -1,10 +1,11 @@
 import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMenuToggle, Link, NavbarMenuItem, Button } from "@nextui-org/react";
 import { Logo } from "../icons/Logo.jsx";
-import Settings from "./Settings.js";
+import SettingsModalContent from "./Modal/SettingsModalContent.js";
 import { useTranslation } from "react-i18next";
 import { useReducer } from "react";
 import { routes } from "../Util/Global.js";
 import { useNavigate } from "react-router-dom";
+import EmptyModal from "./Modal/EmptyModal.js";
 
 export default function MyNavbar() {
 
@@ -42,7 +43,9 @@ export default function MyNavbar() {
       </NavbarContent>
 
       <NavbarContent justify="end" className="hidden sm:flex lg:flex">
-        <Settings isOpen={isOpen} onOpenChange={onOpenChange} />
+        <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false}>
+          <SettingsModalContent />
+        </EmptyModal>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"

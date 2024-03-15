@@ -1,22 +1,29 @@
 import { Button, useDisclosure, Spacer } from '@nextui-org/react';
-import InvestmentModal from './InvestmentModal';
+import NewInvestmentModalContent from './Modal/NewInvestmentModalContent';
 import { useTranslation } from 'react-i18next';
-import { NewAccountTypeModal } from '../NewAccountTypeModal';
+import { NewAccountTypeModalContent } from './Modal/NewAccountTypeModalContent';
+import EmptyModal from './Modal/EmptyModal';
 
 export default function NewInvestment({ isInvestment }) {
 
-  const { t } = useTranslation();//trenger i18n for å kunne skfte språk, og t til å hente ut rett tekst. i18n kommer til å ligge på navbar
+  const { t } = useTranslation();
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <>
-      
-          <Spacer y={4} />
-          <Button onPress={onOpen} color='primary'>{t('newInvestment.add')}</Button>
-          {
-          isInvestment ? <InvestmentModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} /> : <NewAccountTypeModal isOpen={isOpen} onOpenChange={onOpenChange} isEdit={false} />
-        }
+
+      <Spacer y={4} />
+      <Button onPress={onOpen} color='primary'>{t('newInvestment.add')}</Button>
+      {
+        isInvestment ?
+          <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false}>
+            <NewInvestmentModalContent isEdit={false} />
+          </EmptyModal> :
+          <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} >
+            <NewAccountTypeModalContent isEdit={false} />
+          </EmptyModal>
+      }
     </>
   )
 }

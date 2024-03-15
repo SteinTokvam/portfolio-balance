@@ -1,8 +1,12 @@
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import AccountModal from "./AccountModal";
+import AccountModalContent from "./Modal/AccountModalContent";
 import { setAccountToEdit } from "../actions/account";
+import EmptyModal from "./Modal/EmptyModal";
+import { NewAccountTypeModalContent } from "./Modal/NewAccountTypeModalContent";
+import { useState } from "react";
+import EditIcon from "../icons/EditIcon";
 
 export default function AccountsTable() {
     const { t } = useTranslation();
@@ -13,6 +17,8 @@ export default function AccountsTable() {
     const totalValueByType = accounts.map(accountType => {
         return { accountType: accountType.key, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
+
+    const [screen, setScreen] = useState(true)
 
     const columns = [
         {
@@ -43,8 +49,8 @@ export default function AccountsTable() {
     }
 
     function getDistanceToTarget(elem) {//TODO: kan se på rebalanseringskoden om man kan bruke den til å beregne hvor mye som må kjøpes for at den skal være på målprosenten uavhengig av andre investeringstyper.
-        const distanceToTarget = parseInt((totalValue*(elem.goalPercentage/100)-(totalValueByType.filter(item => item.accountType === elem.key)[0].value)).toFixed(0))
-        if(Math.abs(distanceToTarget) === 0) {
+        const distanceToTarget = parseInt((totalValue * (elem.goalPercentage / 100) - (totalValueByType.filter(item => item.accountType === elem.key)[0].value)).toFixed(0))
+        if (Math.abs(distanceToTarget) === 0) {
             return 0
         }
         else return distanceToTarget
@@ -52,7 +58,25 @@ export default function AccountsTable() {
 
     return (
         <>
-            <AccountModal isOpenAccount={isOpen} onOpenChangeAccount={onOpenChange} />
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} >
+                {
+                    screen ? <AccountModalContent>
+                        <Button
+                            className={""}
+                            color="primary"
+                            radius="full"
+                            size="sm"
+                            variant={"bordered"}
+                            onPress={() => setScreen(false)}
+                        >
+                            <EditIcon />
+                            {t('investmentInfoModal.edit')}
+                        </Button>
+                    </AccountModalContent> :
+                        <NewAccountTypeModalContent isEdit={true} setScreen={setScreen} />
+                }
+            </EmptyModal>
+
             <Table isStriped aria-label={t('investmentTable.tableLabel')} className="text-foreground"
                 selectionMode="single"
                 selectionBehavior={"toggle"}
@@ -61,12 +85,13 @@ export default function AccountsTable() {
                     {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
                 </TableHeader>
                 <TableBody classNames="text-left" items={accounts.map(elem => {
-                    return { 
-                        key: elem.key, 
-                        type: elem.name, 
-                        goalPercent: elem.goalPercentage + t('valuators.percentage'), 
-                        currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + t('valuators.percentage'), 
-                        distanceToTarget: getDistanceToTarget(elem) + " " + t('valuators.currency') }
+                    return {
+                        key: elem.key,
+                        type: elem.name,
+                        goalPercent: elem.goalPercentage + t('valuators.percentage'),
+                        currentPercent: (totalValueByType.filter(item => item.accountType === elem.key)[0].value / totalValue * 100).toFixed(2) + t('valuators.percentage'),
+                        distanceToTarget: getDistanceToTarget(elem) + " " + t('valuators.currency')
+                    }
                 })} emptyContent={t('investmentTable.emptyTable')}>
 
                     {(item) => (
