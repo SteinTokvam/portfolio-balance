@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Avatar, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, User, getKeyValue } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editInvestment } from "../actions/investments";
@@ -92,7 +92,7 @@ export default function Transactions() {
             })
 
             var cryptoInvestments = []
-            investments.filter(investment => {
+            investments.forEach(investment => {
                 if (currencies.map(currency => currency.currency).includes(investment.name)) {
                     const fiatValue = currencies.find(currency => currency.currency === investment.name).fiatValue
                     const tmpInvestement = {
@@ -114,7 +114,7 @@ export default function Transactions() {
             return
         }
         fetchData()
-    }, [crypto, accessKey])
+    }, [crypto, accessKey, dispatch, investments])
 
     const columns = [
         { key: 'amount', label: 'Amount' },
