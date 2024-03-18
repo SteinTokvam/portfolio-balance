@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Avatar, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Spacer, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editInvestment } from "../actions/investments";
@@ -80,7 +80,7 @@ export default function Transactions() {
                     lastPrice: value.last,
                     transactions: transactions.orders
                         .filter(order => order.currency === transactions.valueOfCurrency[i].currency)
-                        .filter(order => order.type !== 'Stake')
+                        .filter(order => order.type !== 'Stake' || order.type !== 'InternalTransfer')
                 }
             }).filter(crypto => crypto.fiatValue > 0)
             setCrypto(allCrypto)
@@ -100,7 +100,7 @@ export default function Transactions() {
                         type: investment.type,
                         name: investment.name,
                         account: investment.account,
-                        value: parseFloat(fiatValue),
+                        value: parseFloat(parseFloat(fiatValue).toFixed(0)),
                         note: investment.note,
                         percentage: investment.percentage
                     }
@@ -126,7 +126,12 @@ export default function Transactions() {
     return (
         <div className="grid grid-flow-col justify-stretch">
             {
-                crypto.length === 0 ? <Spinner /> :
+                crypto.length === 0 ?
+                    <div className="flex flex-col text-center">
+                        <Spinner />
+                        <Spacer y={2} />
+                        <p>Henter data fra Firi</p>
+                    </div> :
                     crypto[0] === "FEIL" ? <p>FEIL! Er API-nøkkel satt i innstillingene?</p> :
                         <Accordion selectionMode="multiple">
                             {crypto.map(item => {
