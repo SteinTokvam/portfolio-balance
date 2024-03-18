@@ -62,7 +62,7 @@ export default function SettingsModalContent() {
         if(accessKey !== "") {
             setAccessKeyInput(accessKey)
         }
-    }, [selectedLanguage, i18n, accessKeyInput, accessKey])
+    }, [selectedLanguage, i18n, accessKeyInput, accessKey, dispatch])
 
     return (
         <ModalContent>
