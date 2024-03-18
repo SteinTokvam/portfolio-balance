@@ -3,7 +3,8 @@
 
 const initialState = {
     accountTypes: window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [] ,
-    accountToEdit: {}   
+    accountToEdit: {},
+    firi: window.localStorage.getItem("firi") ? window.localStorage.getItem("firi") : ""
 }
 
 const accountReducer = (state = initialState, action) => {
@@ -35,6 +36,12 @@ const accountReducer = (state = initialState, action) => {
             return {
                 ...state,
                 accountToEdit: action.payload
+            }
+        case 'SET_FIRI_ACCESS_KEY':
+            window.localStorage.setItem('firi', action.payload)
+            return {
+                ...state,
+                firi: action.payload
             }
         case 'DELETE_ACCOUNT_TYPE':
             currentAccountTypes = [...state.accountTypes]

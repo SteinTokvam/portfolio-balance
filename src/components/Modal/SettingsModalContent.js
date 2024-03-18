@@ -1,16 +1,20 @@
-import { Avatar, Button, Divider, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
+import { Avatar, Button, Divider, Input, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
 import { deleteInvestments, importInvestments } from "../../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { languages } from "../../Util/Global"
-import { addInitialAccountTypes, deleteAllAccountTypes } from "../../actions/account"
+import { languages, textInputStyle } from "../../Util/Global"
+import { addInitialAccountTypes, deleteAllAccountTypes, setFiriAccessKey } from "../../actions/account"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+
+    const accessKey = useSelector(state => state.rootReducer.accounts.firi)
+
+    const [accessKeyInput, setAccessKeyInput] = useState("")
 
     const hiddenFileInput = useRef(null);
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
@@ -52,7 +56,13 @@ export default function SettingsModalContent() {
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage)
         window.localStorage.setItem('settings', JSON.stringify({ language: selectedLanguage }))
-    }, [selectedLanguage, i18n])
+        if(accessKeyInput !== "") {
+            dispatch(setFiriAccessKey(accessKeyInput))   
+        }
+        if(accessKey !== "") {
+            setAccessKeyInput(accessKey)
+        }
+    }, [selectedLanguage, i18n, accessKeyInput, accessKey])
 
     return (
         <ModalContent>
@@ -73,6 +83,9 @@ export default function SettingsModalContent() {
                                 </SelectItem>
                             ))}
                         </Select>
+                        <Divider />
+
+                        <Input type="text" classNames={textInputStyle} label="Firi access key" value={accessKeyInput} onValueChange={setAccessKeyInput} />
                         <Divider />
                         <Button color="primary" variant="flat" onPress={handleClick}>
                             <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput} />

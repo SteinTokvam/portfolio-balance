@@ -24,6 +24,7 @@ export const textInputStyle = {
 
   export const routes = {
     dashboard: '/',
+    transactions: '/transactions',
     portfolio: '/portfolio',
     rebalancing: '/rebalancing',
 }

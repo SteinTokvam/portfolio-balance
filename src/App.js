@@ -11,6 +11,7 @@ import Portfolio from './components/Portfolio';
 import { routes } from './Util/Global';
 import Rebalancing from './components/Rebalancing';
 import Footer from './components/Footer';
+import Transactions from './components/Transactions';
 
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
         <Routes>
           <Route path={routes.dashboard} element={
             <Dashboard />
+          } />
+          <Route path={routes.transactions} element={
+            <Transactions />
           } />
           <Route path={routes.portfolio} element={
             <Portfolio />

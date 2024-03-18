@@ -41,3 +41,10 @@ export const setAccountToEdit = (account) => {
         payload: account
     }
 }
+
+export const setFiriAccessKey = (accessKey) => {
+    return {
+        type: 'SET_FIRI_ACCESS_KEY',
+        payload: accessKey
+    }
+}
