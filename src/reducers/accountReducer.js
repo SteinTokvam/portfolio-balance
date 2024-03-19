@@ -2,7 +2,8 @@
 
 
 const initialState = {
-    accountTypes: window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [] ,
+    accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
+    accountTypes: window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [],
     accountToEdit: {},
     firi: window.localStorage.getItem("firi") ? window.localStorage.getItem("firi") : ""
 }
@@ -17,11 +18,11 @@ const accountReducer = (state = initialState, action) => {
                 accountTypes: action.payload,
                 accountToEdit: initialState.accountToEdit
             }
-        case 'ADD_NEW_ACCOUNT_TYPE':
-            window.localStorage.setItem('accountTypes', JSON.stringify([...state.accountTypes, action.payload]))
+        case 'ADD_NEW_ACCOUNT_NAME':
+            window.localStorage.setItem('accounts', JSON.stringify([...state.accounts, action.payload]))
             return {
                 ...state,
-                accountTypes: [...state.accountTypes, action.payload]
+                accounts: [...state.accounts, action.payload]
             }
         case 'EDIT_ACCOUNT':
             currentAccountTypes = [...state.accountTypes]
@@ -57,6 +58,20 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accountTypes: initialState.accountTypes,
                 accountToEdit: initialState.accountToEdit
+            }
+        case 'DELETE_ALL_ACCOUNTS':
+            return {
+                ...state,
+                accounts: []
+            }
+        case 'IMPORT_TRANSACTIONS':
+            var currentAccounts = [...state.accounts]
+            index = currentAccounts.findIndex(account => account.key === action.payload.key)
+            currentAccounts[index] = {...currentAccounts[index], transactions: action.payload.transactions}
+            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+            return {
+                ...state,
+                accounts: currentAccounts
             }
         default:
             return state

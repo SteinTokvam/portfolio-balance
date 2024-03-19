@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const addNewAccountType = (account) => {
+export const addNewAccount = (account) => {
     return {
-        type: 'ADD_NEW_ACCOUNT_TYPE',
+        type: 'ADD_NEW_ACCOUNT_NAME',
         payload: account
     }
 }
@@ -18,6 +18,12 @@ export const deleteAllAccountTypes = (defaultAccountType) => {
     return {
         type: 'DELETE_ACCOUNT_TYPES',
         payload: [{key: uuidv4(), name: defaultAccountType, goalPercentage: 0}][defaultAccountType]
+    }
+}
+
+export const deleteAllAccounts = () => {
+    return {
+        type: 'DELETE_ALL_ACCOUNTS'
     }
 }
 
@@ -46,5 +52,12 @@ export const setFiriAccessKey = (accessKey) => {
     return {
         type: 'SET_FIRI_ACCESS_KEY',
         payload: accessKey
+    }
+}
+
+export const importTransactions = (transactions) => {
+    return {
+        type: 'IMPORT_TRANSACTIONS',
+        payload: transactions
     }
 }

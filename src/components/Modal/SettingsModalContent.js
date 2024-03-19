@@ -4,13 +4,14 @@ import { deleteInvestments, importInvestments } from "../../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages, textInputStyle } from "../../Util/Global"
-import { addInitialAccountTypes, deleteAllAccountTypes, setFiriAccessKey } from "../../actions/account"
+import { addInitialAccountTypes, deleteAllAccountTypes, deleteAllAccounts, setFiriAccessKey } from "../../actions/account"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const accessKey = useSelector(state => state.rootReducer.accounts.firi)
 
@@ -49,7 +50,8 @@ export default function SettingsModalContent() {
         return JSON.stringify({
             investments: investments,
             settings: JSON.parse(window.localStorage.getItem('settings')),
-            accountTypes: accountTypes
+            accountTypes: accountTypes,
+            accounts: accounts
         })
     }
 
@@ -103,6 +105,7 @@ export default function SettingsModalContent() {
                             window.localStorage.clear()
                             dispatch(deleteInvestments())
                             dispatch(deleteAllAccountTypes(t('valuators.defaultAccountType')))
+                            dispatch(deleteAllAccounts())
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

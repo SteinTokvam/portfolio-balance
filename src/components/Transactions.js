@@ -2,6 +2,7 @@ import { Accordion, AccordionItem, Avatar, Spacer, Spinner, Table, TableBody, Ta
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editInvestment } from "../actions/investments";
+import { calculateValue, getTransactionsFromFiri, getValueInFiat } from "../Util/Firi";
 
 
 export default function Transactions() {
@@ -12,46 +13,6 @@ export default function Transactions() {
     const accessKey = useSelector(state => state.rootReducer.accounts.firi)
     const dispatch = useDispatch()
 
-    async function getTransactionsFromFiri(accessKey) {
-        return await fetch('https://api.firi.com/v2/history/transactions', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'firi-access-key': accessKey
-            }
-        })
-            .then(response => {
-                return response.json()
-            })
-    }
-
-    function calculateValue(orders, currencies) {
-        return currencies.map(currency => {
-            var cryptoValue = 0.0
-            orders.reverse()
-                .filter(order => order.currency === currency).forEach(order => {
-                    cryptoValue += parseFloat(order.amount)
-                })
-
-            return { cryptoValue, currency }
-        })
-    }
-
-    async function getValueInFiat(currencies, accessKey) {
-        const value = currencies.map(async cryptocurrency => {
-            const response = await fetch(`https://api.firi.com/v1/markets/${cryptocurrency}nok`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'firi-access-key': accessKey
-                }
-            });
-            return await response.json();
-        })
-
-        const ret = Promise.all(value)
-        return await ret
-    }
 
     useEffect(() => {
         async function fetchData() {

@@ -4,12 +4,13 @@ import { textInputStyle } from "../../Util/Global"
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addNewAccountType, editAccount } from "../../actions/account"
+import { addNewAccount, editAccount } from "../../actions/account"
 
 export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
 
     const { t } = useTranslation()
 
+    const [accountName, setAccountName] = useState("")
     const [accountTypeText, setAccountTypeText] = useState("")
     const [accountTypeGoalPercentage, setAccountTypeGoalPercentage] = useState(0)
     const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
@@ -27,7 +28,7 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
         if (isEdit) {
             dispatch(editAccount({ key: accountToEdit.key, name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
         } else {
-            dispatch(addNewAccountType({ key: uuidv4(), name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
+            dispatch(addNewAccount({ key: uuidv4(), name: accountName, type: accountTypeText, goalPercentage: accountTypeGoalPercentage, transactions: [] }))
         }
     }
 
@@ -37,6 +38,11 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                 <>
                     <ModalHeader className="flex flex-col gap-1">{t('investmentModal.newTitle')}</ModalHeader>
                     <ModalBody>
+                    <Input type="text"
+                            classNames={textInputStyle}
+                            label={"Kontonavn"}
+                            value={accountName}
+                            onValueChange={setAccountName} />
                         <Input type="text"
                             classNames={textInputStyle}
                             label={t('settings.accountType')}
