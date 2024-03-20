@@ -5,7 +5,6 @@ import { useSelector } from "react-redux"
 import NewInvestment from "./NewInvestment";
 import { v4 as uuidv4 } from 'uuid';
 
-
 export default function Dashboard() {
 
     const { t } = useTranslation();
@@ -27,6 +26,7 @@ export default function Dashboard() {
         return { accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
     const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
+    
 
     return (
         <>

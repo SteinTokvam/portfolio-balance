@@ -1,4 +1,4 @@
-import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Spacer } from "@nextui-org/react"
+import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux";
@@ -42,7 +42,6 @@ export default function ImportTransactionsModalContent() {
                         });
                     }
                 })
-                console.log(selectedKeys.keys().next().value)
                 dispatch(importTransactions({ key: selectedKeys.keys().next().value, transactions: lines }))
             };
             reader.readAsText(input);

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 
-export default function AccountsWithTransactions({account}) {
-
+export default function AccountsWithTransactions({ account }) {
+    
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
         direction: "descending",
@@ -21,7 +21,7 @@ export default function AccountsWithTransactions({account}) {
 
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
-    }, [sortDescriptor, account.transactions]);
+    }, [sortDescriptor, account]);
 
     const columns = [
         { key: 'fund_name', label: 'Fund Name' },

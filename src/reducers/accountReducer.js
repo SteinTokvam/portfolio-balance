@@ -67,7 +67,13 @@ const accountReducer = (state = initialState, action) => {
         case 'IMPORT_TRANSACTIONS':
             var currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.key)
-            currentAccounts[index] = {...currentAccounts[index], transactions: action.payload.transactions}
+            currentAccounts[index] = {
+                ...currentAccounts[index], transactions: action.payload.transactions, e24_ids: action.payload.transactions
+                    .map(transaction => transaction.e24_id)
+                    .filter((v, i, self) => {
+                        return i === self.indexOf(v);
+                    })
+            }
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
                 ...state,

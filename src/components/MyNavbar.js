@@ -16,7 +16,6 @@ export default function MyNavbar() {
   const menuItems = [
     { name: t('navbar.dashboard'), link: routes.dashboard },
     { name: 'Transactions', link: routes.transactions },
-    { name: 'Accounts', link: routes.accountsWithTransactions },
     { name: t('navbar.portfolio'), link: routes.portfolio },
     { name: t('navbar.rebalancing'), link: routes.rebalancing },
     { name: t('navbar.settings'), link: onOpen },

@@ -12,7 +12,6 @@ import { routes } from './Util/Global';
 import Rebalancing from './components/Rebalancing';
 import Footer from './components/Footer';
 import Transactions from './components/Transactions';
-import AccountsWithTransactions from './components/AccountsWithTransactions';
 
 
 function App() {
@@ -34,9 +33,6 @@ function App() {
           } />
           <Route path={routes.transactions} element={
             <Transactions />
-          } />
-          <Route path={routes.accountsWithTransactions} element={
-            <AccountsWithTransactions />
           } />
           <Route path={routes.portfolio} element={
             <Portfolio />
