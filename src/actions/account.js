@@ -17,7 +17,7 @@ export const editAccount = (account) => {
 export const deleteAllAccountTypes = (defaultAccountType) => {
     return {
         type: 'DELETE_ACCOUNT_TYPES',
-        payload: [{key: uuidv4(), name: defaultAccountType, goalPercentage: 0}][defaultAccountType]
+        payload: [{ key: uuidv4(), name: defaultAccountType, goalPercentage: 0 }][defaultAccountType]
     }
 }
 
@@ -59,5 +59,12 @@ export const importTransactions = (transactions) => {
     return {
         type: 'IMPORT_TRANSACTIONS',
         payload: transactions
+    }
+}
+
+export const setE24Prices = (accountKey, prices) => {
+    return {
+        type: 'SET_E24_PRICES',
+        payload: { accountKey, prices }
     }
 }

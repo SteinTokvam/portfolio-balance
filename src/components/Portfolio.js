@@ -1,59 +1,72 @@
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import AccountsWithTransactions from "./AccountsWithTransactions";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddAccountImportButtons from "./AddAccountImportButtons";
 import CompanyIcon from "../icons/CompanyIcon";
+import { setE24Prices } from "../actions/account";
 import { fetchTicker } from "../Util/E24";
-import { useState } from "react";
+import { useEffect } from "react";
 
 
 export default function Portfolio() {
     const { t } = useTranslation();
 
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
+    const e24Prices = useSelector(state => state.rootReducer.accounts.e24Prices);
 
-    const [ticker, setTicker] = useState([])
-    const [totalValue, setTotalValue] = useState([])
+    const dispatch = useDispatch()
 
-
-    async function test() {
-        if (accounts.length === 0) {
-            return
+    async function fetchE24Data(account) {
+        if (account.e24_ids === undefined) {
+            return []
         }
-        if (ticker.length >= accounts[0].e24_ids.length) {
-            return
-        }
-
         var tmp = []
-        for (let i = 0; i < accounts.length; i++) {
-            const account = accounts[i];
-            for (let j = 0; j < account.e24_ids.length; j++) {
-                const e24_id = account.e24_ids[j];
-                const e24Data = await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
-                tmp.push({ account: account.key, e24_id, value: e24Data[e24Data.length - 2].value })
-            }
-        }
 
-        setTicker(tmp)
-
-        var tmpTotalValue = []
-        const ids = tmp.map(elem => elem.e24_id)
-        for (let i = 0; i < ids.length; i++) {
-            const id = ids[i];
-            const share_amount = accounts[0].transactions.filter(transaction => transaction.e24_id === id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0)
-            tmpTotalValue.push({ e24_id: id, value: share_amount * tmp[i].value, share_amount })
+        for (let j = 0; j < account.e24_ids.length; j++) {
+            const e24_id = account.e24_ids[j];
+            tmp.push(
+                await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
+                    .then(e24Data => {
+                        return { account: account.key, e24_id, value: e24Data[e24Data.length - 1].value }
+                    })
+            )
         }
-        setTotalValue(tmpTotalValue)
+        dispatch(setE24Prices(account.key, tmp))
     }
-    test()
+
+    useEffect(() => {
+        for (let i = 0; i < accounts.length; i++) {
+            fetchE24Data(accounts[i])
+        }
+    }, [accounts])
+
+    const accordionSubTilte = (account, fund_name) => {
+        if(e24Prices.length === 0 || account.transactions.length === undefined){
+            return (
+                <>
+                </>
+            )
+        }
+
+        const price = e24Prices
+            .filter(e24Price => e24Price.accountKey === account.key)[0].prices//denne blir ikke satt tidsnok ved import så .prices er undefined
+            .filter(price => price.e24_id === fund_name.e24_id)[0].value
+
+        return (
+            <>
+                <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
+                <p>{fund_name.share_amount * price}</p>
+            </>
+        )
+    }
 
     return (
         <div>
             <div className="flex flex-col space-y-4">
                 <AddAccountImportButtons onlyShowAddAccount={accounts.length === 0} />
-                {accounts.length > 0 && totalValue.length > 0 ?
-                    accounts.map(account => {
+                {accounts.length > 0 ?
+                    accounts.map((account) => {
                         return (
                             <>
                                 <Accordion key={account.key} >
@@ -67,21 +80,21 @@ export default function Portfolio() {
                                             <div className="flex flex-row gap-4 justify-between">
                                                 <div>
                                                     <p>{account.type}</p>
-                                                    <p>{totalValue.map(elem => elem.value).reduce((sum, value) => sum + value, 0).toFixed(1) + " " + t('valuators.currency')}</p>
+                                                    {
+                                                        account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
+                                                            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
+                                                        })
+                                                            .filter(fund_name => fund_name.share_amount > 0)
+                                                            .map(fund_name => {
+                                                                return (
+                                                                    <div key={fund_name.e24_id} className="flex flex-col justify-center text-left px-4">
+                                                                        {accordionSubTilte(account, fund_name)}
+                                                                    </div>
+                                                                )
+                                                            })
+
+                                                    }
                                                 </div>
-
-
-                                                {
-                                                    totalValue.filter(elem => elem.value > 0).map(elem => {
-                                                        return (
-                                                            <div className="flex flex-col justify-center items-center px-4">
-                                                                <p>Fond: {accounts[0].transactions.find(transaction => transaction.e24_id === elem.e24_id).fund_name}</p>
-                                                                <p>Andeler: {elem.share_amount}</p>
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
-
                                             </div>}
                                     >
                                         <AccountsWithTransactions account={account} />

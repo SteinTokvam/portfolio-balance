@@ -5,11 +5,13 @@ const initialState = {
     accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
     accountTypes: window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [],
     accountToEdit: {},
+    e24Prices: [],
     firi: window.localStorage.getItem("firi") ? window.localStorage.getItem("firi") : ""
 }
 
 const accountReducer = (state = initialState, action) => {
     var currentAccountTypes = []
+    var currentAccounts = []
     var index = -1
     switch (action.type) {
         case 'ADD_INITIAL_ACCOUNT_TYPES':
@@ -65,7 +67,7 @@ const accountReducer = (state = initialState, action) => {
                 accounts: []
             }
         case 'IMPORT_TRANSACTIONS':
-            var currentAccounts = [...state.accounts]
+            currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.key)
             currentAccounts[index] = {
                 ...currentAccounts[index], transactions: action.payload.transactions, e24_ids: action.payload.transactions
@@ -78,6 +80,14 @@ const accountReducer = (state = initialState, action) => {
             return {
                 ...state,
                 accounts: currentAccounts
+            }
+        case 'SET_E24_PRICES':
+            if(state.e24Prices.filter(price => price.accountKey === action.payload.accountKey).length !== 0) {
+                return state
+            }
+            return {
+                ...state,
+                e24Prices: [...state.e24Prices, { accountKey: action.payload.accountKey, prices: action.payload.prices}]
             }
         default:
             return state
