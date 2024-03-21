@@ -70,7 +70,9 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.key)
             currentAccounts[index] = {
-                ...currentAccounts[index], transactions: action.payload.transactions, e24_ids: action.payload.transactions
+                ...currentAccounts[index], 
+                transactions: action.payload.transactions, 
+                e24_ids: action.payload.transactions
                     .map(transaction => transaction.e24_id)
                     .filter((v, i, self) => {
                         return i === self.indexOf(v);

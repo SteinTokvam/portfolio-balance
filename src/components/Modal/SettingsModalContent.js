@@ -11,7 +11,7 @@ export default function SettingsModalContent() {
     const { t, i18n } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
+    const accounts = useSelector(state => state.rootReducer.accounts)
 
     const accessKey = useSelector(state => state.rootReducer.accounts.firi)
 
@@ -31,7 +31,7 @@ export default function SettingsModalContent() {
         hiddenFileInput.current.click();
     };
 
-    const importInvestmentsFile = e => {
+    const importInvestmentsFile = e => {//TODO: denne må også legge inn kontoer under accounts
         const fileReader = new FileReader();
         fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
         fileReader.onload = e => {
@@ -41,6 +41,7 @@ export default function SettingsModalContent() {
             dispatch(addInitialAccountTypes(json.accountTypes))
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
+            dispatch(setFiriAccessKey(json.accounts.firi))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
         };
