@@ -21,7 +21,7 @@ export default function AddAccountImportButtons({ onlyShowAddAccount = false }) 
 
     return (
         <>
-            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false}>
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
                 {isImport ? <ImportTransactionsModalContent /> : <NewAccountTypeModalContent />}
             </EmptyModal>
             <div className='w-full mx-auto text-center flex flex-col justify-center space-y-4 space-x-0 lg:flex-row lg:space-x-4 lg:space-y-0'>

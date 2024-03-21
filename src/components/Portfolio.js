@@ -29,7 +29,11 @@ export default function Portfolio() {
                 tmp.push(
                     await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
                         .then(e24Data => {
-                            return { account: account.key, e24_id, value: e24Data[e24Data.length - 1].value }
+                            return {
+                                account: account.key,
+                                e24_id,
+                                value: e24Data[e24Data.length - 1].value
+                            }
                         })
                 )
             }
@@ -52,14 +56,13 @@ export default function Portfolio() {
         const allPricesForAccount = e24Prices
             .filter(e24Price => e24Price.accountKey === account.key)[0]
 
-        if (allPricesForAccount === undefined) {
+        if (allPricesForAccount === undefined || allPricesForAccount.prices === undefined) {
             return (
                 <>
                 </>
             )
         }
 
-        console.log(allPricesForAccount)
         const priceForInvestment = allPricesForAccount.prices
             .filter(price => price.e24_id === fund_name.e24_id)[0].value
 
@@ -87,23 +90,24 @@ export default function Portfolio() {
                                         }
                                         className="border border-default-300 rounded-3xl p-4"
                                         subtitle={
-                                            <div className="flex flex-row gap-4 justify-between border-t border-default-300">
+                                            <div>
                                                 <p>{account.type}</p>
-
-                                                {
-                                                    account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
-                                                        return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
-                                                    })
-                                                        .filter(fund_name => fund_name.share_amount > 0)
-                                                        .map(fund_name => {
-                                                            return (
-                                                                <div>
-                                                                    {accordionSubTilte(account, fund_name)}
-                                                                </div>
-                                                            )
+                                                <div className="hidden sm:flex flex-row gap-4 justify-between border-t border-default-300">
+                                                    {
+                                                        account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
+                                                            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
                                                         })
+                                                            .filter(fund_name => fund_name.share_amount > 0)
+                                                            .map(fund_name => {
+                                                                return (
+                                                                    <div>
+                                                                        {accordionSubTilte(account, fund_name)}
+                                                                    </div>
+                                                                )
+                                                            })
 
-                                                }
+                                                    }
+                                                </div>
 
                                             </div>}
                                     >

@@ -36,7 +36,7 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
         <ModalContent>
             {(onClose) => (
                 <>
-                    <ModalHeader className="flex flex-col gap-1">{t('investmentModal.newTitle')}</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">{t('accountModal.title')}</ModalHeader>
                     <ModalBody>
                     <Input type="text"
                             classNames={textInputStyle}
