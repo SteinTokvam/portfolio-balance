@@ -23,7 +23,7 @@ export default function Portfolio() {
                 return []
             }
             var tmp = []
-    
+
             for (let j = 0; j < account.e24_ids.length; j++) {
                 const e24_id = account.e24_ids[j];
                 tmp.push(
@@ -49,14 +49,24 @@ export default function Portfolio() {
             )
         }
 
-        const price = e24Prices
-            .filter(e24Price => e24Price.accountKey === account.key)[0].prices//denne blir ikke satt tidsnok ved import så .prices er undefined
+        const allPricesForAccount = e24Prices
+            .filter(e24Price => e24Price.accountKey === account.key)[0]
+
+        if (allPricesForAccount === undefined) {
+            return (
+                <>
+                </>
+            )
+        }
+
+        console.log(allPricesForAccount)
+        const priceForInvestment = allPricesForAccount.prices
             .filter(price => price.e24_id === fund_name.e24_id)[0].value
 
         return (
             <>
                 <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
-                <p>{(fund_name.share_amount * price).toFixed(0) + t('valuators.currency')}</p>
+                <p>{(fund_name.share_amount * priceForInvestment).toFixed(0) + t('valuators.currency')}</p>
             </>
         )
     }
@@ -79,22 +89,22 @@ export default function Portfolio() {
                                         subtitle={
                                             <div className="flex flex-row gap-4 justify-between border-t border-default-300">
                                                 <p>{account.type}</p>
-                                                
-                                                    {
-                                                        account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
-                                                            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
-                                                        })
-                                                            .filter(fund_name => fund_name.share_amount > 0)
-                                                            .map(fund_name => {
-                                                                return (
-                                                                    <div>
-                                                                        {accordionSubTilte(account, fund_name)}
-                                                                    </div>
-                                                                )
-                                                            })
 
-                                                    }
-                                                
+                                                {
+                                                    account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
+                                                        return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
+                                                    })
+                                                        .filter(fund_name => fund_name.share_amount > 0)
+                                                        .map(fund_name => {
+                                                            return (
+                                                                <div>
+                                                                    {accordionSubTilte(account, fund_name)}
+                                                                </div>
+                                                            )
+                                                        })
+
+                                                }
+
                                             </div>}
                                     >
                                         <AccountsWithTransactions account={account} />
