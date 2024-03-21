@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Divider } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import AccountsWithTransactions from "./AccountsWithTransactions";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,7 +42,7 @@ export default function Portfolio() {
     }, [accounts])
 
     const accordionSubTilte = (account, fund_name) => {
-        if(e24Prices.length === 0 || account.transactions.length === undefined){
+        if (e24Prices.length === 0 || account.transactions.length === undefined) {
             return (
                 <>
                 </>
@@ -56,7 +56,7 @@ export default function Portfolio() {
         return (
             <>
                 <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
-                <p>{fund_name.share_amount * price}</p>
+                <p>{(fund_name.share_amount * price).toFixed(0) + t('valuators.currency')}</p>
             </>
         )
     }
@@ -77,9 +77,9 @@ export default function Portfolio() {
                                         }
                                         className="border border-default-300 rounded-3xl p-4"
                                         subtitle={
-                                            <div className="flex flex-row gap-4 justify-between">
-                                                <div>
-                                                    <p>{account.type}</p>
+                                            <div className="flex flex-row gap-4 justify-between border-t border-default-300">
+                                                <p>{account.type}</p>
+                                                
                                                     {
                                                         account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
                                                             return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
@@ -87,14 +87,14 @@ export default function Portfolio() {
                                                             .filter(fund_name => fund_name.share_amount > 0)
                                                             .map(fund_name => {
                                                                 return (
-                                                                    <div key={fund_name.e24_id} className="flex flex-col justify-center text-left px-4">
+                                                                    <div>
                                                                         {accordionSubTilte(account, fund_name)}
                                                                     </div>
                                                                 )
                                                             })
 
                                                     }
-                                                </div>
+                                                
                                             </div>}
                                     >
                                         <AccountsWithTransactions account={account} />
