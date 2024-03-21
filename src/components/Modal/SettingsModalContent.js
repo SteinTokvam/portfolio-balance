@@ -31,7 +31,8 @@ export default function SettingsModalContent() {
         hiddenFileInput.current.click();
     };
 
-    const importInvestmentsFile = e => {//TODO: denne må også legge inn kontoer under accounts
+    const importInvestmentsFile = e => {
+        //TODO: denne må også legge inn kontoer under accounts
         const fileReader = new FileReader();
         fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
         fileReader.onload = e => {
