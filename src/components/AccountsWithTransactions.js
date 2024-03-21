@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
-import { fetchTicker } from "../Util/E24";
-import { useDispatch } from "react-redux";
-import { setE24Prices } from "../actions/account";
 
 export default function AccountsWithTransactions({ account }) {
     
@@ -34,9 +31,6 @@ export default function AccountsWithTransactions({ account }) {
         { key: 'share_amount', label: 'Share Amount' },
         { key: 'date', label: 'Date' },
     ];
-
-    const dispatch = useDispatch()
-
 
     useEffect(() => {
         

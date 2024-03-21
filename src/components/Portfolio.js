@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Avatar, Divider } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import AccountsWithTransactions from "./AccountsWithTransactions";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,29 +17,29 @@ export default function Portfolio() {
 
     const dispatch = useDispatch()
 
-    async function fetchE24Data(account) {
-        if (account.e24_ids === undefined) {
-            return []
-        }
-        var tmp = []
-
-        for (let j = 0; j < account.e24_ids.length; j++) {
-            const e24_id = account.e24_ids[j];
-            tmp.push(
-                await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
-                    .then(e24Data => {
-                        return { account: account.key, e24_id, value: e24Data[e24Data.length - 1].value }
-                    })
-            )
-        }
-        dispatch(setE24Prices(account.key, tmp))
-    }
-
     useEffect(() => {
+        async function fetchE24Data(account) {
+            if (account.e24_ids === undefined) {
+                return []
+            }
+            var tmp = []
+    
+            for (let j = 0; j < account.e24_ids.length; j++) {
+                const e24_id = account.e24_ids[j];
+                tmp.push(
+                    await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
+                        .then(e24Data => {
+                            return { account: account.key, e24_id, value: e24Data[e24Data.length - 1].value }
+                        })
+                )
+            }
+            dispatch(setE24Prices(account.key, tmp))
+        }
+
         for (let i = 0; i < accounts.length; i++) {
             fetchE24Data(accounts[i])
         }
-    }, [accounts])
+    }, [accounts, dispatch])
 
     const accordionSubTilte = (account, fund_name) => {
         if (e24Prices.length === 0 || account.transactions.length === undefined) {
