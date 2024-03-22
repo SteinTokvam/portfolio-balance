@@ -1,8 +1,7 @@
 import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
-import { useTranslation } from "react-i18next";
 import AccountsWithTransactions from "./AccountsWithTransactions";
 import { useDispatch, useSelector } from "react-redux";
-import AddAccountImportButtons from "./AddAccountImportButtons";
+import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { setE24Prices } from "../actions/account";
 import { fetchTicker } from "../Util/E24";
@@ -10,7 +9,6 @@ import { useEffect } from "react";
 
 
 export default function Portfolio() {
-    const { t } = useTranslation();
 
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
     const e24Prices = useSelector(state => state.rootReducer.accounts.e24Prices);
@@ -108,7 +106,7 @@ export default function Portfolio() {
     return (
         <div>
             <div className="flex flex-col space-y-4">
-                <AddAccountImportButtons onlyShowAddAccount={accounts.length === 0} />
+                <AddAccountButton />
                 {accounts.length > 0 ?
                     accounts.map((account) => {
                         return (

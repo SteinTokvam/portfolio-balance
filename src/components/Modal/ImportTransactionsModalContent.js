@@ -1,16 +1,13 @@
-import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
-import { useRef, useState } from "react";
+import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
+import { useRef } from "react";
 import { useTranslation } from "react-i18next"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { importTransactions } from "../../actions/account";
 import { UploadIcon } from "../../icons/UploadIcon";
 
-export default function ImportTransactionsModalContent() {
+export default function ImportTransactionsModalContent({accountKey}) {
 
     const { t } = useTranslation()
-    const [selectedKeys, setSelectedKeys] = useState([]);
-
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const dispatch = useDispatch();
 
@@ -42,7 +39,7 @@ export default function ImportTransactionsModalContent() {
                         });
                     }
                 })
-                dispatch(importTransactions({ key: selectedKeys.keys().next().value, transactions: lines }))
+                dispatch(importTransactions({ key: accountKey, transactions: lines }))
             };
             reader.readAsText(input);
         }
@@ -62,19 +59,6 @@ export default function ImportTransactionsModalContent() {
                     </ModalHeader>
                     <ModalBody>
                         <div className='grid grid-cols-2 gap-12 items-center justify-between'>
-                            <Select
-                                label={"Konto"}
-                                placeholder={"Konto"}
-                                className="max-w-xs"
-                                onSelectionChange={setSelectedKeys}
-                                selectedKeys={selectedKeys}
-                            >
-                                {accounts.map(account => (
-                                    <SelectItem key={account.key}>
-                                        {account.name +  "-" + account.type}
-                                    </SelectItem>
-                                ))}
-                            </Select>
                             <Button color="primary" variant="bordered" onPress={handleClick} size="lg">
                                 <input type="file"
                                     ref={hiddenFileInput}

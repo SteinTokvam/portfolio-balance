@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import { useMemo, useState } from "react";
+import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
+import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
+import EmptyModal from "./Modal/EmptyModal";
 
 export default function AccountsWithTransactions({ account }) {
-    
+
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
         direction: "descending",
@@ -31,14 +33,19 @@ export default function AccountsWithTransactions({ account }) {
         { key: 'share_amount', label: 'Share Amount' },
         { key: 'date', label: 'Date' },
     ];
-
-    useEffect(() => {
-        
-    }, [account])
-
+    
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     return (
         <div>
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
+                <ImportTransactionsModalContent accountKey={account.key} />
+            </EmptyModal>
+            <Button color="primary"
+                onPress={onOpen}>
+                Importer transaksjoner
+            </Button>
+            <Spacer y={4} />
             <Table
                 isStriped
                 aria-label={"konto"}
