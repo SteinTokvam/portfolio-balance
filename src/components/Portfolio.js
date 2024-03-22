@@ -89,7 +89,6 @@ export default function Portfolio() {
             })
 
         return (
-
             <div className="">
                 <div className="pr-4">
                     <p>{totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
@@ -99,8 +98,6 @@ export default function Portfolio() {
                 </div>
             </div>
         )
-
-
     }
 
     return (

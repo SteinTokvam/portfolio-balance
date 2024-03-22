@@ -61,9 +61,6 @@ export default function Dashboard() {
                     <Spacer y={4} />
                 </div> : ""
             }
-            <div className='w-full mx-auto text-center'>
-                <NewInvestment />
-            </div>
         </>
     )
 }
