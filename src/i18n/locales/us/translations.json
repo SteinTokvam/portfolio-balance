@@ -8,9 +8,6 @@
         "biggestInvestment": "Largest investment",
         "total": "Total value"
     },
-    "newInvestment" : {
-        "add" : "+"
-    },
     "investmentModal": {
         "editTitle": "Edit investment:",
         "newTitle": "Add new Investment:",
@@ -48,18 +45,6 @@
         "columnDistanceToTargetLabel": "DISTANCE TO TARGET PERCENT",
         "tableLabel": "Table over different investments.",
         "emptyTable": "No investments added yet."
-    },
-    "statistics": {
-        "cardTitle": "Statistics",
-        "cardSubTitle": "Key statistics about your investments.",
-        "cardTotalValue": "Total value: {{value}} {{currency}}",
-        "cardShareOfValue": "Share of {{investment}}: {{percentage}}%"
-    },
-    "investmentTypes": {
-        "stock": "Stock",
-        "equityFund": "Equity Fund",
-        "crypto": "Cryptocurrency",
-        "cash": "Cash"
     },
     "navbar": {
         "brand": "Portfolio rebalancer",

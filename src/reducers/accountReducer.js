@@ -1,5 +1,3 @@
-//export const investmentTypes = ["Aksje", "Fond", "Krypto", "Kontanter"];
-
 
 const initialState = {
     accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
