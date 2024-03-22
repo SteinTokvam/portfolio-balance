@@ -45,41 +45,64 @@ export default function Portfolio() {
         }
     }, [accounts, dispatch])
 
-    const accordionSubTilte = (account, fund_name) => {
-        if (e24Prices.length === 0 || account.transactions.length === undefined) {
-            return (
-                <>
-                </>
-            )
-        }
+    const accordionSubTilte = (account, e24Ids) => {
+        var totalValue = 0
+        const ret = e24Ids !== undefined && e24Ids.map((e24_id) => {
+            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
+        })
+            .filter(fund_name => fund_name.share_amount > 0)
+            .map((fund_name) => {
+                if (e24Prices.length === 0 || account.transactions.length === undefined) {
+                    return (
+                        <>
+                        </>
+                    )
+                }
 
-        const allPricesForAccount = e24Prices
-            .filter(e24Price => e24Price.accountKey === account.key)[0]
+                const allPricesForAccount = e24Prices
+                    .filter(e24Price => e24Price.accountKey === account.key)[0]
 
-        if (allPricesForAccount === undefined || allPricesForAccount.prices === undefined) {
-            return (
-                <>
-                </>
-            )
-        }
+                if (allPricesForAccount === undefined || allPricesForAccount.prices === undefined) {
+                    return (
+                        <>
+                        </>
+                    )
+                }
 
-        const priceForInvestment = allPricesForAccount.prices
-            .filter(price => price.e24_id === fund_name.e24_id)[0].value
+                const priceForInvestment = allPricesForAccount.prices
+                    .filter(price => price.e24_id === fund_name.e24_id)[0].value
 
-        const value = priceForInvestment * fund_name.share_amount
+                const value = priceForInvestment * fund_name.share_amount
 
-        if(value < 1) {
-            return(
-                <>
-                </>
-            )
-        }
+                totalValue += value
+
+                if (value < 1) {
+                    return (
+                        <>
+                        </>
+                    )
+                }
+                return (
+                    <div className="flex flex-col justify-between pr-4">
+                        <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
+                        <p>{value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                    </div>
+                )
+            })
+
         return (
-            <>
-                <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
-                <p>{(value).toFixed(0) + t('valuators.currency')}</p>
-            </>
+
+            <div className="">
+                <div className="pr-4">
+                    <p>{totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                </div>
+                <div className="hidden sm:flex border-t border-default-300">
+                    {ret}
+                </div>
+            </div>
         )
+
+
     }
 
     return (
@@ -100,20 +123,9 @@ export default function Portfolio() {
                                         subtitle={
                                             <div>
                                                 <p>{account.type}</p>
-                                                <div className="hidden sm:flex flex-row gap-4 justify-between border-t border-default-300">
+                                                <div className="">
                                                     {
-                                                        account.e24_ids !== undefined && account.e24_ids.map((e24_id) => {
-                                                            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
-                                                        })
-                                                            .filter(fund_name => fund_name.share_amount > 0)
-                                                            .map(fund_name => {
-                                                                return (
-                                                                    <div>
-                                                                        {accordionSubTilte(account, fund_name)}
-                                                                    </div>
-                                                                )
-                                                            })
-
+                                                        accordionSubTilte(account, account.e24_ids)
                                                     }
                                                 </div>
 
