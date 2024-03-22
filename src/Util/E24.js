@@ -1,6 +1,6 @@
 
 export async function fetchTicker(ticker, exchange = "OSE", type, period = "1weeks") {
-    const response = await fetch(`https://api.e24.no/bors/chart/${ticker}.${exchange}?period=${period}&type=${type.toLowerCase()}`)
+    const response = await fetch(`https://corsproxy.io/?https://api.e24.no/bors/chart/${ticker}.${exchange}?period=${period}&type=${type.toLowerCase()}`)
         .then(res => res.json())
         .then(data => {
             return data.data.map(item => {
