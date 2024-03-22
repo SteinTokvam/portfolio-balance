@@ -66,10 +66,18 @@ export default function Portfolio() {
         const priceForInvestment = allPricesForAccount.prices
             .filter(price => price.e24_id === fund_name.e24_id)[0].value
 
+        const value = priceForInvestment * fund_name.share_amount
+
+        if(value < 1) {
+            return(
+                <>
+                </>
+            )
+        }
         return (
             <>
                 <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
-                <p>{(fund_name.share_amount * priceForInvestment).toFixed(0) + t('valuators.currency')}</p>
+                <p>{(value).toFixed(0) + t('valuators.currency')}</p>
             </>
         )
     }
