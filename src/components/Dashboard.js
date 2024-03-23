@@ -8,6 +8,7 @@ export default function Dashboard() {
 
     const { t } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
 
     const [biggestInvestment, setBiggestInvestment] = useState({})
@@ -21,10 +22,10 @@ export default function Dashboard() {
         }
     }, [setBiggestInvestment, investments])
 
-    const totalValueByType = accountTypes.map(accountType => {
-        return { accountType: accountType.name, value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0) }
+    const totalValueByType = accounts.map(account => {
+        return { accountType: account.name, value: investments.filter(investment => investment.type === account.key).reduce((sum, investment) => sum + investment.value, 0) }
     })
-    const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
+    const totalValueForInvestments = useSelector(state => state.rootReducer.accounts.totalValueForInvestments)
     
 
     return (
@@ -33,7 +34,7 @@ export default function Dashboard() {
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue} {t('valuators.currency')}</h2>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValueForInvestments.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
             </div >
             <div className="w-full text-center flex flex-col justify-center">
@@ -56,7 +57,7 @@ export default function Dashboard() {
                     <Spacer y={20} />
                     <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                     <Spacer y={2} />
-                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValue.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
+                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValueForInvestments.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
                     <Spacer y={4} />
                 </div> : ""
             }

@@ -1,10 +1,13 @@
+import { setHoldings } from "../actions/account"
 
 const initialState = {
     accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
     accountTypes: window.localStorage.getItem("accountTypes") ? JSON.parse(window.localStorage.getItem("accountTypes")) : [],
     accountToEdit: {},
     e24Prices: [],
-    firi: window.localStorage.getItem("firi") ? window.localStorage.getItem("firi") : ""
+    firi: window.localStorage.getItem("firi") ? window.localStorage.getItem("firi") : "",
+    totalValueForInvestments: 0,
+    holdings: new Map()
 }
 
 const accountReducer = (state = initialState, action) => {
@@ -88,6 +91,16 @@ const accountReducer = (state = initialState, action) => {
             return {
                 ...state,
                 e24Prices: [...state.e24Prices, { accountKey: action.payload.accountKey, prices: action.payload.prices}]
+            }
+        case 'SET_TOTAL_VALUE_FOR_INVESTMENTS':
+            return {
+                ...state,
+                totalValueForInvestments: action.payload
+            }
+        case 'SET_HOLDINGS':
+            return {
+                ...state,
+                holdings: [...state.holdings,action.payload]
             }
         default:
             return state

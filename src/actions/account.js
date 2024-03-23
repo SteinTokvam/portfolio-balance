@@ -68,3 +68,17 @@ export const setE24Prices = (accountKey, prices) => {
         payload: { accountKey, prices }
     }
 }
+
+export const setTotalValueForInvestments = (totalValue) => {
+    return {
+        type: 'SET_TOTAL_VALUE_FOR_INVESTMENTS',
+        payload: totalValue
+    }
+}
+
+export const setHoldings = (holdings) => {
+    return {
+        type: 'SET_HOLDINGS',
+        payload: holdings
+    }
+}

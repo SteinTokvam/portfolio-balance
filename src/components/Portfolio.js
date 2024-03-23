@@ -3,7 +3,7 @@ import AccountsWithTransactions from "./AccountsWithTransactions";
 import { useDispatch, useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { setE24Prices } from "../actions/account";
+import { setE24Prices, setHoldings, setTotalValueForInvestments } from "../actions/account";
 import { fetchTicker } from "../Util/E24";
 import { useEffect } from "react";
 
@@ -83,7 +83,9 @@ export default function Portfolio() {
         const value = accordionSubTilte(account, account.e24_ids)
         holdings.set(account.key, value)
         investmentsTotalValue += value.totalValue
+        dispatch(setHoldings({ accountKey: account.key, holdings: value.holdingValues }))
     })
+    dispatch(setTotalValueForInvestments(investmentsTotalValue))
 
     return (
         <div>
@@ -91,7 +93,6 @@ export default function Portfolio() {
                 <AddAccountButton />
                 {accounts.length > 0 ?
                     <div>
-                        {investmentsTotalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
                         {
                             accounts.map((account) => {
                                 return (
