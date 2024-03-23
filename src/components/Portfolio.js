@@ -25,7 +25,7 @@ export default function Portfolio() {
             for (let j = 0; j < account.e24_ids.length; j++) {
                 const e24_id = account.e24_ids[j];
                 tmp.push(
-                    await fetchTicker(e24_id, "OSE", account.type, "1weeks").then(res => res)
+                    await fetchTicker(e24_id, "OSE", account.type, "1months").then(res => res)
                         .then(e24Data => {
                             return {
                                 account: account.key,
@@ -44,94 +44,95 @@ export default function Portfolio() {
     }, [accounts, dispatch])
 
     const accordionSubTilte = (account, e24Ids) => {
-        var totalValue = 0
-        const ret = e24Ids !== undefined && e24Ids.map((e24_id) => {
-            return { e24_id, share_amount: account.transactions.filter(transaction => transaction.e24_id === e24_id).reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0) }
+        const holdings = e24Ids?.map(e24_id => {
+            const transactionsForId = account.transactions.filter(transaction => transaction.e24_id === e24_id);
+            const shareAmount = transactionsForId.reduce((sum, transaction) => sum + parseFloat(transaction.share_amount), 0);
+            return { e24_id, shareAmount };
         })
-            .filter(fund_name => fund_name.share_amount > 0)
-            .map((fund_name) => {
-                if (e24Prices.length === 0 || account.transactions.length === undefined) {
-                    return (
-                        <>
-                        </>
-                    )
-                }
+            .filter(item => item.shareAmount > 0);
 
-                const allPricesForAccount = e24Prices
-                    .filter(e24Price => e24Price.accountKey === account.key)[0]
+        if (!holdings) {
+            return
+        }
 
-                if (allPricesForAccount === undefined || allPricesForAccount.prices === undefined) {
-                    return (
-                        <>
-                        </>
-                    )
-                }
+        const holdingValues = holdings.map(item => {
+            const transaction = account.transactions.find(transaction => transaction.e24_id === item.e24_id);
+            if (!transaction || !e24Prices.length || !account.transactions.length) {
+                return null;
+            }
 
-                const priceForInvestment = allPricesForAccount.prices
-                    .filter(price => price.e24_id === fund_name.e24_id)[0].value
+            const accountPrices = e24Prices.find(price => price.accountKey === account.key)?.prices;
+            if (!accountPrices) {
+                return null;
+            }
 
-                const value = priceForInvestment * fund_name.share_amount
+            const price = accountPrices.find(price => price.e24_id === item.e24_id)?.value;
+            const value = price * item.shareAmount;
 
-                totalValue += value
+            return { transaction, value };
+        })
+            .filter(item => item && item.value >= 1);
 
-                if (value < 1) {
-                    return (
-                        <>
-                        </>
-                    )
-                }
-                return (
-                    <div className="flex flex-col justify-between pr-4">
-                        <p>{account.transactions.find(transaction => transaction.e24_id === fund_name.e24_id).fund_name}</p>
-                        <p>{value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                    </div>
-                )
-            })
-
-        return (
-            <div className="">
-                <div className="pr-4">
-                    <p>{totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                </div>
-                <div className="hidden sm:flex border-t border-default-300">
-                    {ret}
-                </div>
-            </div>
-        )
+        return { holdingValues: holdingValues, totalValue: holdingValues.reduce((sum, item) => sum + item.value, 0) }
     }
+
+    const holdings = new Map()
+    var investmentsTotalValue = 0
+
+    accounts.forEach(account => {
+        const value = accordionSubTilte(account, account.e24_ids)
+        holdings.set(account.key, value)
+        investmentsTotalValue += value.totalValue
+    })
 
     return (
         <div>
             <div className="flex flex-col space-y-4">
                 <AddAccountButton />
                 {accounts.length > 0 ?
-                    accounts.map((account) => {
-                        return (
-                            <>
-                                <Accordion key={account.key} >
-                                    <AccordionItem aria-label="Accordion"
-                                        title={account.name}
-                                        startContent={
-                                            <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${account.name.toLowerCase()}.no`} fallback={<CompanyIcon />} />
-                                        }
-                                        className="border border-default-300 rounded-3xl p-4"
-                                        subtitle={
-                                            <div>
-                                                <p>{account.type}</p>
-                                                <div className="">
-                                                    {
-                                                        accordionSubTilte(account, account.e24_ids)
-                                                    }
-                                                </div>
+                    <div>
+                        {investmentsTotalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                        {
+                            accounts.map((account) => {
+                                return (
+                                    <>
 
-                                            </div>}
-                                    >
-                                        <AccountsWithTransactions account={account} />
-                                    </AccordionItem>
-                                </Accordion>
-                            </>
-                        )
-                    })
+                                        <Accordion key={account.key} >
+                                            <AccordionItem aria-label="Accordion"
+                                                title={account.name}
+                                                startContent={
+                                                    <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${account.name.toLowerCase()}.no`} fallback={<CompanyIcon />} />
+                                                }
+                                                className="border border-default-300 rounded-3xl p-4"
+                                                subtitle={
+                                                    <div>
+                                                        <p>{account.type}</p>
+                                                        <div className="">
+                                                            <div>
+                                                                <div className="pr-4">
+                                                                    <p>{holdings.get(account.key).totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                </div>
+                                                                <div className="hidden sm:flex border-t border-default-300">
+                                                                    {holdings.get(account.key).holdingValues.map(item => (
+                                                                        <div className="flex flex-col justify-between pr-4" key={item.transaction.fund_name}>
+                                                                            <p>{item.transaction.fund_name}</p>
+                                                                            <p>{item.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>}
+                                            >
+                                                <AccountsWithTransactions account={account} />
+                                            </AccordionItem>
+                                        </Accordion>
+                                    </>
+                                )
+                            })
+                        }
+                    </div>
                     :
                     ""
                 }
