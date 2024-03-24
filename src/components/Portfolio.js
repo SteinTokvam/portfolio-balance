@@ -15,30 +15,44 @@ export default function Portfolio() {
     const [totalValue, setTotalValue] = useState([]);
 
     useEffect(() => {
-        accounts.forEach(account => setTotalValues(account.holdings))
+        accounts.forEach(account => setTotalValues(account.type, account.holdings))
     }, [])
 
-    function setTotalValues(holdings) {
+    function setTotalValues(accountType, holdings) {
         if (holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
             return
         }
 
-        holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
-            .then(prices => prices[prices.length - 1])
-            .then(price => setTotalValue(prevState => {
-                if(price.date === "") {
+        if (accountType === 'Automatic') {//TODO: må sette inn prisen her. nå regner jeg bare sammen mengde krypto som ikke gir mening
+            holdings.forEach(holding => {
+                setTotalValue(prevState => {
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                    }
+                    return [{ name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                })
+            })
+        } else {
+            holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
+                .then(prices => prices[prices.length - 1])
+                .then(price => setTotalValue(prevState => {
+                    if (price.date === "") {
+                        return prevState
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                    }
                     return prevState
-                }
-                if (prevState.filter(item => item.name === holding.name).length === 0) {
-                    return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
-                }
-                if (prevState.length === 0) {
-                    return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
-                }
-                return prevState
-            })))
+                })))
+        }
     }
 
     return (
@@ -65,7 +79,9 @@ export default function Portfolio() {
                                                             <div>
 
                                                                 {
-                                                                    totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                    account.type === 'Automatic' ?
+                                                                        totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0) :
+                                                                        totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                 }
                                                                 <div className="hidden sm:flex border-t border-default-300">
                                                                     {
@@ -74,14 +90,13 @@ export default function Portfolio() {
                                                                                 return (
                                                                                     <div key={totalValue.name} className="pr-4">
                                                                                         <p>{totalValue.name}</p>
-                                                                                        <p>{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                                        <p>{account.type === 'Automatic' ? totalValue.value : totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
                                                                                     </div>
                                                                                 )
                                                                             }
                                                                         })
                                                                     }
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>

@@ -63,6 +63,13 @@ const accountReducer = (state = initialState, action) => {
     var index = -1
     switch (action.type) {
         case 'ADD_NEW_ACCOUNT':
+            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
+            return {
+                ...state,
+                accounts: [...state.accounts, action.payload]
+            }
+        case 'ADD_AUTOMATIC_ACCOUNT':
+            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
             return {
                 ...state,
                 accounts: [...state.accounts, action.payload]
