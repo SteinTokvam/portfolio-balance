@@ -4,7 +4,7 @@ import { textInputStyle } from "../../Util/Global"
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addNewAccount, editAccount } from "../../actions/account"
+import { addNewAccount, editAccount } from "../../actions/accounts"
 
 export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
 
@@ -26,9 +26,24 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
     function handleSubmit() {
         setScreen(true)
         if (isEdit) {
-            dispatch(editAccount({ key: accountToEdit.key, name: accountTypeText, goalPercentage: accountTypeGoalPercentage }))
+            dispatch(editAccount({ 
+                key: accountToEdit.key, 
+                name: accountTypeText, 
+                goalPercentage: accountTypeGoalPercentage 
+            }))
         } else {
-            dispatch(addNewAccount({ key: uuidv4(), name: accountName, type: accountTypeText, goalPercentage: accountTypeGoalPercentage, transactions: [] }))
+            dispatch(addNewAccount({ 
+                name: accountName, 
+                key: uuidv4(), 
+                type: accountTypeText, 
+                transactions: [],
+                goalPercentage: accountTypeGoalPercentage, 
+                totalValue: 0,
+                yield: 0,
+                isManual: false,
+                apiInfo: {},
+                holdings: []
+            }))
         }
     }
 

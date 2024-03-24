@@ -3,7 +3,7 @@ import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, 
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import EmptyModal from "./Modal/EmptyModal";
 
-export default function AccountsWithTransactions({ account }) {
+export default function TransactionsTable({ account }) {
 
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
@@ -26,11 +26,11 @@ export default function AccountsWithTransactions({ account }) {
     }, [sortDescriptor, account]);
 
     const columns = [
-        { key: 'fund_name', label: 'Fund Name' },
-        { key: 'amount', label: 'Amount' },
+        { key: 'name', label: 'Name' },
+        { key: 'cost', label: 'Cost' },
         { key: 'type', label: 'Type' },
-        { key: 'unit_price', label: 'Unit Price' },
-        { key: 'share_amount', label: 'Share Amount' },
+        { key: 'equityPrice', label: 'Unit Price' },
+        { key: 'equityShare', label: 'Number of shares' },
         { key: 'date', label: 'Date' },
     ];
     
@@ -39,7 +39,7 @@ export default function AccountsWithTransactions({ account }) {
     return (
         <div>
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
-                <ImportTransactionsModalContent accountKey={account.key} />
+                <ImportTransactionsModalContent accountKey={account.key} accountType={account.type} />
             </EmptyModal>
             <Button color="primary"
                 onPress={onOpen}>

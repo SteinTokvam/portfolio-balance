@@ -5,7 +5,7 @@ import { editInvestment } from "../actions/investments";
 import { calculateValue, getTransactionsFromFiri, getValueInFiat } from "../Util/Firi";
 
 
-export default function Transactions() {
+export default function FiriTransactions() {
 
     const investments = useSelector(state => state.rootReducer.investments.investments);
 
@@ -14,6 +14,7 @@ export default function Transactions() {
     const dispatch = useDispatch()
 
 
+    //Dette er for firi
     useEffect(() => {
         async function fetchData() {
             const transactions = await getTransactionsFromFiri(accessKey).then(orders => {

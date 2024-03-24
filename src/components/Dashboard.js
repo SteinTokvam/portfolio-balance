@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function Dashboard() {
 
-    const { t } = useTranslation();
+    /*const { t } = useTranslation();
     const investments = useSelector(state => state.rootReducer.investments.investments)
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
     const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
@@ -62,5 +62,5 @@ export default function Dashboard() {
                 </div> : ""
             }
         </>
-    )
+    )*/
 }

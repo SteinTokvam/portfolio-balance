@@ -1,13 +1,16 @@
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import { useRef } from "react";
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux";
-import { importTransactions } from "../../actions/account";
+import { useDispatch, useSelector } from "react-redux";
+import { importTransactions } from "../../actions/accounts";
 import { UploadIcon } from "../../icons/UploadIcon";
+import { v4 as uuidv4 } from 'uuid';
 
-export default function ImportTransactionsModalContent({accountKey}) {
+export default function ImportTransactionsModalContent({ accountKey, accountType }) {
 
     const { t } = useTranslation()
+
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
     const dispatch = useDispatch();
 
@@ -17,8 +20,36 @@ export default function ImportTransactionsModalContent({accountKey}) {
         hiddenFileInput.current.click();
     };
 
+    function getHoldings(accountKey, transactions, type) {
+        console.log(transactions)
+        if(!transactions) {
+            return
+        }
+        const holdings = []
+        const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.e24Key))];
+        console.log(uniqueHoldingKeys)
+        uniqueHoldingKeys.forEach(e24Key => {
+            const equityShare = transactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
+
+            if (equityShare > 0) {
+                holdings.push(
+                    {
+                        name: transactions.find(transaction => transaction.e24Key === e24Key).name,
+                        accountKey: accountKey,
+                        equityShare,
+                        equityType: type,
+                        e24Key,
+                        goalPercentage: 0
+                    }
+                )
+            }
+        })
+        console.log(holdings)
+       return holdings
+    }
+
     function readCsv(event) {
-        var lines = [];
+        var transactions = [];
         if (event.target.files && event.target.files[0]) {
             const input = event.target.files[0];
             const reader = new FileReader();
@@ -27,19 +58,21 @@ export default function ImportTransactionsModalContent({accountKey}) {
                 file.forEach((line, index) => {
                     if (index !== 0) {
                         const data = line.split(',');
-                        lines.push({
-                            id: data[0],
-                            amount: data[1],
-                            fund_name: data[2],
+                        transactions.push({
+                            key: data[0],
+                            cost: parseFloat(data[1]),
+                            name: data[2],
                             type: data[3],
                             date: data[4],
-                            unit_price: data[5],
-                            e24_id: data[6],
-                            share_amount: data[7]
+                            equityPrice: parseFloat(data[5]),
+                            e24Key: data[6],
+                            equityShare: parseFloat(data[7])
                         });
                     }
                 })
-                dispatch(importTransactions({ key: accountKey, transactions: lines }))
+
+                const holdings = getHoldings(accountKey, transactions, accountType)
+                dispatch(importTransactions({ key: accountKey, transactions: transactions, holdings }))
             };
             reader.readAsText(input);
         }
@@ -65,7 +98,7 @@ export default function ImportTransactionsModalContent({accountKey}) {
                                     onChange={readCsv}
                                     accept=".csv"
                                     style={{ display: 'none' }} />
-                                Last opp fil <UploadIcon /> 
+                                Last opp fil <UploadIcon />
                             </Button>
                         </div>
                     </ModalBody>

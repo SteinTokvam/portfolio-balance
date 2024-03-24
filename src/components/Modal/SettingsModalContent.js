@@ -4,7 +4,7 @@ import { deleteInvestments, importInvestments } from "../../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages, textInputStyle } from "../../Util/Global"
-import { addInitialAccountTypes, deleteAllAccountTypes, deleteAllAccounts, setFiriAccessKey } from "../../actions/account"
+import { addInitialAccountTypes, deleteAllAccountTypes, deleteAllAccounts, setFiriAccessKey } from "../../actions/accounts"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()

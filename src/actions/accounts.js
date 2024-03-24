@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const addNewAccount = (account) => {
     return {
-        type: 'ADD_NEW_ACCOUNT_NAME',
+        type: 'ADD_NEW_ACCOUNT',
         payload: account
     }
 }
@@ -64,7 +64,7 @@ export const importTransactions = (transactions) => {
 
 export const setE24Prices = (accountKey, prices) => {
     return {
-        type: 'SET_E24_PRICES',
+        type: 'SET_LATEST_PRICE',
         payload: { accountKey, prices }
     }
 }
@@ -73,12 +73,5 @@ export const setTotalValueForInvestments = (totalValue) => {
     return {
         type: 'SET_TOTAL_VALUE_FOR_INVESTMENTS',
         payload: totalValue
-    }
-}
-
-export const setHoldings = (holdings) => {
-    return {
-        type: 'SET_HOLDINGS',
-        payload: holdings
     }
 }

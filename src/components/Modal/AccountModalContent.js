@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from 'react';
 import { useTranslation } from "react-i18next"
 import DeleteIcon from "../../icons/DeleteIcon";
-import { deleteAccountType } from "../../actions/account";
+import { deleteAccountType } from "../../actions/accounts";
 
 export default function AccountModalContent({children}) {
     const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit);
