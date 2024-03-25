@@ -17,7 +17,7 @@ export default function Dashboard() {
         })
     }, [accounts])
 
-    function setTotalValues(accountType, holdings) {
+    function setTotalValues(accountType, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
         if (!holdings || holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
