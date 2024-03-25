@@ -58,7 +58,7 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                     {
                         name: accountName,
                         key: uuidv4(),
-                        type: "Automatic",
+                        type: "Cryptocurrency",
                         transactions: [],
                         goalPercentage: accountTypeGoalPercentage,
                         totalValue: 0,
