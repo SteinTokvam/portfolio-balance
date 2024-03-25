@@ -19,7 +19,7 @@ export default function Portfolio() {
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     function setTotalValues(accountType, holdings) {
-        if (holdings.length === 0) {
+        if (!holdings || holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
             return
