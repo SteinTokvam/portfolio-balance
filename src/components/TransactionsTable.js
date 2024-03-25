@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { calculateValue, getTransactionsFromFiri, getValueInFiat } from "../Util/Firi";
 import { useDispatch } from "react-redux";
