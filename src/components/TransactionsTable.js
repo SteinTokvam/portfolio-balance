@@ -115,7 +115,7 @@ export default function TransactionsTable({ account }) {
             return
         }
         fetchData()
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     const hiddenFileInput = useRef(null);
 

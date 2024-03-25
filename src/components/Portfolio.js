@@ -16,7 +16,7 @@ export default function Portfolio() {
 
     useEffect(() => {
         accounts.forEach(account => setTotalValues(account.type, account.holdings))
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     function setTotalValues(accountType, holdings) {
         if (holdings.length === 0) {
