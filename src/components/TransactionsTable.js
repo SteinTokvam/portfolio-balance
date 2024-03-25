@@ -70,7 +70,7 @@ export default function TransactionsTable({ account }) {
                     },
                     equityShare: transactions.valueOfCurrency[i].cryptoValue.toFixed(8),
                     name: transactions.valueOfCurrency[i].currency,
-                    fiatValue: parseFloat((transactions.valueOfCurrency[i].cryptoValue) * value.last).toFixed(2),
+                    fiatValue: parseFloat(parseFloat((transactions.valueOfCurrency[i].cryptoValue) * value.last).toFixed(2)),
                     fiatCurrency: 'NOK',
                     lastPrice: value.last,
                     transactions: transactions.orders
@@ -90,6 +90,7 @@ export default function TransactionsTable({ account }) {
             }).filter(crypto => crypto.fiatValue > 0)
             const allMatches = transactions.orders
                 .filter(order => order.type === 'Match')
+
             const allTransactions = transactions.orders
                 .filter(order => order.currency !== 'NOK')
                 .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
@@ -106,9 +107,9 @@ export default function TransactionsTable({ account }) {
                         cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
                     }
                 })
-            const holdings = allCrypto.map(crypto => crypto.holdings)
+            
             console.log("Fetched transactions.")
-            dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
+            dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings: allCrypto }))
         }
 
         if (account.apiInfo.accessKey === "") {
