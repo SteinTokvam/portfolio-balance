@@ -25,16 +25,16 @@ export default function Portfolio() {
             return
         }
 
-        if (accountType === 'Automatic') {//TODO: må sette inn prisen her. nå regner jeg bare sammen mengde krypto som ikke gir mening
+        if (accountType === 'Automatic') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
-                        return [{ name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                        return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {
-                        return [...prevState, { name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                        return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
                     }
-                    return [{ name: holding.name, value: holding.equityShare, accountKey: holding.accountKey }]
+                    return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
                 })
             })
         } else {

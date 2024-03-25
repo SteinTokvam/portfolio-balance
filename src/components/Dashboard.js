@@ -1,28 +1,58 @@
-
+import { Spacer } from "@nextui-org/react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux"
+import { fetchTicker } from "../Util/E24";
 
 export default function Dashboard() {
 
-    /*const { t } = useTranslation();
-    const investments = useSelector(state => state.rootReducer.investments.investments)
+    const { t } = useTranslation();
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
-
-    const [biggestInvestment, setBiggestInvestment] = useState({})
+    const [totalValue, setTotalValue] = useState([]);
+    const biggestInvestment = totalValue.length !== 0 && totalValue.reduce((a, b) => a.value > b.value ? a : b)
 
     useEffect(() => {
-        const res = Math.max.apply(Math, investments.map(function (i) { return i.value; }))
+        accounts.forEach(account => {
+            setTotalValues(account.type, account.holdings)
+        })
+    }, [accounts])
 
-        const foundInvestment = investments.find(function (i) { return i.value === res; })
-        if (foundInvestment !== undefined || foundInvestment !== Infinity) {
-            setBiggestInvestment(foundInvestment)
+    function setTotalValues(accountType, holdings) {
+        if (!holdings || holdings.length === 0) {
+            console.log("no holdings")
+            setTotalValue(prevState => [...prevState, 0])
+            return
         }
-    }, [setBiggestInvestment, investments])
 
-    const totalValueByType = accounts.map(account => {
-        return { accountType: account.name, value: investments.filter(investment => investment.type === account.key).reduce((sum, investment) => sum + investment.value, 0) }
-    })
-    const totalValueForInvestments = useSelector(state => state.rootReducer.accounts.totalValueForInvestments)
-    
+        if (accountType === 'Automatic') {
+            holdings.forEach(holding => {
+                setTotalValue(prevState => {
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                    }
+                    return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                })
+            })
+        } else {
+            holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
+                .then(prices => prices[prices.length - 1])
+                .then(price => setTotalValue(prevState => {
+                    if (price.date === "") {
+                        return prevState
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                    }
+                    return prevState
+                })))
+        }
+    }
 
     return (
         <>
@@ -30,33 +60,40 @@ export default function Dashboard() {
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValueForInvestments.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a, b) => a + b.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
             </div >
             <div className="w-full text-center flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-20 justify-between">
                     {
-                        totalValueByType.map(type => {
+                        accounts.map(account => {
                             return (
-                                <div key={type + uuidv4()}>
-                                    <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
+                                <div key={account.key}>
+                                    <h2 className="text-medium font-semibold leading-none text-default-600">{account.name}</h2>
                                     <Spacer y={2} />
-                                    <h4 className="text-large font-bold leading-none text-default-400">{type.value} {t('valuators.currency')}</h4>
+                                    <h4 className="text-large font-bold leading-none text-default-400">{
+                                        account.type === 'Automatic' ?
+                                            account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
+                                            totalValue
+                                                .filter(holding => holding.accountKey === account.key)
+                                                .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                    }</h4>
                                 </div>)
                         })
                     }
                 </div>
             </div>
+
             {
-                biggestInvestment !== null && biggestInvestment !== undefined && Object.keys(biggestInvestment).length > 0 ?
+                biggestInvestment &&
                 <div className="full text-center mx-auto flex flex-col justify-center">
                     <Spacer y={20} />
                     <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                     <Spacer y={2} />
-                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name + ": " + (biggestInvestment.value / totalValueForInvestments.toFixed(2) * 100).toFixed(2) + t('valuators.percentage')}</h2>
-                    <Spacer y={4} />
-                </div> : ""
+                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
+                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h4>
+                </div>
             }
         </>
-    )*/
+    )
 }

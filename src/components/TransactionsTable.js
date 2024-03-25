@@ -61,13 +61,9 @@ export default function TransactionsTable({ account }) {
 
             const allCrypto = valueInFiat.map((value, i) => {
                 return {
-                    holdings: {
-                        name: transactions.valueOfCurrency[i].currency,
-                        accountKey: account.key,
-                        equityShare: parseFloat(transactions.valueOfCurrency[i].cryptoValue.toFixed(8)),
-                        equityType: "Cryptocurrency",
-                        goalPercentage: 0
-                    },
+                    accountKey: account.key,
+                    equityType: "Cryptocurrency",
+                    goalPercentage: 0,
                     equityShare: transactions.valueOfCurrency[i].cryptoValue.toFixed(8),
                     name: transactions.valueOfCurrency[i].currency,
                     fiatValue: parseFloat(parseFloat((transactions.valueOfCurrency[i].cryptoValue) * value.last).toFixed(2)),
@@ -107,7 +103,7 @@ export default function TransactionsTable({ account }) {
                         cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
                     }
                 })
-            
+
             console.log("Fetched transactions.")
             dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings: allCrypto }))
         }
