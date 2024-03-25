@@ -24,7 +24,7 @@ export default function Dashboard() {
             return
         }
 
-        if (accountType === 'Automatic') {
+        if (accountType === 'Cryptocurrency') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
@@ -72,7 +72,7 @@ export default function Dashboard() {
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{account.name}</h2>
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{
-                                        account.type === 'Automatic' ?
+                                        account.type === 'Cryptocurrency' ?
                                             account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
                                             totalValue
                                                 .filter(holding => holding.accountKey === account.key)

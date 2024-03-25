@@ -25,7 +25,7 @@ export default function Portfolio() {
             return
         }
 
-        if (accountType === 'Automatic') {
+        if (accountType === 'Cryptocurrency') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
@@ -79,14 +79,14 @@ export default function Portfolio() {
                                                             <div>
 
                                                                 {
-                                                                    account.type === 'Automatic' ?
+                                                                    account.type === 'Cryptocurrency' ?
                                                                         account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                         :
                                                                         totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                 }
                                                                 <div className="hidden sm:flex border-t border-default-300">
                                                                     {
-                                                                        account.type === 'Automatic' ?
+                                                                        account.type === 'Cryptocurrency' ?
                                                                             account.holdings.map(holding => {
                                                                                 return (
                                                                                     <div key={holding.name} className="pr-4">
