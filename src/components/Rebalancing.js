@@ -1,49 +1,75 @@
-import { Button, Checkbox, Input, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Checkbox, Input, Spacer } from "@nextui-org/react";
 import { textInputStyle } from "../Util/Global";
 import { useTranslation } from "react-i18next";
-import RebalancingModalContent from "./Modal/RebalancingModalContent";
 import { useDispatch, useSelector } from "react-redux";
 import { setMinimumSumToInvest, setSumToInvest } from "../actions/rebalancing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import EmptyModal from "./Modal/EmptyModal";
 
 export default function Rebalancing() {
 
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
     const { t } = useTranslation()
-
-    const selectedSum = useSelector(state => state.rootReducer.rebalancing.sum)
-    const selectedMinimumSum = useSelector(state => state.rootReducer.rebalancing.minimumSum)
     const dispatch = useDispatch()
 
-    const investments = useSelector(state => state.rootReducer.investments.investments)
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
-    const totalValueByType = accountTypes.map(accountType => {
-        return {
-            accountTypeGoalPercentage: accountType.accountTypeGoalPercentage,
-            accountType: accountType.name,
-            accountTypeKey: accountType.key,
-            value: investments.filter(investment => investment.type === accountType.key).reduce((sum, investment) => sum + investment.value, 0)
-        }
-    })
-    const totalValue = investments.reduce((sum, investment) => sum + investment.value, 0);
+    const sumToInvest = useState(1)
+    const minimumToInvest = useState(100)
+    const [totalValue, setTotalValue] = useState(0)
+
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const [investmentByType, setInvestmentByType] = useState([])
     const [canSell, setCanSell] = useState(false);
     const [closestToTarget, setClosestToTarget] = useState(false);
 
-    function handleInvestmentTypeRebalance(investmentType) {
-        setInvestmentByType(investments.filter(investment => investment.type === investmentType))
-        onOpen()
-    }
+    const allHoldings = accounts.map(account => account.holdings).flat()
+    const investmentTypes = allHoldings.map(holding => {
+        if(holding.fiatValue) {
+            return {
+                accountKey: holding.accountKey,
+                e24Key: holding.e24Key,
+                equityShare: holding.equityShare,
+                equityType: holding.equityType,
+                fiatValue: holding.fiatValue
+            }    
+        }
+        return {
+            accountKey: holding.accountKey,
+            e24Key: holding.e24Key,
+            equityShare: holding.equityShare,
+            equityType: holding.equityType,
+        }
+    })
+
+    const uniqueInvestmentTypes = Array.from(new Set(investmentTypes.map(investmentType => investmentType.equityType)))
+    
+    useEffect(() => {
+        var totalValue = 0
+        uniqueInvestmentTypes.forEach(investmentType => {
+            investmentTypes.forEach(investment => {
+                if (investment.equityType === investmentType) {
+                    if(investment.fiatValue) {
+                        totalValue += investment.fiatValue
+                    } else {
+                        //TODO: må hente pris fra e24
+                        totalValue += investment.equityShare
+                    }
+                }
+            })
+
+            setInvestmentByType(investmentByType => {
+                if(investmentByType.filter(investment => investment.type === investmentType).length > 0) {
+                    return investmentByType
+                }
+                return [...investmentByType, { type: investmentType, totalValue: totalValue }]
+            })
+        })
+        setTotalValue(totalValue)
+    }, [])
+
+    console.log(investmentByType)
 
     return (
         <>
-            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} size='5xl'>
-                <RebalancingModalContent investmentByType={investmentByType} canSell={canSell} closestToTarget={closestToTarget} />
-            </EmptyModal>
             <div className="flex flex-col items-center justify-center">
                 <h1 className="text-large font-semibold leading-none text-default-600">{t('rebalancer.header')}</h1>
                 <Spacer y={4} />
@@ -51,9 +77,9 @@ export default function Rebalancing() {
                     <Spacer y={10} />
                     <h4 className="text-small font-semibold leading-none text-default-800">{t('rebalancer.text')}</h4>
                     <Spacer y={2} />
-                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={selectedSum} onValueChange={s => dispatch(setSumToInvest(s))} />
+                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.textbox')} value={sumToInvest} onValueChange={s => dispatch(setSumToInvest(s))} />
                     <Spacer y={2} />
-                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.minimumSum')} value={selectedMinimumSum} onValueChange={s => dispatch(setMinimumSumToInvest(s))} />
+                    <Input type="number" classNames={textInputStyle} label={t('rebalancer.minimumSum')} value={minimumToInvest} onValueChange={s => dispatch(setMinimumSumToInvest(s))} />
                     <Spacer y={2} />
                     <Checkbox isSelected={canSell} onValueChange={setCanSell}>
                         {t('rebalancer.canSellInvestmentsCheck')}
@@ -73,12 +99,13 @@ export default function Rebalancing() {
                 <Spacer y={4} />
                 <div className="grid grid-cols-2 gap-20 justify-between">
                     {
-                        totalValueByType.map(type => {
+                        investmentByType.map(type => {
                             return (
-                                <Button key={type + uuidv4()} onPress={() => handleInvestmentTypeRebalance(type.accountTypeKey)} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
-                                    <h2 className="text-medium font-semibold leading-none text-default-600">{type.accountType}</h2>
-                                    <Spacer y={2} />
-                                    <h4 className="text-large font-bold leading-none text-default-400">{((type.value / totalValue) * 100).toFixed(2)}{t('valuators.percentage')}</h4>
+                                <Button key={type + uuidv4()} onPress={() => {}} variant="light" color="success" className="h-max grid grid-cols-1 gap-1 justify-between">
+                                    <h2 className="text-medium font-semibold leading-none text-default-600">{type.type}</h2>
+                                    <Spacer y={1} />
+                                    <h4 className="text-medium leading-none text-default-400">{type.totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h4>
+                                    <h4 className="text-medium leading-none text-default-400">{((type.totalValue / totalValue) * 100).toFixed(2)}{t('valuators.percentage')}</h4>
                                 </Button>)
                         })
                     }

@@ -25,7 +25,7 @@ export default function Portfolio() {
             return
         }
 
-        if (accountType === 'Cryptocurrency') {
+        if (accountType === 'Kryptovaluta') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
@@ -94,7 +94,7 @@ export default function Portfolio() {
                                                             !account.isManual ?
                                                                 account.holdings.map(holding => {
                                                                     return (
-                                                                        <div key={holding.name} className="pt-4">
+                                                                        <div key={holding.name} className="p-1 w-1/3">
                                                                             <p>{holding.name}</p>
                                                                             <p>{holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
                                                                         </div>

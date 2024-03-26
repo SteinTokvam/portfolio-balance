@@ -26,7 +26,6 @@ export default function ImportTransactionsModalContent({ accountKey }) {
         }
         const holdings = []
         const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.e24Key))];
-        console.log(uniqueHoldingKeys)
         uniqueHoldingKeys.forEach(e24Key => {
             const equityShare = transactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
 
@@ -35,7 +34,6 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                     {
                         name: transactions.find(transaction => transaction.e24Key === e24Key).name,
                         accountKey: accountKey,
-                        type: "",
                         equityShare,
                         equityType: type,
                         e24Key,
@@ -44,7 +42,6 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                 )
             }
         })
-        console.log(holdings)
         return holdings
     }
 
@@ -66,7 +63,8 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                             date: data[4],
                             equityPrice: parseFloat(data[5]),
                             e24Key: data[6],
-                            equityShare: parseFloat(data[7])
+                            equityShare: parseFloat(data[7]),
+                            equityType: investmentType
                         });
                     }
                 })

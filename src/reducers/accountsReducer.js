@@ -43,12 +43,6 @@ const initialState = {
 }
 
 /*
-const accountTypes = [
-    "MUTUAL_FUND",
-	"STOCK",
-	"CRYPTOCURRENCY",
-	"ETF"
-]
 
 const transactionTypes = [
     "BUY",

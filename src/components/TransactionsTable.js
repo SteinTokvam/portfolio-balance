@@ -43,7 +43,7 @@ export default function TransactionsTable({ account, children }) {
     ];
 
     useEffect(() => {
-        if (account.type !== 'Cryptocurrency') {
+        if (account.type !== 'Kryptovaluta') {
             return
         }
 
@@ -68,7 +68,7 @@ export default function TransactionsTable({ account, children }) {
                     accountKey: account.key,
                     equityType: "Cryptocurrency",
                     goalPercentage: 0,
-                    equityShare: transactions.valueOfCurrency[i].cryptoValue.toFixed(8),
+                    equityShare: parseFloat(transactions.valueOfCurrency[i].cryptoValue.toFixed(8)),
                     name: transactions.valueOfCurrency[i].currency,
                     fiatValue: parseFloat(parseFloat((transactions.valueOfCurrency[i].cryptoValue) * value.last).toFixed(2)),
                     fiatCurrency: 'NOK',
@@ -79,7 +79,7 @@ export default function TransactionsTable({ account, children }) {
                         .map(transaction => {
                             return {
                                 key: transaction.id,
-                                equityShare: transaction.amount,
+                                equityShare: parseFloat(transaction.amount),
                                 date: transaction.date,
                                 type: transaction.type,
                                 equityPrice: 0,
@@ -100,7 +100,7 @@ export default function TransactionsTable({ account, children }) {
                     return {
                         key: transaction.id,
                         name: transaction.currency,
-                        equityShare: transaction.amount,
+                        equityShare: parseFloat(transaction.amount),
                         date: transaction.date,
                         type: transaction.type,
                         equityPrice: 0,

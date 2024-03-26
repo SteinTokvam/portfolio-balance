@@ -17,6 +17,7 @@ export default function Dashboard() {
         })
     }, [accounts])
 
+
     function setTotalValues(accountType, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
         if (!holdings || holdings.length === 0) {
             console.log("no holdings")
@@ -24,7 +25,7 @@ export default function Dashboard() {
             return
         }
 
-        if (accountType === 'Cryptocurrency') {
+        if (accountType === 'Kryptovaluta') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
@@ -40,7 +41,7 @@ export default function Dashboard() {
             holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
                 .then(prices => prices[prices.length - 1])
                 .then(price => setTotalValue(prevState => {
-                    if (price.date === "") {
+                    if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
                         return prevState
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {

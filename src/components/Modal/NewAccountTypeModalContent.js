@@ -1,75 +1,68 @@
-import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs } from "@nextui-org/react"
+import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
 import { textInputStyle } from "../../Util/Global"
-import { useState, useEffect } from "react"
+import { useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
+import { addAutomaticAccount, addNewAccount } from "../../actions/accounts"
 
 export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
 
     const { t } = useTranslation()
 
     const [accountName, setAccountName] = useState("")
-    const [accountTypeText, setAccountTypeText] = useState("")
-    const [accountTypeGoalPercentage, setAccountTypeGoalPercentage] = useState(0)
+
+    const accountTypes = [
+        "Aksjesparekonto",
+        "Individuell pensjonskonto",
+        "Kryptovaluta",
+        "Aksjefondskonto",
+        "Egen pensjonskonto"
+    ]
+    const [selectedKeys, setSelectedKeys] = useState([]);
+    const selectedAccountType = useMemo(
+        () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
+        [selectedKeys]
+    );
 
     const [accessKeyText, setAccessKeyText] = useState("")
 
     const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (isEdit && accountToEdit !== undefined) {
-            setAccountTypeText(accountToEdit.name)
-            setAccountTypeGoalPercentage(accountToEdit.goalPercentage)
-        }
-    }, [accountToEdit, isEdit])
-
     function handleSubmit() {
         setScreen(true)
-        if (isEdit) {
-            dispatch(editAccount(
+
+        if (selectedAccountType !== "Kryptovaluta") {
+            dispatch(addNewAccount(
                 {
-                    key: accountToEdit.key,
-                    name: accountTypeText,
-                    goalPercentage: accountTypeGoalPercentage
+                    name: accountName,
+                    key: uuidv4(),
+                    type: selectedAccountType,
+                    transactions: [],
+                    totalValue: 0,
+                    yield: 0,
+                    isManual: true,
+                    apiInfo: {},
+                    holdings: []
                 }
             ))
         } else {
-            if (accountTypeText !== "") {
-                dispatch(addNewAccount(
-                    {
-                        name: accountName,
-                        key: uuidv4(),
-                        type: accountTypeText,
-                        transactions: [],
-                        goalPercentage: accountTypeGoalPercentage,
-                        totalValue: 0,
-                        yield: 0,
-                        isManual: true,
-                        apiInfo: {},
-                        holdings: []
-                    }
-                ))
-            } else {
-                dispatch(addAutomaticAccount(
-                    {
-                        name: accountName,
-                        key: uuidv4(),
-                        type: "Cryptocurrency",
-                        transactions: [],
-                        goalPercentage: accountTypeGoalPercentage,
-                        totalValue: 0,
-                        yield: 0,
-                        isManual: false,
-                        apiInfo: {
-                            accessKey: accessKeyText
-                        },
-                        holdings: []
-                    }
-                ))
-            }
+            dispatch(addAutomaticAccount(
+                {
+                    name: accountName,
+                    key: uuidv4(),
+                    type: selectedAccountType,
+                    transactions: [],
+                    totalValue: 0,
+                    yield: 0,
+                    isManual: false,
+                    apiInfo: {
+                        accessKey: accessKeyText
+                    },
+                    holdings: []
+                }
+            ))
         }
     }
 
@@ -78,28 +71,27 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
             {(onClose) => (
                 <>
                     <ModalHeader className="flex flex-col gap-1">{t('accountModal.title')}</ModalHeader>
-                    <ModalBody>
+                    <ModalBody className="">
                         <Tabs>
-                            <Tab key="Manual" title="Manual import">
+                            <Tab key="Manual" title="Manual import" className="w-full">
                                 <Input type="text"
                                     classNames={textInputStyle}
                                     label={"Kontonavn"}
                                     value={accountName}
                                     onValueChange={setAccountName} />
-                                <Input type="text"
-                                    classNames={textInputStyle}
-                                    label={t('settings.accountType')}
-                                    value={accountTypeText}
-                                    onValueChange={setAccountTypeText} />
-                                <Input type="number"
-                                    classNames={textInputStyle}
-                                    label={t('settings.accountTypeGoalPercentage')}
-                                    value={accountTypeGoalPercentage}
-                                    onValueChange={setAccountTypeGoalPercentage}
-                                    startContent={
-                                        <div className="pointer-events-none flex items-center">
-                                            <span className="text-default-400 text-small">{t('valuators.percentage')}</span>
-                                        </div>} />
+                                <Select
+                                    label={"Kontotype"}
+                                    placeholder={"Kontotype"}
+                                    className="pt-4 drop-shadow-xl"
+                                    onSelectionChange={setSelectedKeys}
+                                    selectedKeys={selectedKeys}
+                                >
+                                    {accountTypes.map((accountType) => (
+                                        <SelectItem key={accountType} value={accountType} >
+                                            {accountType}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
                             </Tab>
                             <Tab key="Auto" title="Automatic import">
                                 <Input type="text"
@@ -107,17 +99,22 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                                     label={"Kontonavn"}
                                     value={accountName}
                                     onValueChange={setAccountName} />
-                                <Input type="number"
-                                    classNames={textInputStyle}
-                                    label={t('settings.accountTypeGoalPercentage')}
-                                    value={accountTypeGoalPercentage}
-                                    onValueChange={setAccountTypeGoalPercentage}
-                                    startContent={
-                                        <div className="pointer-events-none flex items-center">
-                                            <span className="text-default-400 text-small">{t('valuators.percentage')}</span>
-                                        </div>} />
+                                <Select
+                                    label={"Kontotype"}
+                                    placeholder={"Kontotype"}
+                                    className="pt-4 drop-shadow-xl"
+                                    onSelectionChange={setSelectedKeys}
+                                    selectedKeys={selectedKeys}
+                                >
+                                    {accountTypes.map((accountType) => (
+                                        <SelectItem key={accountType} value={accountType} >
+                                            {accountType}
+                                        </SelectItem>
+                                    ))}
+                                </Select>
                                 <Input type="text"
                                     classNames={textInputStyle}
+                                    className="pt-4"
                                     label="Firi access key"
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
