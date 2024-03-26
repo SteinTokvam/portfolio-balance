@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
-import { deleteAllAccounts, setFiriAccessKey } from "../../actions/accounts"
+import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
@@ -34,6 +34,7 @@ export default function SettingsModalContent() {
             const json = JSON.parse(e.target.result)
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
+            dispatch(importAccounts(json.accounts))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
         };

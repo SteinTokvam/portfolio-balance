@@ -102,6 +102,13 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 totalValue: action.payload
             }
+        case 'IMPORT_ACCOUNTS':
+            window.localStorage.setItem("accounts", JSON.stringify(action.payload.accounts))
+            console.log(action.payload.accounts)
+            return {
+                ...state,
+                accounts: action.payload.accounts
+            }
         case 'DELETE_ALL_ACCOUNTS':
             return initialState
         default:

@@ -82,3 +82,10 @@ export const setTotalValueForInvestments = (totalValue) => {
         payload: totalValue
     }
 }
+
+export const importAccounts = (accounts) => {
+    return {
+        type: 'IMPORT_ACCOUNTS',
+        payload: accounts
+    }
+}

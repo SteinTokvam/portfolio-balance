@@ -41,7 +41,7 @@ export default function Portfolio() {
             holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
                 .then(prices => prices[prices.length - 1])
                 .then(price => setTotalValue(prevState => {
-                    if (price.date === "") {
+                    if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
                         return prevState
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {

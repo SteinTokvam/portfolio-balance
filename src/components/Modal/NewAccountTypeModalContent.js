@@ -14,7 +14,6 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
     const [accountTypeText, setAccountTypeText] = useState("")
     const [accountTypeGoalPercentage, setAccountTypeGoalPercentage] = useState(0)
 
-    const [endpointText, setEndpointText] = useState("")
     const [accessKeyText, setAccessKeyText] = useState("")
 
     const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
@@ -65,7 +64,6 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                         yield: 0,
                         isManual: false,
                         apiInfo: {
-                            endpoint: endpointText,
                             accessKey: accessKeyText
                         },
                         holdings: []
@@ -120,12 +118,7 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                                         </div>} />
                                 <Input type="text"
                                     classNames={textInputStyle}
-                                    label={"API endpoint"}
-                                    value={endpointText}
-                                    onValueChange={setEndpointText} />
-                                <Input type="text"
-                                    classNames={textInputStyle}
-                                    label="access key"
+                                    label="Firi access key"
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
                             </Tab>
