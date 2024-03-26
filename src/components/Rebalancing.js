@@ -64,7 +64,7 @@ export default function Rebalancing() {
             })
         })
         setTotalValue(totalValue)
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     console.log(investmentByType)
 

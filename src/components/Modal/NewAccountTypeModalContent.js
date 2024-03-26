@@ -2,7 +2,7 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import { useTranslation } from "react-i18next"
 import { textInputStyle } from "../../Util/Global"
 import { useMemo, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount } from "../../actions/accounts"
 
@@ -27,7 +27,6 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
 
     const [accessKeyText, setAccessKeyText] = useState("")
 
-    const accountToEdit = useSelector(state => state.rootReducer.accounts.accountToEdit)
     const dispatch = useDispatch()
 
     function handleSubmit() {
