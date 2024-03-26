@@ -75,7 +75,7 @@ export default function Portfolio() {
                                                 subtitle={
                                                     <div>
                                                         <p>{account.type}</p>
-                                                        <div className="">
+                                                        <div>
                                                             <p className="text-default-800 font-bold">
                                                                 {
                                                                     !account.isManual ?
@@ -88,7 +88,7 @@ export default function Portfolio() {
                                                     </div>
                                                 }
                                             >
-                                                <TransactionsTable account={account} >
+                                                <TransactionsTable account={account}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
                                                             !account.isManual ?
