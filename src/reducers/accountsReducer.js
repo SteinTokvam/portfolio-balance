@@ -102,6 +102,8 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 totalValue: action.payload
             }
+        case 'DELETE_ALL_ACCOUNTS':
+            return initialState
         default:
             return state
     }
