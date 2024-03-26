@@ -7,7 +7,7 @@ import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 
-export default function TransactionsTable({ account }) {
+export default function TransactionsTable({ account, children }) {
 
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
@@ -132,6 +132,11 @@ export default function TransactionsTable({ account }) {
             }
 
             <Spacer y={4} />
+            {children &&
+                <>
+                    {children}
+                    <Spacer y={4} />
+                </>}
             <Table
                 isStriped
                 aria-label={"konto"}

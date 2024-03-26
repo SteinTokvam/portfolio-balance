@@ -12,9 +12,10 @@ export default function AddAccountButton() {
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
                 <NewAccountTypeModalContent />
             </EmptyModal>
-            <div className='w-full mx-auto text-center flex flex-col justify-center space-y-4 space-x-0 lg:flex-row lg:space-x-4 lg:space-y-0'>
+            <div className='w-2/3 mx-auto text-center flex flex-col justify-center space-y-4 space-x-0 lg:flex-row lg:space-x-4 lg:space-y-0'>
                 <Button color="primary"
-                    onPress={onOpen}>
+                    onPress={onOpen}
+                    endContent={<h1 className="text-xl font-bold">+</h1>}>
                     Legg til konto
                 </Button>
             </div>

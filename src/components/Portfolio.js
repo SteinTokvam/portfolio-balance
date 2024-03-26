@@ -76,44 +76,44 @@ export default function Portfolio() {
                                                     <div>
                                                         <p>{account.type}</p>
                                                         <div className="">
-                                                            <div>
-
+                                                            <p className="text-default-800 font-bold">
                                                                 {
                                                                     !account.isManual ?
                                                                         account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                         :
                                                                         totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                 }
-                                                                <div className="hidden sm:flex border-t border-default-300">
-                                                                    {
-                                                                        !account.isManual ?
-                                                                            account.holdings.map(holding => {
-                                                                                return (
-                                                                                    <div key={holding.name} className="pr-4">
-                                                                                        <p>{holding.name}</p>
-                                                                                        <p>{holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                                                                                    </div>
-                                                                                )
-                                                                            }) :
-                                                                            totalValue.map(totalValue => {
-                                                                                if (totalValue.accountKey === account.key) {
-                                                                                    return (
-                                                                                        <div key={totalValue.name} className="pr-4">
-                                                                                            <p>{totalValue.name}</p>
-                                                                                            <p>{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                                                                                        </div>
-                                                                                    )
-                                                                                }
-                                                                                return <></>
-                                                                            })
-                                                                    }
-                                                                </div>
-                                                            </div>
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 }
                                             >
-                                                <TransactionsTable account={account} />
+                                                <TransactionsTable account={account} >
+                                                    <div className="max-w-full flex flex-wrap border-t border-default-300">
+                                                        {
+                                                            !account.isManual ?
+                                                                account.holdings.map(holding => {
+                                                                    return (
+                                                                        <div key={holding.name} className="pt-4">
+                                                                            <p>{holding.name}</p>
+                                                                            <p>{holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                        </div>
+                                                                    )
+                                                                }) :
+                                                                totalValue.map(totalValue => {
+                                                                    if (totalValue.accountKey === account.key) {
+                                                                        return (
+                                                                            <div key={totalValue.name} className="p-1 w-1/3">
+                                                                                <p className="text-default-600">{totalValue.name}</p>
+                                                                                <p className="text-default-800 font-bold">{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                    return <></>
+                                                                })
+                                                        }
+                                                    </div>
+                                                </TransactionsTable>
                                             </AccordionItem>
                                         </Accordion>
                                     </div>

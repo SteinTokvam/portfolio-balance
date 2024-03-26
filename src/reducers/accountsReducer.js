@@ -90,7 +90,7 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts[index] = {
                 ...currentAccounts[index], 
                 transactions: [...currentAccounts[index].transactions, ...newTransactions], 
-                holdings: action.payload.holdings, 
+                holdings: [...currentAccounts[index].holdings, ...action.payload.holdings], 
             }
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
