@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { textInputStyle } from "../../Util/Global";
 import { importTransactions } from "../../actions/accounts";
-import rootReducer from "../../reducers";
 
 export default function ImportTransactionsModalContent({ accountKey }) {
 
