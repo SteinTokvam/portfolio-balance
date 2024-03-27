@@ -89,7 +89,7 @@ const accountReducer = (state = initialState, action) => {
                 }
             });
 
-            if(!currentAccounts.isManual) {
+            if(!isManual) {
                 currentAccounts[index] = {
                     ...currentAccounts[index], 
                     transactions: transactionsPayload, 
@@ -109,7 +109,7 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts[index] = {
                 ...currentAccounts[index], 
                 transactions: [...currentAccounts[index].transactions, ...newTransactions], 
-                holdings: isManual ? currentHoldings : [...currentAccounts[index].holdings, ...action.payload.holdings], 
+                holdings: currentHoldings, 
             }
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {

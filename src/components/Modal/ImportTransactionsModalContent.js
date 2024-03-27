@@ -126,7 +126,7 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                                     onChange={readCsv}
                                     accept=".csv"
                                     style={{ display: 'none' }} />
-                                {t('ImportTransactionsModal.uploadFiles')} <UploadIcon />
+                                {t('importTransactionsModal.uploadFiles')} <UploadIcon />
                             </Button>
                         </div>
                     </ModalBody>
