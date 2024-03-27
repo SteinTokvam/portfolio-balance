@@ -132,13 +132,8 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button variant="light" onPress={() => {
-                            onClose()
-                        }}>
-                            Lukk
-                        </Button>
                         <Button color="primary" variant="light" onPress={onClose}>
-                            {t('investmentModal.close')}
+                            {t('general.closeButton')}
                         </Button>
                     </ModalFooter>
                 </>

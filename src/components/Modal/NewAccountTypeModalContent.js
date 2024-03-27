@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount } from "../../actions/accounts"
 
-export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
+export function NewAccountTypeModalContent({ setScreen = () => { } }) {
 
     const { t } = useTranslation()
 
@@ -126,13 +126,13 @@ export function NewAccountTypeModalContent({ isEdit, setScreen = () => { } }) {
                             setScreen(true)
                             onClose()
                         }}>
-                            {t('investmentModal.close')}
+                            {t('general.closeButton')}
                         </Button>
-                        <Button color="success" variant="light" aria-label={isEdit ? t('investmentModal.saveChanges') : t('investmentModal.save')} onPress={() => {
+                        <Button color="success" variant="light" aria-label={t('general.save')} onPress={() => {
                             onClose()
                             handleSubmit()
                         }}>
-                            {isEdit ? t('investmentModal.saveChanges') : t('settings.addAccountButton')}
+                            {t('general.save')}
                         </Button>
                     </ModalFooter>
                 </>

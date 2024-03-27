@@ -104,11 +104,6 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accounts: currentAccounts
             }
-        case 'SET_TOTAL_VALUE_FOR_INVESTMENTS':
-            return {
-                ...state,
-                totalValue: action.payload
-            }
         case 'IMPORT_ACCOUNTS':
             window.localStorage.setItem("accounts", JSON.stringify(action.payload.accounts))
             console.log(action.payload.accounts)

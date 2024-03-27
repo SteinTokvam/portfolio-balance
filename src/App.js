@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import Portfolio from './components/Portfolio';
 import { routes } from './Util/Global';
-import Rebalancing from './components/Rebalancing';
 import Footer from './components/Footer';
 
 
@@ -32,9 +31,6 @@ function App() {
           } />
           <Route path={routes.portfolio} element={
             <Portfolio />
-          } />
-          <Route path={routes.rebalancing} element={
-            <Rebalancing />
           } />
         </Routes>
       </div>

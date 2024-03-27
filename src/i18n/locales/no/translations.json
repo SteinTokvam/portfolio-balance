@@ -1,60 +1,21 @@
 {
-    "valuators": {
-        "currency": "Kr",
-        "percentage": "%",
-        "defaultAccountType": "Kontanter"
+    "general": {
+        "closeButton": "Lukk",
+        "save": "Legg til"
     },
     "dashboard": {
         "biggestInvestment": "Største investering:",
         "total": "Total verdi"
     },
-    "investmentModal": {
-        "editTitle": "Endre investering:",
-        "newTitle": "Legg til investering:",
-        "type": "Investeringstype",
-        "typeLabel": "Velg investeringstype",
-        "nameOfAccount": "Navn på konto",
-        "nameOfInvestment": "Navn på investering",
-        "value": "Verdi",
-        "goalPercentage": "Målprosent for investering",
-        "close": "Lukk",
-        "saveChanges": "Lagre endringer",
-        "save": "Legg til",
-        "textAreaDescription": "Notat til investeringen.",
-        "textAreaPlaceholder": "Legg til et notat."
-    },
-    "investmentInfoModal": {
-        "type": "Type:",
-        "value": "Verdi:",
-        "currentPercentage": "Nåværende prosentandel for investeringstype:",
-        "goalPercentage": "Målprosent:",
-        "note": "Kommentar:",
-        "edit": "Rediger"
-    },
-    "portfolio":{
-        "investmentsTab": "Investeringer",
-        "accountTypesTab": "Kontotyper"
-    },
-    "investmentTable": {
-        "columnTypeLabel": "TYPE",
-        "columnAccountLabel": "KONTO",
-        "columnNameLabel": "NAVN",
-        "columnValueLabel": "VERDI",
-        "columnCurrentPercentLabel": "NÅVÆRENDE PROSENTANDEL",
-        "columnGoalPercentLabel": "MÅLPROSENT",
-        "columnDistanceToTargetLabel": "AVSTAND TIL MÅLPROSENT",
-        "tableLabel": "Tabell over forskjellige investeringer.",
-        "emptyTable": "Ingen investeringer lagt til enda."
-    },
     "navbar": {
         "brand": "Portfolio rebalancer",
         "dashboard": "Dashboard",
         "portfolio": "Portfolio",
-        "rebalancing": "Rebalansering",
         "settings": "Innstillinger"
     },
     "accountModal": {
-        "title": "Legg til ny konto:"
+        "title": "Legg til ny konto:",
+        "addAccountButton": "Legg til konto"
     },
     "settings": {
         "header": "Innstillinger",
@@ -63,12 +24,8 @@
         "deleteTitle": "Faresonen!",
         "deleteButton": "Slett all brukerdata!",
         "deleteAlert": "All brukerdata slettet.",
-        "closeButton": "Lukk",
         "selectType": "Språk",
-        "selectLabel": "Velg språk",
-        "accountType": "Kontotype",
-        "accountTypeGoalPercentage": "Målprosent",
-        "addAccountButton": "Legg til konto"
+        "selectLabel": "Velg språk"
     },
     "footer": {
         "github": "Vis kildekoden på GitHub",
@@ -77,27 +34,5 @@
     "supportDevelopment": {
         "header": "Støtt utviklingen",
         "ethAdress": "Ethereum adresse:"
-    },
-    "rebalancer": {
-        "textbox": "Sum å investere:",
-        "minimumSum": "Minstesum å investere:",
-        "header": "Rebalansering av portfolio",
-        "subTitle": "Nåværende fordeling:",
-        "rebalanceButton": "Rebalanser portfolio",
-        "canSellInvestmentsCheck": "Ønsker du å selge unna investeringer for å rebalansere?",
-        "closestToGoalCheck": "Ønsker du å kjøpe investeringer nærmest målet?",
-        "text": "For å rebalansere proteføljen så trykker man på den investeringskategorien man ønsker å rebalansere i henhold til satt målprosent. Husk å skrive inn eventuelle nye innskudd."
-    },
-    "rebalancingModal": {
-        "header": "Rebalanseringsresultat",
-        "close": "lukk",
-        "toBuy": "Å kjøpe/selge:",
-        "newValue": "Ny verdi:",
-        "noRebalancing": "Ingen rebalansering nødvendig.",
-        "table": {
-            "name": "NAVN",
-            "buySell": "KJØPE/SELGE",
-            "newValue": "NY VERDI"
-        }
     }
 }
