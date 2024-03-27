@@ -17,6 +17,18 @@
         "title": "Legg til ny konto:",
         "addAccountButton": "Legg til konto"
     },
+    "importTransactionsModal": {
+        "title": "Importer transaksjoner",
+        "uploadFiles": "Last opp fil"
+    },
+    "transactionsTable": {
+        "name": "Navn",
+        "cost": "Kostnad",
+        "type": "Type",
+        "equityPrice": "Enhetspris",
+        "equityShare": "Andel",
+        "date": "Dato"
+    },
     "settings": {
         "header": "Innstillinger",
         "importButton": "Importer data",

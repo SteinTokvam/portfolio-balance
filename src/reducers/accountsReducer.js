@@ -89,6 +89,18 @@ const accountReducer = (state = initialState, action) => {
                 }
             });
 
+            if(!currentAccounts.isManual) {
+                currentAccounts[index] = {
+                    ...currentAccounts[index], 
+                    transactions: transactionsPayload, 
+                    holdings: action.payload.holdings, 
+                }
+                window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+                return {
+                    ...state,
+                    accounts: currentAccounts
+                }
+            }
 
             if(newTransactions.length === 0) {
                 console.log("no new transactions")

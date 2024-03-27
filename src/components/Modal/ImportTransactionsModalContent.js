@@ -108,7 +108,7 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                     <ModalHeader className="justify-between">
                         <div className="flex gap-5">
                             <div className="flex flex-col gap-1 items-start justify-center">
-                                <h4 className="text-small font-semibold leading-none text-default-600">Importer transaksjoner</h4>
+                                <h4 className="text-small font-semibold leading-none text-default-600">{t('importTransactionsModal.title')}</h4>
                             </div>
                         </div>
 
@@ -127,7 +127,7 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                                     onChange={readCsv}
                                     accept=".csv"
                                     style={{ display: 'none' }} />
-                                Last opp fil <UploadIcon />
+                                {t('ImportTransactionsModal.uploadFiles')} <UploadIcon />
                             </Button>
                         </div>
                     </ModalBody>

@@ -17,6 +17,18 @@
         "title": "Add new account:",
         "addAccountButton": "Add account"
     },
+    "importTransactionsModal": {
+        "title": "Import transactions",
+        "uploadFiles": "Upload file"
+    },
+    "transactionsTable": {
+        "name": "Name",
+        "cost": "Cost",
+        "type": "Type",
+        "equityPrice": "Unit price",
+        "equityShare": "Quantity",
+        "date": "Date"
+    },
     "settings": {
         "header": "Settings",
         "importButton": "Import data",

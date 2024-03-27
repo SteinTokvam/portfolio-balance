@@ -6,8 +6,11 @@ import { importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
+import { useTranslation } from "react-i18next";
 
 export default function TransactionsTable({ account, children }) {
+
+    const { t } = useTranslation()
 
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
@@ -34,16 +37,16 @@ export default function TransactionsTable({ account, children }) {
     }, [sortDescriptor, account]);
 
     const columns = [
-        { key: 'name', label: 'Name' },
-        { key: 'cost', label: 'Cost' },
-        { key: 'type', label: 'Type' },
-        { key: 'equityPrice', label: 'Unit Price' },
-        { key: 'equityShare', label: 'Number of shares' },
-        { key: 'date', label: 'Date' },
+        { key: 'name', label: t('transactionsTable.name') },
+        { key: 'cost', label: t('transactionsTable.cost') },
+        { key: 'type', label: t('transactionsTable.type') },
+        { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
+        { key: 'equityShare', label: t('transactionsTable.equityShare') },
+        { key: 'date', label: t('transactionsTable.date') },
     ];
 
     useEffect(() => {
-        if (account.type !== 'Kryptovaluta') {
+        if (account.isManual) {
             return
         }
 
@@ -126,7 +129,7 @@ export default function TransactionsTable({ account, children }) {
                         <ImportTransactionsModalContent accountKey={account.key} />
                     </EmptyModal>
                     <Button color="primary" variant="bordered" onPress={onOpen} size="lg">
-                        Importer transaksjoner <UploadIcon />
+                        {t('importTransactionsModal.title')} <UploadIcon />
                     </Button>
                 </>
             }

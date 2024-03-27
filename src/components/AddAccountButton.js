@@ -1,9 +1,12 @@
 import { Button, useDisclosure } from "@nextui-org/react";
 import EmptyModal from "./Modal/EmptyModal";
 import { NewAccountTypeModalContent } from "./Modal/NewAccountTypeModalContent";
+import { useTranslation } from "react-i18next";
 
 
 export default function AddAccountButton() {
+
+    const { t } = useTranslation()
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -16,7 +19,7 @@ export default function AddAccountButton() {
                 <Button color="primary"
                     onPress={onOpen}
                     endContent={<h1 className="text-xl font-bold">+</h1>}>
-                    Legg til konto
+                    {t('accountModal.addAccountButton')}
                 </Button>
             </div>
         </>
