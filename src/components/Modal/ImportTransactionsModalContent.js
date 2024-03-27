@@ -1,16 +1,18 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { textInputStyle } from "../../Util/Global";
 import { importTransactions } from "../../actions/accounts";
+import rootReducer from "../../reducers";
 
 export default function ImportTransactionsModalContent({ accountKey }) {
 
     const { t } = useTranslation()
 
     const dispatch = useDispatch();
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
     const [investmentType, setInvestmentType] = useState("")
 
     const hiddenFileInput = useRef(null);
@@ -20,9 +22,32 @@ export default function ImportTransactionsModalContent({ accountKey }) {
     };
 
     function getHoldings(accountKey, transactions, type) {
-        console.log(transactions)
         if (!transactions) {
             return
+        }
+        if(!accounts.filter(account => account.key === accountKey)[0].isManual) {
+            const currentTransactions = accounts.filter(account => account.key === accountKey)[0].transactions
+            const currentTransactionKeys = currentTransactions.map(transaction => transaction.key)
+            const newTransactions = transactions.filter(transaction => !currentTransactionKeys.includes(transaction.key))
+            const holdings = []
+            const uniqueHoldingKeys = [...new Set(newTransactions.map(transaction => transaction.e24Key))];
+            uniqueHoldingKeys.forEach(e24Key => {
+                const equityShare = newTransactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
+    
+                if (equityShare > 0) {
+                    holdings.push(
+                        {
+                            name: newTransactions.find(transaction => transaction.e24Key === e24Key).name,
+                            accountKey: accountKey,
+                            equityShare,
+                            equityType: type,
+                            e24Key,
+                            goalPercentage: 0
+                        }
+                    )
+                }
+            })
+            return holdings
         }
         const holdings = []
         const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.e24Key))];

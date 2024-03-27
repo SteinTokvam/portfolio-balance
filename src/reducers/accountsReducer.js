@@ -73,10 +73,23 @@ const accountReducer = (state = initialState, action) => {
         case 'IMPORT_TRANSACTIONS':
             currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.key)
+            const isManual = currentAccounts[index].isManual
             const transactionsPayload = action.payload.transactions
             const currentTransactionKeys = currentAccounts[index].transactions.map(transaction => transaction.key)
             const newTransactions = transactionsPayload.filter(transaction => !currentTransactionKeys.includes(transaction.key))
-            console.log(newTransactions)
+            
+            const currentHoldings = [...state.accounts[index].holdings]
+            
+            action.payload.holdings.forEach(newHolding => {
+                const index = currentHoldings.findIndex(curr => curr.e24Key === newHolding.e24Key)
+                if(index !== -1) {
+                    currentHoldings[index] = {...currentHoldings[index], equityShare: currentHoldings[index].equityShare + newHolding.equityShare}
+                } else {
+                    currentHoldings.push(newHolding)
+                }
+            });
+
+
             if(newTransactions.length === 0) {
                 console.log("no new transactions")
                 return {...state}
@@ -84,7 +97,7 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts[index] = {
                 ...currentAccounts[index], 
                 transactions: [...currentAccounts[index].transactions, ...newTransactions], 
-                holdings: [...currentAccounts[index].holdings, ...action.payload.holdings], 
+                holdings: isManual ? currentHoldings : [...currentAccounts[index].holdings, ...action.payload.holdings], 
             }
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
