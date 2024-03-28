@@ -1,8 +1,9 @@
-import { Spacer } from "@nextui-org/react";
-import { useEffect, useState } from "react";
+import { Select, SelectItem, Spacer, Tab, Tabs } from "@nextui-org/react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { fetchTicker } from "../Util/E24";
+import { equityTypes } from "../Util/Global";
 
 export default function Dashboard() {
 
@@ -11,14 +12,22 @@ export default function Dashboard() {
     const [totalValue, setTotalValue] = useState([]);
     const biggestInvestment = totalValue.length !== 0 && totalValue.reduce((a, b) => a.value > b.value ? a : b)
 
+
+    const filters = ["Konto", "Investeringstype"]
+    const [selectedKeys, setSelectedKeys] = useState([filters[0]]);
+    const selectedFilter = useMemo(
+        () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
+        [selectedKeys]
+    );
+
     useEffect(() => {
         accounts.forEach(account => {
-            setTotalValues(account.type, account.holdings)
+            setTotalValues(selectedFilter, account.type, account.holdings)
         })
-    }, [accounts])
+    }, [accounts, selectedFilter])
 
 
-    function setTotalValues(accountType, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
+    function setTotalValues(filter, accountType, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
         if (!holdings || holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
@@ -29,12 +38,12 @@ export default function Dashboard() {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
-                        return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                        return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {
-                        return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                        return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                     }
-                    return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
+                    return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                 })
             })
         } else {
@@ -45,10 +54,10 @@ export default function Dashboard() {
                         return prevState
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {
-                        return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                        return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     if (prevState.length === 0) {
-                        return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
+                        return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     return prevState
                 })))
@@ -64,10 +73,24 @@ export default function Dashboard() {
                 <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a, b) => a + b.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
             </div >
+            <Select
+                selectionMode="single"
+                label="Filtrer"
+                className="max-w-xs"
+                onSelectionChange={setSelectedKeys}
+                selectedKeys={selectedKeys}
+            >
+                {filters.map((filter) => (
+                    <SelectItem key={filter} value={filter}>
+                        {filter}
+                    </SelectItem>
+                ))}
+            </Select>
+            <Spacer y={4} />
             <div className="w-full text-center flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-20 justify-between">
-                    {
-                        accounts.map(account => {
+                    {accounts.length > 0 ?
+                        selectedFilter === filters[0] ? accounts.map(account => {
                             return (
                                 <div key={account.key}>
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{account.name}</h2>
@@ -79,8 +102,31 @@ export default function Dashboard() {
                                                 .filter(holding => holding.accountKey === account.key)
                                                 .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                     }</h4>
+                                    <h4 className="text-large font-bold leading-none text-default-400">{
+                                            ((totalValue
+                                                .filter(holding => holding.accountKey === account.key)
+                                                .reduce((acc, cur) => acc + cur.value, 0) / totalValue.reduce((a, b) => a + b.value, 0))*100).toFixed(2)
+                                        }%</h4>
                                 </div>)
-                        })
+                        }) :
+                            equityTypes.map(equityType => {
+                                return (
+                                    <div key={equityType}>
+                                        <h2 className="text-medium font-semibold leading-none text-default-600">{equityType}</h2>
+                                        <Spacer y={2} />
+                                        <h4 className="text-large font-bold leading-none text-default-400">{
+                                            totalValue
+                                                .filter(holding => holding.type === equityType)
+                                                .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                        }</h4>
+                                        <h4 className="text-large font-bold leading-none text-default-400">{
+                                            ((totalValue
+                                                .filter(holding => holding.type === equityType)
+                                                .reduce((acc, cur) => acc + cur.value, 0) / totalValue.reduce((a, b) => a + b.value, 0))*100).toFixed(2)
+                                        }%</h4>
+                                    </div>)
+                            })
+                            : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
                     }
                 </div>
             </div>

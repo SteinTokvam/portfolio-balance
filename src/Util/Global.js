@@ -26,3 +26,5 @@ export const textInputStyle = {
     dashboard: '/',
     portfolio: '/portfolio',
 }
+
+export const equityTypes= ["Fund", "Stock", "Cryptocurrency"]
