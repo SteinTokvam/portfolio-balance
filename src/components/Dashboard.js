@@ -1,4 +1,4 @@
-import { Select, SelectItem, Spacer, Tab, Tabs } from "@nextui-org/react";
+import { Select, SelectItem, Spacer } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
