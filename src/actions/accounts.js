@@ -60,3 +60,10 @@ export const newTransaction = (accountKey, transaction) => {
         payload: { accountKey, transaction }
     }
 }
+
+export const deleteTransaction = (transactionKey, accountKey) => {
+    return {
+        type: 'DELETE_TRANSACTION',
+        payload: { transactionKey, accountKey }
+    }
+}

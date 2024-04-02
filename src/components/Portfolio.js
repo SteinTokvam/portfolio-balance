@@ -1,12 +1,10 @@
-import { Accordion, AccordionItem, Avatar, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { fetchTicker } from "../Util/E24";
 import { useEffect, useState } from "react";
-import DeleteIcon from "../icons/DeleteIcon";
-import { deleteAccount } from "../actions/accounts";
 
 
 
@@ -15,8 +13,6 @@ export default function Portfolio() {
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
     const [totalValue, setTotalValue] = useState([]);
-
-    const dispatch = useDispatch()
 
     useEffect(() => {
         accounts.forEach(account => setTotalValues(account.type, account.holdings))
@@ -75,7 +71,7 @@ export default function Portfolio() {
                                                 startContent={
                                                     <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${account.name.toLowerCase()}.no`} fallback={<CompanyIcon />} />
                                                 }
-                                                className="border border-default-300 rounded-3xl p-4"
+                                                className="border border-default-300 rounded-3xl p-4 mb-4"
                                                 subtitle={
                                                     <div className="max-w-full flex flex-row justify-between">
                                                         <div className="flex flex-col">
@@ -91,13 +87,6 @@ export default function Portfolio() {
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <Button
-                                                            color="danger"
-                                                            isIconOnly
-                                                            startContent={<DeleteIcon />} 
-                                                            onPress={() =>
-                                                                dispatch(deleteAccount(account.key))
-                                                            }/>
                                                     </div>
                                                 }
                                             >

@@ -77,23 +77,23 @@ const accountReducer = (state = initialState, action) => {
             const transactionsPayload = action.payload.transactions
             const currentTransactionKeys = currentAccounts[index].transactions.map(transaction => transaction.key)
             const newTransactions = transactionsPayload.filter(transaction => !currentTransactionKeys.includes(transaction.key))
-            
+
             const currentHoldings = [...state.accounts[index].holdings]
-            
+
             action.payload.holdings.forEach(newHolding => {
                 const index = currentHoldings.findIndex(curr => curr.e24Key === newHolding.e24Key)
-                if(index !== -1) {
-                    currentHoldings[index] = {...currentHoldings[index], equityShare: currentHoldings[index].equityShare + newHolding.equityShare}
+                if (index !== -1) {
+                    currentHoldings[index] = { ...currentHoldings[index], equityShare: currentHoldings[index].equityShare + newHolding.equityShare }
                 } else {
                     currentHoldings.push(newHolding)
                 }
             });
 
-            if(!isManual) {
+            if (!isManual) {
                 currentAccounts[index] = {
-                    ...currentAccounts[index], 
-                    transactions: transactionsPayload, 
-                    holdings: action.payload.holdings, 
+                    ...currentAccounts[index],
+                    transactions: transactionsPayload,
+                    holdings: action.payload.holdings,
                 }
                 window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
                 return {
@@ -102,14 +102,14 @@ const accountReducer = (state = initialState, action) => {
                 }
             }
 
-            if(newTransactions.length === 0) {
+            if (newTransactions.length === 0) {
                 console.log("no new transactions")
-                return {...state}
+                return { ...state }
             }
             currentAccounts[index] = {
-                ...currentAccounts[index], 
-                transactions: [...currentAccounts[index].transactions, ...newTransactions], 
-                holdings: currentHoldings, 
+                ...currentAccounts[index],
+                transactions: [...currentAccounts[index].transactions, ...newTransactions],
+                holdings: currentHoldings,
             }
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
@@ -120,7 +120,7 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.accountKey)
 
-            if(index === -1) {
+            if (index === -1) {
                 return {
                     ...state
                 }
@@ -142,22 +142,39 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accounts: action.payload.accounts
             }
-        case 'DELETE_ACCOUNT':
-            console.log(action.payload.accountKey)
+        case 'DELETE_TRANSACTION':
             currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.accountKey)
 
-            if(index === -1) {
+            if (index === -1) {
                 return {
                     ...state
                 }
             }
-            currentAccounts.splice(index, 1)
 
-            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+            const remainingTransactions = currentAccounts[index].transactions.filter(transaction => transaction.key !== action.payload.transactionKey)
+
+            const newAccounts = [
+                ...currentAccounts.filter(account => account.key !== action.payload.accountKey), 
+                {
+                    ...currentAccounts[index],
+                    transactions: remainingTransactions
+                }
+            ]
+            window.localStorage.setItem("accounts", JSON.stringify(newAccounts))
+            return {//TODO: må oppdatere holdings
+                ...state,
+                accounts: newAccounts
+            }
+        case 'DELETE_ACCOUNT':
+            console.log(action.payload.accountKey)
+            currentAccounts = [...state.accounts]
+            const remainingAccounts = currentAccounts.filter(account => account.key !== action.payload.accountKey)
+
+            window.localStorage.setItem("accounts", JSON.stringify(remainingAccounts))
             return {
                 ...state,
-                accounts: currentAccounts
+                accounts: remainingAccounts
             }
         case 'DELETE_ALL_ACCOUNTS':
             return initialState

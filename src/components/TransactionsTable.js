@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { calculateValue, getTransactionsFromFiri, getValueInFiat } from "../Util/Firi";
 import { useDispatch } from "react-redux";
-import { importTransactions } from "../actions/accounts";
+import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
+import DeleteButton from "./DeleteButton";
 
 export default function TransactionsTable({ account, children }) {
 
@@ -21,7 +22,7 @@ export default function TransactionsTable({ account, children }) {
     const dispatch = useDispatch()
 
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
-    
+
     const [modalContent, setModalContent] = useState(<></>)
 
     const sortedItems = useMemo(() => {
@@ -46,6 +47,7 @@ export default function TransactionsTable({ account, children }) {
         { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
         { key: 'equityShare', label: t('transactionsTable.equityShare') },
         { key: 'date', label: t('transactionsTable.date') },
+        { key: 'action', label: 'Action'}
     ];
 
     useEffect(() => {
@@ -125,8 +127,8 @@ export default function TransactionsTable({ account, children }) {
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     function handleOpen(type, accountKey) {
-        switch(type) {
-            case 'import': 
+        switch (type) {
+            case 'import':
                 setModalContent(<ImportTransactionsModalContent accountKey={accountKey} />)
                 break
             case 'transaction':
@@ -139,10 +141,22 @@ export default function TransactionsTable({ account, children }) {
         onOpen()
     }
 
+    function renderCell(item, columnKey) {
+        switch(columnKey) {
+            case 'action':
+                return  <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" />
+            default:
+                return getKeyValue(item, columnKey)
+        }
+    }
+
     return (
         <div>
-            {account.type === 'Cryptocurrency' ? <></> :
-                <>
+            {account.type === 'Kryptovaluta' ?
+                <div className="flex justify-end">
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
+                </div> :
+                <div className="flex flex-row justify-between">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
                         {modalContent}
                     </EmptyModal>
@@ -152,7 +166,8 @@ export default function TransactionsTable({ account, children }) {
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account.key)} size="lg">
                         Ny transaksjon
                     </Button>
-                </>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
+                </div>
             }
 
             <Spacer y={4} />
@@ -181,7 +196,7 @@ export default function TransactionsTable({ account, children }) {
                     emptyContent={"Ingen transaksjoner enda"}>
                     {(item) => (
                         <TableRow key={item.key}>
-                            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+                            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>
