@@ -1,9 +1,8 @@
-import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
-import { useRef, useState } from "react";
+import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
-import { textInputStyle } from "../../Util/Global";
 import { importTransactions } from "../../actions/accounts";
 
 export default function ImportTransactionsModalContent({ accountKey }) {
@@ -12,7 +11,6 @@ export default function ImportTransactionsModalContent({ accountKey }) {
 
     const dispatch = useDispatch();
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    const [investmentType, setInvestmentType] = useState("")
 
     const hiddenFileInput = useRef(null);
 
@@ -20,11 +18,23 @@ export default function ImportTransactionsModalContent({ accountKey }) {
         hiddenFileInput.current.click();
     };
 
+    const investmentType = [
+        "Stock",
+        "Fund",
+        "Obligasjon",
+        "Kryptovaluta",
+    ]
+    const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
+    const selectedInvestmentType = useMemo(
+        () => Array.from(selectedInvestmentKeys).join(", ").replaceAll("_", " "),
+        [selectedInvestmentKeys]
+    );
+
     function getHoldings(accountKey, transactions, type) {
         if (!transactions) {
             return
         }
-        if(!accounts.filter(account => account.key === accountKey)[0].isManual) {
+        if (!accounts.filter(account => account.key === accountKey)[0].isManual) {
             const currentTransactions = accounts.filter(account => account.key === accountKey)[0].transactions
             const currentTransactionKeys = currentTransactions.map(transaction => transaction.key)
             const newTransactions = transactions.filter(transaction => !currentTransactionKeys.includes(transaction.key))
@@ -32,7 +42,7 @@ export default function ImportTransactionsModalContent({ accountKey }) {
             const uniqueHoldingKeys = [...new Set(newTransactions.map(transaction => transaction.e24Key))];
             uniqueHoldingKeys.forEach(e24Key => {
                 const equityShare = newTransactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
-    
+
                 if (equityShare > 0) {
                     holdings.push(
                         {
@@ -88,12 +98,12 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                             equityPrice: parseFloat(data[5]),
                             e24Key: data[6],
                             equityShare: parseFloat(data[7]),
-                            equityType: investmentType
+                            equityType: selectedInvestmentType
                         });
                     }
                 })
 
-                const holdings = getHoldings(accountKey, transactions, investmentType)
+                const holdings = getHoldings(accountKey, transactions, selectedInvestmentType)
                 dispatch(importTransactions({ key: accountKey, transactions, holdings }))
             };
             reader.readAsText(input);
@@ -115,11 +125,19 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                     <ModalBody>
 
                         <div className='grid grid-cols-2 gap-12 items-center justify-between'>
-                            <Input type="text"
-                                classNames={textInputStyle}
+                            <Select
                                 label={"Investeringstype"}
-                                value={investmentType}
-                                onValueChange={setInvestmentType} />
+                                placeholder={"Investeringstype"}
+                                className="pt-4 drop-shadow-xl"
+                                onSelectionChange={setSelectedInvestmentKeys}
+                                selectedKeys={selectedInvestmentKeys}
+                            >
+                                {investmentType.map((investmentType) => (
+                                    <SelectItem key={investmentType} value={investmentType} >
+                                        {investmentType}
+                                    </SelectItem>
+                                ))}
+                            </Select>
                             <Button color="primary" variant="bordered" onPress={handleClick} size="lg">
                                 <input type="file"
                                     ref={hiddenFileInput}

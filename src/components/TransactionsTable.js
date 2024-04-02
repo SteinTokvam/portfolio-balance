@@ -7,6 +7,7 @@ import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
+import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 
 export default function TransactionsTable({ account, children }) {
 
@@ -20,6 +21,8 @@ export default function TransactionsTable({ account, children }) {
     const dispatch = useDispatch()
 
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
+    
+    const [modalContent, setModalContent] = useState(<></>)
 
     const sortedItems = useMemo(() => {
         return [...account.transactions].sort((a, b) => {
@@ -121,15 +124,33 @@ export default function TransactionsTable({ account, children }) {
         fetchData()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
+    function handleOpen(type, accountKey) {
+        switch(type) {
+            case 'import': 
+                setModalContent(<ImportTransactionsModalContent accountKey={accountKey} />)
+                break
+            case 'transaction':
+                setModalContent(<NewTransactionModalContent accountKey={accountKey} />)
+                break
+            default:
+                setModalContent(<ImportTransactionsModalContent accountKey={accountKey} />)
+                break
+        }
+        onOpen()
+    }
+
     return (
         <div>
             {account.type === 'Cryptocurrency' ? <></> :
                 <>
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
-                        <ImportTransactionsModalContent accountKey={account.key} />
+                        {modalContent}
                     </EmptyModal>
-                    <Button color="primary" variant="bordered" onPress={onOpen} size="lg">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account.key)} size="lg">
                         {t('importTransactionsModal.title')} <UploadIcon />
+                    </Button>
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account.key)} size="lg">
+                        Ny transaksjon
                     </Button>
                 </>
             }

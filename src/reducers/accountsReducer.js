@@ -116,6 +116,25 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accounts: currentAccounts
             }
+        case 'NEW_TRANSACTION':
+            currentAccounts = [...state.accounts]
+            index = currentAccounts.findIndex(account => account.key === action.payload.accountKey)
+
+            if(index === -1) {
+                return {
+                    ...state
+                }
+            }
+            currentAccounts[index] = {//TODO: må også oppdatere holdings
+                ...currentAccounts[index],
+                transactions: [...currentAccounts[index].transactions, action.payload.transaction],
+            }
+
+            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+            return {
+                ...state,
+                accounts: currentAccounts
+            }
         case 'IMPORT_ACCOUNTS':
             window.localStorage.setItem("accounts", JSON.stringify(action.payload.accounts))
             console.log(action.payload.accounts)
