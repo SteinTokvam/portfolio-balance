@@ -142,6 +142,23 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accounts: action.payload.accounts
             }
+        case 'DELETE_ACCOUNT':
+            console.log(action.payload.accountKey)
+            currentAccounts = [...state.accounts]
+            index = currentAccounts.findIndex(account => account.key === action.payload.accountKey)
+
+            if(index === -1) {
+                return {
+                    ...state
+                }
+            }
+            currentAccounts.splice(index, 1)
+
+            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+            return {
+                ...state,
+                accounts: currentAccounts
+            }
         case 'DELETE_ALL_ACCOUNTS':
             return initialState
         default:

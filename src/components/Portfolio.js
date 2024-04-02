@@ -1,10 +1,12 @@
-import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Button } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { fetchTicker } from "../Util/E24";
 import { useEffect, useState } from "react";
+import DeleteIcon from "../icons/DeleteIcon";
+import { deleteAccount } from "../actions/accounts";
 
 
 
@@ -13,6 +15,8 @@ export default function Portfolio() {
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
     const [totalValue, setTotalValue] = useState([]);
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         accounts.forEach(account => setTotalValues(account.type, account.holdings))
@@ -73,18 +77,27 @@ export default function Portfolio() {
                                                 }
                                                 className="border border-default-300 rounded-3xl p-4"
                                                 subtitle={
-                                                    <div>
-                                                        <p>{account.type}</p>
-                                                        <div>
-                                                            <p className="text-default-800 font-bold">
-                                                                {
-                                                                    !account.isManual ?
-                                                                        account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                                                        :
-                                                                        totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                                                }
-                                                            </p>
+                                                    <div className="max-w-full flex flex-row justify-between">
+                                                        <div className="flex flex-col">
+                                                            <p>{account.type}</p>
+                                                            <div>
+                                                                <p className="text-default-800 font-bold">
+                                                                    {
+                                                                        !account.isManual ?
+                                                                            account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                            :
+                                                                            totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                    }
+                                                                </p>
+                                                            </div>
                                                         </div>
+                                                        <Button
+                                                            color="danger"
+                                                            isIconOnly
+                                                            startContent={<DeleteIcon />} 
+                                                            onPress={() =>
+                                                                dispatch(deleteAccount(account.key))
+                                                            }/>
                                                     </div>
                                                 }
                                             >

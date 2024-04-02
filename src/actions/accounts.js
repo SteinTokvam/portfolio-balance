@@ -13,6 +13,13 @@ export const addAutomaticAccount = (account) => {
     }
 }
 
+export const deleteAccount = (accountKey) => {
+    return {
+        type: 'DELETE_ACCOUNT',
+        payload: { accountKey }
+    }
+}
+
 export const deleteAllAccounts = () => {
     return {
         type: 'DELETE_ALL_ACCOUNTS'
