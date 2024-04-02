@@ -3,6 +3,10 @@ export async function fetchTicker(ticker, exchange = "OSE", type, period = "1wee
     if(!type) {
         return [{date: "", value: 0}]
     }
+
+    if(!ticker || ticker === "") {
+        return []
+    }
     const proxy = 'https://corsproxy.io/?'
     const useProxy = true
     const response = await fetch(`${useProxy ? proxy : ''}https://api.e24.no/bors/chart/${ticker}.${exchange}?period=${period}&type=${type.toLowerCase()}`)
