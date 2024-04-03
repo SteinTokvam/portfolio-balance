@@ -40,7 +40,7 @@ export default function Dashboard() {
                     if (prevState.length === 0) {
                         return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                     }
-                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                    if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
                         return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
@@ -53,7 +53,7 @@ export default function Dashboard() {
                     if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
                         return prevState
                     }
-                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                    if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
                         return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     if (prevState.length === 0) {
