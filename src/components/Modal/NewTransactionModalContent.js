@@ -51,19 +51,19 @@ export default function NewTransactionModalContent({ accountKey }) {
     function handleSubmit() {
         const transactionToAdd = {
             key: uuidv4(),
-            cost,
+            cost: parseFloat(cost),
             name: transactionName,
             type: selectedTransactionType,
             date,
-            equityPrice,
+            equityPrice: parseFloat(equityPrice),
             e24Key,
-            equityShare,
+            equityShare: parseFloat(equityShare),
             equityType: selectedInvestmentType
         }
         dispatch(
             newTransaction(accountKey,
                 transactionToAdd,
-                getHoldings(accountKey, [transactionToAdd], selectedTransactionType, accounts)
+                getHoldings(accountKey, [transactionToAdd], selectedInvestmentType, accounts)
             )
         )
     }

@@ -46,9 +46,11 @@ export default function Portfolio() {
                     if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
                         return prevState
                     }
-                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                    //Has no investment of that name on that account
+                    if (prevState.filter(item => item.name === holding.name && item.accountKey == holding.accountKey).length === 0) {
                         return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
                     }
+                    //has no investment before
                     if (prevState.length === 0) {
                         return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
                     }
