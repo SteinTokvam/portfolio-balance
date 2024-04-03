@@ -1,10 +1,10 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { textInputStyle } from "../../Util/Global";
-import { newTransaction } from "../../actions/accounts";
+import { useDispatch, useSelector } from "react-redux";
+import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
+import { newTransaction } from "../../actions/accounts";
 
 
 export default function NewTransactionModalContent({ accountKey }) {
@@ -16,6 +16,8 @@ export default function NewTransactionModalContent({ accountKey }) {
     const [equityPrice, setEquityPrice] = useState(0)
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState(0)
+
+    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const transactionType = [
         "BUY",
@@ -47,19 +49,21 @@ export default function NewTransactionModalContent({ accountKey }) {
     const dispatch = useDispatch()
 
     function handleSubmit() {
+        const transactionToAdd = {
+            key: uuidv4(),
+            cost,
+            name: transactionName,
+            type: selectedTransactionType,
+            date,
+            equityPrice,
+            e24Key,
+            equityShare,
+            equityType: selectedInvestmentType
+        }
         dispatch(
             newTransaction(accountKey,
-                {
-                    key: uuidv4(),
-                    cost,
-                    name: transactionName,
-                    type: selectedTransactionType,
-                    date,
-                    equityPrice,
-                    e24Key,
-                    equityShare,
-                    equityType: selectedInvestmentType
-                }
+                transactionToAdd,
+                getHoldings(accountKey, [transactionToAdd], selectedTransactionType, accounts)
             )
         )
     }

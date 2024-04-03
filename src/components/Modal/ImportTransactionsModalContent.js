@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
+import { getHoldings } from "../../Util/Global";
 
 export default function ImportTransactionsModalContent({ accountKey }) {
 
@@ -30,55 +31,6 @@ export default function ImportTransactionsModalContent({ accountKey }) {
         [selectedInvestmentKeys]
     );
 
-    function getHoldings(accountKey, transactions, type) {
-        if (!transactions) {
-            return
-        }
-        if (!accounts.filter(account => account.key === accountKey)[0].isManual) {
-            const currentTransactions = accounts.filter(account => account.key === accountKey)[0].transactions
-            const currentTransactionKeys = currentTransactions.map(transaction => transaction.key)
-            const newTransactions = transactions.filter(transaction => !currentTransactionKeys.includes(transaction.key))
-            const holdings = []
-            const uniqueHoldingKeys = [...new Set(newTransactions.map(transaction => transaction.e24Key))];
-            uniqueHoldingKeys.forEach(e24Key => {
-                const equityShare = newTransactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
-
-                if (equityShare > 0) {
-                    holdings.push(
-                        {
-                            name: newTransactions.find(transaction => transaction.e24Key === e24Key).name,
-                            accountKey: accountKey,
-                            equityShare,
-                            equityType: type,
-                            e24Key,
-                            goalPercentage: 0
-                        }
-                    )
-                }
-            })
-            return holdings
-        }
-        const holdings = []
-        const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.e24Key))];
-        uniqueHoldingKeys.forEach(e24Key => {
-            const equityShare = transactions.filter(transaction => transaction.e24Key === e24Key).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
-
-            if (equityShare > 0) {
-                holdings.push(
-                    {
-                        name: transactions.find(transaction => transaction.e24Key === e24Key).name,
-                        accountKey: accountKey,
-                        equityShare,
-                        equityType: type,
-                        e24Key,
-                        goalPercentage: 0
-                    }
-                )
-            }
-        })
-        return holdings
-    }
-
     function readCsv(event) {
         var transactions = [];
         if (event.target.files && event.target.files[0]) {
@@ -103,7 +55,7 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                     }
                 })
 
-                const holdings = getHoldings(accountKey, transactions, selectedInvestmentType)
+                const holdings = getHoldings(accountKey, transactions, selectedInvestmentType, accounts)
                 dispatch(importTransactions({ key: accountKey, transactions, holdings }))
             };
             reader.readAsText(input);

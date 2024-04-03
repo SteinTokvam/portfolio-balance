@@ -15,7 +15,9 @@ export default function Portfolio() {
     const [totalValue, setTotalValue] = useState([]);
 
     useEffect(() => {
-        accounts.forEach(account => setTotalValues(account.type, account.holdings))
+        accounts.forEach(account => {
+            setTotalValues(account.type, account.holdings)
+        })
     }, [accounts])
 
     function setTotalValues(accountType, holdings) {
