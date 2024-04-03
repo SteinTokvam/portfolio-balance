@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 
 
-export default function NewTransactionModalContent({ accountKey }) {
+export default function NewTransactionModalContent({ account }) {
     const { t } = useTranslation()
 
     const [transactionName, setTransactionName] = useState("")
@@ -61,9 +61,9 @@ export default function NewTransactionModalContent({ accountKey }) {
             equityType: selectedInvestmentType
         }
         dispatch(
-            newTransaction(accountKey,
+            newTransaction(account.key,
                 transactionToAdd,
-                getHoldings(accountKey, [transactionToAdd], selectedInvestmentType, accounts)
+                getHoldings([transactionToAdd], account)
             )
         )
     }

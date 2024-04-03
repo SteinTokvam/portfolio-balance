@@ -6,7 +6,7 @@ import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
 import { getHoldings } from "../../Util/Global";
 
-export default function ImportTransactionsModalContent({ accountKey }) {
+export default function ImportTransactionsModalContent({ account }) {
 
     const { t } = useTranslation()
 
@@ -55,8 +55,8 @@ export default function ImportTransactionsModalContent({ accountKey }) {
                     }
                 })
 
-                const holdings = getHoldings(accountKey, transactions, selectedInvestmentType, accounts)
-                dispatch(importTransactions({ key: accountKey, transactions, holdings }))
+                const holdings = getHoldings(transactions, account)
+                dispatch(importTransactions({ key: account.key, transactions, holdings }))
             };
             reader.readAsText(input);
         }

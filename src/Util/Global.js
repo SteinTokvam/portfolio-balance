@@ -29,13 +29,12 @@ export const textInputStyle = {
 
 export const equityTypes = ["Fund", "Stock", "Cryptocurrency"]
 
-export function getHoldings(accountKey, transactions, type, accounts) {
+export function getHoldings(transactions, account) {
   if (!transactions) {
       return
   }
-  if (!accounts.filter(account => account.key === accountKey)[0].isManual) {
-      const currentTransactions = accounts.filter(account => account.key === accountKey)[0].transactions
-      const currentTransactionKeys = currentTransactions.map(transaction => transaction.key)
+  if (!account.isManual) {
+      const currentTransactionKeys = account.transactions.map(transaction => transaction.key)
       const newTransactions = transactions.filter(transaction => !currentTransactionKeys.includes(transaction.key))
       const holdings = []
       const uniqueHoldingKeys = [...new Set(newTransactions.map(transaction => transaction.e24Key))];
@@ -46,9 +45,9 @@ export function getHoldings(accountKey, transactions, type, accounts) {
               holdings.push(
                   {
                       name: newTransactions.find(transaction => transaction.e24Key === e24Key).name,
-                      accountKey: accountKey,
+                      accountKey: account.key,
                       equityShare,
-                      equityType: type,
+                      equityType: transactions.filter(transaction => transaction.e24Key === e24Key)[0].equityType,
                       e24Key,
                       goalPercentage: 0
                   }
@@ -66,9 +65,9 @@ export function getHoldings(accountKey, transactions, type, accounts) {
           holdings.push(
               {
                   name: transactions.find(transaction => transaction.e24Key === e24Key).name,
-                  accountKey: accountKey,
+                  accountKey: account.key,
                   equityShare,
-                  equityType: type,
+                  equityType: transactions.filter(transaction => transaction.e24Key === e24Key)[0].equityType,
                   e24Key,
                   goalPercentage: 0
               }

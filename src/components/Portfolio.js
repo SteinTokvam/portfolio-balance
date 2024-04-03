@@ -5,6 +5,7 @@ import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { fetchTicker } from "../Util/E24";
 import { useEffect, useState } from "react";
+import { getHoldings } from "../Util/Global";
 
 
 
@@ -16,7 +17,7 @@ export default function Portfolio() {
 
     useEffect(() => {
         accounts.forEach(account => {
-            setTotalValues(account.type, account.holdings)
+            setTotalValues(account.type, getHoldings(account.transactions, account))
         })
     }, [accounts])
 

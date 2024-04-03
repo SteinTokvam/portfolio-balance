@@ -126,16 +126,16 @@ export default function TransactionsTable({ account, children }) {
         fetchData()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
-    function handleOpen(type, accountKey) {
+    function handleOpen(type, account) {
         switch (type) {
             case 'import':
-                setModalContent(<ImportTransactionsModalContent accountKey={accountKey} />)
+                setModalContent(<ImportTransactionsModalContent account={account} />)
                 break
             case 'transaction':
-                setModalContent(<NewTransactionModalContent accountKey={accountKey} />)
+                setModalContent(<NewTransactionModalContent account={account} />)
                 break
             default:
-                setModalContent(<ImportTransactionsModalContent accountKey={accountKey} />)
+                setModalContent(<ImportTransactionsModalContent accountKey={account} />)
                 break
         }
         onOpen()
@@ -160,10 +160,10 @@ export default function TransactionsTable({ account, children }) {
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
                         {modalContent}
                     </EmptyModal>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account.key)} size="lg">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account)} size="lg">
                         {t('importTransactionsModal.title')} <UploadIcon />
                     </Button>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account.key)} size="lg">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg">
                         Ny transaksjon
                     </Button>
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
