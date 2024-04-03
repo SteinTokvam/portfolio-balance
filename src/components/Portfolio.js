@@ -48,7 +48,7 @@ export default function Portfolio() {
                         return prevState
                     }
                     //Has no investment of that name on that account
-                    if (prevState.filter(item => item.name === holding.name && item.accountKey == holding.accountKey).length === 0) {
+                    if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
                         return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey }]
                     }
                     //has no investment before

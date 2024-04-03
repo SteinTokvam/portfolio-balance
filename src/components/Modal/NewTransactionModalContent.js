@@ -1,7 +1,7 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
@@ -16,8 +16,6 @@ export default function NewTransactionModalContent({ account }) {
     const [equityPrice, setEquityPrice] = useState(0)
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState(0)
-
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const transactionType = [
         "BUY",

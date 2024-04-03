@@ -1,7 +1,7 @@
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
 import { getHoldings } from "../../Util/Global";
@@ -11,7 +11,6 @@ export default function ImportTransactionsModalContent({ account }) {
     const { t } = useTranslation()
 
     const dispatch = useDispatch();
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
 
     const hiddenFileInput = useRef(null);
 
