@@ -75,6 +75,20 @@ const accountReducer = (state = initialState, action) => {
             currentAccounts = [...state.accounts]
             index = currentAccounts.findIndex(account => account.key === action.payload.key)
             const isManual = currentAccounts[index].isManual
+
+            if (!isManual) {
+                currentAccounts[index] = {
+                    ...currentAccounts[index],
+                    transactions: action.payload.transactions,
+                    holdings: action.payload.holdings,
+                }
+                window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
+                return {
+                    ...state,
+                    accounts: currentAccounts
+                }
+            }
+            
             const transactionsPayload = action.payload.transactions
             const currentTransactionKeys = currentAccounts[index].transactions.map(transaction => transaction.key)
             const newTransactions = transactionsPayload.filter(transaction => !currentTransactionKeys.includes(transaction.key))
@@ -89,19 +103,6 @@ const accountReducer = (state = initialState, action) => {
                     currentHoldings.push(newHolding)
                 }
             });
-
-            if (!isManual) {
-                currentAccounts[index] = {
-                    ...currentAccounts[index],
-                    transactions: transactionsPayload,
-                    holdings: action.payload.holdings,
-                }
-                window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
-                return {
-                    ...state,
-                    accounts: currentAccounts
-                }
-            }
 
             if (newTransactions.length === 0) {
                 console.log("no new transactions")

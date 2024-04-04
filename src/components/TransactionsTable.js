@@ -9,6 +9,7 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
+import { getHoldings } from "../Util/Global";
 
 export default function TransactionsTable({ account, children }) {
 
@@ -69,33 +70,6 @@ export default function TransactionsTable({ account, children }) {
                 return
             }
 
-            const valueInFiat = await getValueInFiat(transactions.allCurrencies, account.apiInfo.accessKey)
-
-            const allCrypto = valueInFiat.map((value, i) => {
-                return {
-                    accountKey: account.key,
-                    equityType: "Cryptocurrency",
-                    goalPercentage: 0,
-                    equityShare: parseFloat(transactions.valueOfCurrency[i].cryptoValue.toFixed(8)),
-                    name: transactions.valueOfCurrency[i].currency,
-                    fiatValue: parseFloat(parseFloat((transactions.valueOfCurrency[i].cryptoValue) * value.last).toFixed(2)),
-                    fiatCurrency: 'NOK',
-                    lastPrice: value.last,
-                    transactions: transactions.orders
-                        .filter(order => order.currency === transactions.valueOfCurrency[i].currency)
-                        .filter(order => order.type !== 'Stake' || order.type !== 'InternalTransfer')
-                        .map(transaction => {
-                            return {
-                                key: transaction.id,
-                                equityShare: parseFloat(transaction.amount),
-                                date: transaction.date,
-                                type: transaction.type,
-                                equityPrice: 0,
-                                cost: 0
-                            }
-                        })
-                }
-            }).filter(crypto => crypto.fiatValue > 0)
             const allMatches = transactions.orders
                 .filter(order => order.type === 'Match')
 
@@ -116,8 +90,10 @@ export default function TransactionsTable({ account, children }) {
                     }
                 })
 
+            const holdings = getHoldings(allTransactions, account)
+
             console.log("Fetched transactions.")
-            dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings: allCrypto }))
+            dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
         }
 
         if (account.apiInfo.accessKey === "") {

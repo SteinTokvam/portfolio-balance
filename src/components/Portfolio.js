@@ -40,6 +40,19 @@ export default function Portfolio() {
                     return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey }]
                 })
             })
+        }
+        if(accountType === 'Obligasjon') {
+            holdings.forEach(holding => {
+                setTotalValue(prevState => {
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                    }
+                    return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                })
+            })
         } else {
             holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
                 .then(prices => prices[prices.length - 1])
@@ -85,7 +98,7 @@ export default function Portfolio() {
                                                                 <p className="text-default-800 font-bold">
                                                                     {
                                                                         !account.isManual ?
-                                                                            account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                            account.holdings.reduce((sum, item) => item.fiatValue !== undefined ? sum + item.fiatValue: 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                             :
                                                                             totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                     }
@@ -103,7 +116,7 @@ export default function Portfolio() {
                                                                     return (
                                                                         <div key={holding.name} className="p-1 w-1/3">
                                                                             <p>{holding.name}</p>
-                                                                            <p>{holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                            <p>{holding.fiatValue !== undefined ? holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : (0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
                                                                         </div>
                                                                     )
                                                                 }) :

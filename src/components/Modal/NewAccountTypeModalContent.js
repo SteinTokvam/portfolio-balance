@@ -1,6 +1,6 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
-import { textInputStyle } from "../../Util/Global"
+import { accountTypes, textInputStyle } from "../../Util/Global"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
@@ -12,13 +12,6 @@ export function NewAccountTypeModalContent({ setScreen = () => { } }) {
 
     const [accountName, setAccountName] = useState("")
 
-    const accountTypes = [
-        "Aksjesparekonto",
-        "Individuell pensjonskonto",
-        "Kryptovaluta",
-        "Aksjefondskonto",
-        "Egen pensjonskonto"
-    ]
     const [selectedKeys, setSelectedKeys] = useState([]);
     const selectedAccountType = useMemo(
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { fetchTicker } from "../Util/E24";
-import { equityTypes } from "../Util/Global";
+import { equityTypes, getHoldings } from "../Util/Global";
 
 export default function Dashboard() {
 
@@ -46,6 +46,18 @@ export default function Dashboard() {
                     return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
                 })
             })
+        } if(accountType === 'Obligasjon') {
+            holdings.forEach(holding => {
+                setTotalValue(prevState => {
+                    if (prevState.length === 0) {
+                        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                    }
+                    if (prevState.filter(item => item.name === holding.name).length === 0) {
+                        return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                    }
+                    return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                })
+            })
         } else {
             holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
                 .then(prices => prices[prices.length - 1])
@@ -66,6 +78,7 @@ export default function Dashboard() {
 
     return (
         <>
+        {console.log(getHoldings(accounts[2].transactions, accounts[2]))}
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
@@ -138,7 +151,7 @@ export default function Dashboard() {
                     <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                     <Spacer y={2} />
                     <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
-                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h4>
+                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }): 0}</h4>
                 </div>
             }
         </>
