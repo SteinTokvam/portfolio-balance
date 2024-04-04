@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
-import { calculateValue, getTransactionsFromFiri, getValueInFiat } from "../Util/Firi";
+import { calculateValue, getTransactionsFromFiri } from "../Util/Firi";
 import { useDispatch } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";

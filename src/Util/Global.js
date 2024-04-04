@@ -1,4 +1,3 @@
-import { getValueInFiat } from "./Firi";
 
 export const languages = ["us", "no"];
 

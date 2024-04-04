@@ -22,7 +22,7 @@ export default function Dashboard() {
 
     useEffect(() => {
         accounts.forEach(account => {
-            setTotalValues(selectedFilter, account.type, account.holdings)
+            setTotalValues(selectedFilter, account.type, getHoldings(account.transactions, account))
         })
     }, [accounts, selectedFilter])
 
