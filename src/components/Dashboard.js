@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { fetchTicker } from "../Util/E24";
 import { equityTypes, getHoldings } from "../Util/Global";
+import { getValueInFiat } from "../Util/Firi";
 
 export default function Dashboard() {
 
@@ -22,12 +23,12 @@ export default function Dashboard() {
 
     useEffect(() => {
         accounts.forEach(account => {
-            setTotalValues(selectedFilter, account.type, getHoldings(account.transactions, account))
+            setTotalValues(selectedFilter, account.type, account, getHoldings(account.transactions, account))
         })
     }, [accounts, selectedFilter])
 
 
-    function setTotalValues(filter, accountType, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
+    function setTotalValues(filter, accountType, account, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
         if (!holdings || holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
@@ -36,17 +37,21 @@ export default function Dashboard() {
 
         if (accountType === 'Kryptovaluta') {
             holdings.forEach(holding => {
-                setTotalValue(prevState => {
-                    if (prevState.length === 0) {
-                        return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
-                        return [...prevState, { name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    return [{ name: holding.name, value: holding.fiatValue, accountKey: holding.accountKey, type: holding.equityType }]
-                })
+                getValueInFiat([holding.name], account.apiInfo.accessKey)
+                    .then(cryptoPrice => {
+                        const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
+                        setTotalValue(prevState => {
+                            if (prevState.length === 0) {
+                                return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
+                            }
+                            if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
+                                return [...prevState, { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
+                            }
+                            return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
+                        })
+                    })
             })
-        } if(accountType === 'Obligasjon') {
+        } if (accountType === 'Obligasjon') {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
@@ -115,10 +120,10 @@ export default function Dashboard() {
                                                 .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                     }</h4>
                                     <h4 className="text-large font-bold leading-none text-default-400">{
-                                            ((totalValue
-                                                .filter(holding => holding.accountKey === account.key)
-                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0))*100).toFixed(2)
-                                        }%</h4>
+                                        ((totalValue
+                                            .filter(holding => holding.accountKey === account.key)
+                                            .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                    }%</h4>
                                 </div>)
                         }) :
                             equityTypes.map(equityType => {
@@ -134,11 +139,11 @@ export default function Dashboard() {
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             ((totalValue
                                                 .filter(holding => holding.type === equityType)
-                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0))*100).toFixed(2)
+                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
                                         }%</h4>
                                     </div>)
                             })
-                            : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
+                        : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
                     }
                 </div>
             </div>
@@ -150,7 +155,7 @@ export default function Dashboard() {
                     <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                     <Spacer y={2} />
                     <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
-                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }): 0}</h4>
+                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
                 </div>
             }
         </>
