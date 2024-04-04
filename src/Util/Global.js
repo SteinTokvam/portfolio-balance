@@ -29,7 +29,7 @@ export const routes = {
   portfolio: '/portfolio',
 }
 
-export const equityTypes = ["Fund", "Stock", "Cryptocurrency"]
+export const equityTypes = ["Fund", "Stock", "Cryptocurrency", "Loan"]
 
 export const accountTypes = [
   "Aksjesparekonto",

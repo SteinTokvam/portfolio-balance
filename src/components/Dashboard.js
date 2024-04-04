@@ -50,12 +50,12 @@ export default function Dashboard() {
             holdings.forEach(holding => {
                 setTotalValue(prevState => {
                     if (prevState.length === 0) {
-                        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
                     }
                     if (prevState.filter(item => item.name === holding.name).length === 0) {
-                        return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                        return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
                     }
-                    return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey }]
+                    return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
                 })
             })
         } else {
@@ -78,12 +78,11 @@ export default function Dashboard() {
 
     return (
         <>
-        {console.log(getHoldings(accounts[2].transactions, accounts[2]))}
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a, b) => a + b.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
             </div >
             <Select
@@ -118,7 +117,7 @@ export default function Dashboard() {
                                     <h4 className="text-large font-bold leading-none text-default-400">{
                                             ((totalValue
                                                 .filter(holding => holding.accountKey === account.key)
-                                                .reduce((acc, cur) => acc + cur.value, 0) / totalValue.reduce((a, b) => a + b.value, 0))*100).toFixed(2)
+                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0))*100).toFixed(2)
                                         }%</h4>
                                 </div>)
                         }) :
@@ -130,12 +129,12 @@ export default function Dashboard() {
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             totalValue
                                                 .filter(holding => holding.type === equityType)
-                                                .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                         }</h4>
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             ((totalValue
                                                 .filter(holding => holding.type === equityType)
-                                                .reduce((acc, cur) => acc + cur.value, 0) / totalValue.reduce((a, b) => a + b.value, 0))*100).toFixed(2)
+                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0))*100).toFixed(2)
                                         }%</h4>
                                     </div>)
                             })

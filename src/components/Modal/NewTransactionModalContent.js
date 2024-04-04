@@ -2,7 +2,7 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { getHoldings, textInputStyle } from "../../Util/Global";
+import { equityTypes, getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 
@@ -32,12 +32,6 @@ export default function NewTransactionModalContent({ account }) {
         [selectedTransactionKeys]
     );
 
-    const investmentType = [
-        "Stock",
-        "Fund",
-        "Obligasjon",
-        "Kryptovaluta",
-    ]
     const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
     const selectedInvestmentType = useMemo(
         () => Array.from(selectedInvestmentKeys).join(", ").replaceAll("_", " "),
@@ -129,9 +123,9 @@ export default function NewTransactionModalContent({ account }) {
                             onSelectionChange={setSelectedInvestmentKeys}
                             selectedKeys={selectedInvestmentKeys}
                         >
-                            {investmentType.map((investmentType) => (
-                                <SelectItem key={investmentType} value={investmentType} >
-                                    {investmentType}
+                            {equityTypes.map((equityType) => (
+                                <SelectItem key={equityType} value={equityType} >
+                                    {equityType}
                                 </SelectItem>
                             ))}
                         </Select>

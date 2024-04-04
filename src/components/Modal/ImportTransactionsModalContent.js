@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
-import { getHoldings } from "../../Util/Global";
+import { equityTypes, getHoldings } from "../../Util/Global";
 
 export default function ImportTransactionsModalContent({ account }) {
 
@@ -18,12 +18,6 @@ export default function ImportTransactionsModalContent({ account }) {
         hiddenFileInput.current.click();
     };
 
-    const investmentType = [
-        "Stock",
-        "Fund",
-        "Obligasjon",
-        "Kryptovaluta",
-    ]
     const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
     const selectedInvestmentType = useMemo(
         () => Array.from(selectedInvestmentKeys).join(", ").replaceAll("_", " "),
@@ -83,9 +77,9 @@ export default function ImportTransactionsModalContent({ account }) {
                                 onSelectionChange={setSelectedInvestmentKeys}
                                 selectedKeys={selectedInvestmentKeys}
                             >
-                                {investmentType.map((investmentType) => (
-                                    <SelectItem key={investmentType} value={investmentType} >
-                                        {investmentType}
+                                {equityTypes.map((equityTypes) => (
+                                    <SelectItem key={equityTypes} value={equityTypes} >
+                                        {equityTypes}
                                     </SelectItem>
                                 ))}
                             </Select>
