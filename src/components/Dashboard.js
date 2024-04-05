@@ -1,5 +1,5 @@
 import { Select, SelectItem, Spacer } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
 import { equityTypes, getHoldings, setTotalValues } from "../Util/Global";
@@ -19,20 +19,24 @@ export default function Dashboard() {
         [selectedKeys]
     );
 
+    const hasLoadedBefore = useRef(true)
     useEffect(() => {
-        accounts.forEach(account => {
-            Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                setTotalValue(prevState => {
-                    return [...prevState, ...newHoldings]
+        if(hasLoadedBefore.current) {
+            accounts.forEach(account => {
+                Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
+                    const mergedWithTotalValue = [...totalValue, ...newHoldings]
+                    const removeDuplicates = mergedWithTotalValue.filter((value, index) => mergedWithTotalValue.indexOf(value) === index)
+                    setTotalValue(prevState => {
+                        return [...prevState, ...removeDuplicates]
+                    })
                 })
             })
-            
-        })
-    }, [accounts, selectedFilter])
+            hasLoadedBefore.current = false
+        }
+    }, [accounts])
 
     return (
         <>
-        {console.log(totalValue)}
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>

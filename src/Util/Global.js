@@ -115,9 +115,7 @@ export function setTotalValues(account, holdings) {
   }
 
   const accountType = account.type
-  console.log(accountType)
-  console.log(account.holdings)
-
+  
   return holdings.map(holding => {
     if (accountType === 'Kryptovaluta') {
       return getValueInFiat([holding.name], account.apiInfo.accessKey)
@@ -131,6 +129,9 @@ export function setTotalValues(account, holdings) {
       return fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
         .then(prices => prices[prices.length - 1])
         .then(price => {
+          if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
+            return {}
+          }
           return { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }
         })
     }
