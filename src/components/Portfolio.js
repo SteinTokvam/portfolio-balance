@@ -28,7 +28,7 @@ export default function Portfolio() {
             })
             hasLoadedBefore.current = false
         }
-    }, [accounts])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <div>
@@ -68,7 +68,7 @@ export default function Portfolio() {
                                                             totalValue.map(totalValue => {
                                                                 if (totalValue.accountKey === account.key) {
                                                                     if(totalValue.value < 1) {
-                                                                        return
+                                                                        return ''
                                                                     }
                                                                     return (
                                                                         <div key={totalValue.name} className="p-1 w-1/3">

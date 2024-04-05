@@ -33,7 +33,7 @@ export default function Dashboard() {
             })
             hasLoadedBefore.current = false
         }
-    }, [accounts])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>

@@ -9,7 +9,9 @@ export default function DeleteButton({ handleDelete, buttonText }) {
             startContent={<DeleteIcon />}
             onPress={handleDelete}
             size="lg"
-            variant="bordered" >
+            variant="bordered"
+            className="m-2"
+        >
             {buttonText}
         </Button>
     )

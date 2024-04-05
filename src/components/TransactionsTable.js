@@ -132,14 +132,14 @@ export default function TransactionsTable({ account, children }) {
                 <div className="flex justify-end">
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
                 </div> :
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
                         {modalContent}
                     </EmptyModal>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account)} size="lg">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account)} size="lg" className="m-2">
                         {t('importTransactionsModal.title')} <UploadIcon />
                     </Button>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         Ny transaksjon
                     </Button>
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
