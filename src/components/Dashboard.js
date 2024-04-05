@@ -2,9 +2,7 @@ import { Select, SelectItem, Spacer } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
-import { fetchTicker } from "../Util/E24";
-import { equityTypes, getHoldings } from "../Util/Global";
-import { getValueInFiat } from "../Util/Firi";
+import { equityTypes, getHoldings, setTotalValues } from "../Util/Global";
 
 export default function Dashboard() {
 
@@ -23,66 +21,18 @@ export default function Dashboard() {
 
     useEffect(() => {
         accounts.forEach(account => {
-            setTotalValues(selectedFilter, account.type, account, getHoldings(account.transactions, account))
+            Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
+                setTotalValue(prevState => {
+                    return [...prevState, ...newHoldings]
+                })
+            })
+            
         })
     }, [accounts, selectedFilter])
 
-
-    function setTotalValues(filter, accountType, account, holdings) {//Denne er kopiert fra Portfolio. burde sette ting i global state, så koden er på en plass. alternativt flytte ut metoden en plass og få den til å returnere hele state
-        if (!holdings || holdings.length === 0) {
-            console.log("no holdings")
-            setTotalValue(prevState => [...prevState, 0])
-            return
-        }
-
-        if (accountType === 'Kryptovaluta') {
-            holdings.forEach(holding => {
-                getValueInFiat([holding.name], account.apiInfo.accessKey)
-                    .then(cryptoPrice => {
-                        const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
-                        setTotalValue(prevState => {
-                            if (prevState.length === 0) {
-                                return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
-                            }
-                            if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
-                                return [...prevState, { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
-                            }
-                            return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
-                        })
-                    })
-            })
-        } if (accountType === 'Obligasjon') {
-            holdings.forEach(holding => {
-                setTotalValue(prevState => {
-                    if (prevState.length === 0) {
-                        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    if (prevState.filter(item => item.name === holding.name).length === 0) {
-                        return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
-                })
-            })
-        } else {
-            holdings.forEach(holding => fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
-                .then(prices => prices[prices.length - 1])
-                .then(price => setTotalValue(prevState => {
-                    if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
-                        return prevState
-                    }
-                    if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
-                        return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    if (prevState.length === 0) {
-                        return [{ name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
-                    }
-                    return prevState
-                })))
-        }
-    }
-
     return (
         <>
+        {console.log(totalValue)}
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>

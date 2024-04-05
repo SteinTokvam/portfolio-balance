@@ -1,3 +1,5 @@
+import { fetchTicker } from "./E24";
+import { getValueInFiat } from "./Firi";
 
 export const languages = ["us", "no"];
 
@@ -83,25 +85,93 @@ export function getHoldings(transactions, account) {
       }
     })
     return holdings
-  } 
+  }
   const holdings = []
-    const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.name))];
-    uniqueHoldingKeys.forEach(name => {
-      const equityShare = transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
-      const cost = transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + parseFloat(transaction.cost), 0)
+  const uniqueHoldingKeys = [...new Set(transactions.map(transaction => transaction.name))];
+  uniqueHoldingKeys.forEach(name => {
+    const equityShare = transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
+    const cost = transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + parseFloat(transaction.cost), 0)
 
-      if (equityShare > 0) {
-        holdings.push(
-          {
-            name: transactions.find(transaction => transaction.name === name).name,
-            accountKey: account.key,
-            equityShare,
-            equityType: transactions.filter(transaction => transaction.name === name)[0].equityType,
-            value: cost,
-            goalPercentage: 0
-          }
-        )
-      }
-    })
-    return holdings
+    if (equityShare > 0) {
+      holdings.push(
+        {
+          name: transactions.find(transaction => transaction.name === name).name,
+          accountKey: account.key,
+          equityShare,
+          equityType: transactions.filter(transaction => transaction.name === name)[0].equityType,
+          value: cost,
+          goalPercentage: 0
+        }
+      )
+    }
+  })
+  return holdings
 }
+
+export function setTotalValues(account, holdings) {
+  if (!holdings || holdings.length === 0) {
+    console.log("no holdings")
+    return []
+  }
+
+  const accountType = account.type
+  console.log(accountType)
+  console.log(account.holdings)
+
+  return holdings.map(holding => {
+    if (accountType === 'Kryptovaluta') {
+      return getValueInFiat([holding.name], account.apiInfo.accessKey)
+        .then(cryptoPrice => {
+          const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
+          return { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }
+        })
+    } else if (accountType === 'Obligasjon') {
+      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
+    } else {
+      return fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
+        .then(prices => prices[prices.length - 1])
+        .then(price => {
+          return { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }
+        })
+    }
+  })
+}
+
+/*
+
+holdings.forEach(holding => {
+    if (accountType === 'Kryptovaluta') {
+      getValueInFiat([holding.name], account.apiInfo.accessKey)
+        .then(cryptoPrice => {
+          const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
+          setTotalValue(prevState => {
+            if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
+              return [...prevState, { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
+            }
+            return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
+          })
+        })
+    } else if (accountType === 'Obligasjon') {
+      setTotalValue(prevState => {
+        if (prevState.filter(item => item.name === holding.name).length === 0) {
+          return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
+        }
+        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
+      })
+    } else {
+      fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
+        .then(prices => prices[prices.length - 1])
+        .then(price => setTotalValue(prevState => {
+          if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
+            return [...prevState]
+          }
+
+          if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {//har ikke denne investeringen fra før
+            return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
+          }
+          return [...prevState]
+        }))
+    }
+  })
+  
+  */

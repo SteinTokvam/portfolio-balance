@@ -3,9 +3,8 @@ import TransactionsTable from "./TransactionsTable";
 import { useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { fetchTicker } from "../Util/E24";
 import { useEffect, useState } from "react";
-import { getHoldings } from "../Util/Global";
+import { getHoldings, setTotalValues } from "../Util/Global";
 
 
 
@@ -16,12 +15,13 @@ export default function Portfolio() {
     const [totalValue, setTotalValue] = useState([]);
 
     useEffect(() => {
-        accounts.forEach(account => {
-            setTotalValues(account.type, getHoldings(account.transactions, account))
+        accounts.forEach(account => {//tror noe timing greier gjør at jeg ikke får inn mer enn en holding av gangen.. kanskje neste konto nullstiller igjen så en bare har sen som den ble ferdig med til slutt?
+            setTotalValues(account, getHoldings(account.transactions, account), setTotalValue)
+            //setTotalValues(account.type, getHoldings(account.transactions, account))
         })
     }, [accounts])
 
-    function setTotalValues(accountType, holdings) {
+    /*function setTotalValues(accountType, holdings) {
         if (!holdings || holdings.length === 0) {
             console.log("no holdings")
             setTotalValue(prevState => [...prevState, 0])
@@ -71,7 +71,7 @@ export default function Portfolio() {
                     return prevState
                 })))
         }
-    }
+    }*/
 
     return (
         <div>
@@ -97,9 +97,6 @@ export default function Portfolio() {
                                                             <div>
                                                                 <p className="text-default-800 font-bold">
                                                                     {
-                                                                        !account.isManual ?
-                                                                            account.holdings.reduce((sum, item) => item.fiatValue !== undefined ? sum + item.fiatValue: 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                                                            :
                                                                             totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                     }
                                                                 </p>
@@ -111,7 +108,7 @@ export default function Portfolio() {
                                                 <TransactionsTable account={account}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
-                                                            !account.isManual ?
+                                                            /*!account.isManual ?
                                                                 account.holdings.map(holding => {
                                                                     return (
                                                                         <div key={holding.name} className="p-1 w-1/3">
@@ -119,9 +116,10 @@ export default function Portfolio() {
                                                                             <p>{holding.fiatValue !== undefined ? holding.fiatValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : (0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
                                                                         </div>
                                                                     )
-                                                                }) :
+                                                                }) :*/
                                                                 totalValue.map(totalValue => {
                                                                     if (totalValue.accountKey === account.key) {
+                                                                        
                                                                         return (
                                                                             <div key={totalValue.name} className="p-1 w-1/3">
                                                                                 <p className="text-default-600">{totalValue.name}</p>
