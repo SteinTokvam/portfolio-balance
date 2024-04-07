@@ -115,13 +115,18 @@ export function setTotalValues(account, holdings) {
   }
 
   const accountType = account.type
-  
+
   return holdings.map(holding => {
     if (accountType === 'Kryptovaluta') {
       return getValueInFiat([holding.name], account.apiInfo.accessKey)
         .then(cryptoPrice => {
           const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
-          return { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }
+          return {
+            name: holding.name,
+            value: parseFloat(last),
+            accountKey: holding.accountKey,
+            type: holding.equityType
+          }
         })
     } else if (accountType === 'Obligasjon') {
       return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
@@ -130,9 +135,21 @@ export function setTotalValues(account, holdings) {
         .then(prices => prices[prices.length - 1])
         .then(price => {
           if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
-            return {}
+            return {
+              name: holding.name,
+              value: account.transactions
+                .filter(transaction => transaction.name === holding.name)
+                .reduce((sum, item) => sum + item.cost, 0),
+              accountKey: holding.accountKey,
+              type: holding.equityType
+            }
           }
-          return { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }
+          return {
+            name: holding.name,
+            value: price.value * holding.equityShare,
+            accountKey: holding.accountKey,
+            type: holding.equityType
+          }
         })
     }
   })

@@ -68,7 +68,7 @@ export default function Dashboard() {
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{
                                         account.type === 'Cryptocurrency' ?
-                                            account.holdings.reduce((sum, item) => sum + item.fiatValue, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
+                                            account.holdings.reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
                                             totalValue
                                                 .filter(holding => holding.accountKey === account.key)
                                                 .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
