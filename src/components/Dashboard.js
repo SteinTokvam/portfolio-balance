@@ -80,7 +80,7 @@ export default function Dashboard() {
                                     }%</h4>
                                 </div>)
                         }) :
-                            equityTypes.map(equityType => {
+                            equityTypes.map((equityType, index) => {
                                 return (
                                     <div key={equityType}>
                                         <h2 className="text-medium font-semibold leading-none text-default-600">{equityType}</h2>
@@ -94,7 +94,7 @@ export default function Dashboard() {
                                             ((totalValue
                                                 .filter(holding => holding.type === equityType)
                                                 .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                        }%</h4>
+                                        }% / {equityGoalPercentage[index]}%</h4>
                                     </div>)
                             })
                         : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
