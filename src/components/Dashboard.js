@@ -1,4 +1,4 @@
-import { Select, SelectItem, Spacer, useDisclosure, Button } from "@nextui-org/react";
+import { Select, SelectItem, Spacer, useDisclosure, Button, Divider } from "@nextui-org/react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
@@ -13,7 +13,21 @@ export default function Dashboard() {
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
     const [totalValue, setTotalValue] = useState([]);
     const biggestInvestment = totalValue.length !== 0 && totalValue.reduce((a, b) => a.value > b.value ? a : b)
+    const furthestFromGoal = equityTypes.map(equityType => {
+        return {
+            currentPercentage: parseFloat((totalValue
+                .filter(holding => holding.type === equityType.key)
+                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0) * 100).toFixed(2)),
+            equityType
+        }
+    }).map(furthest => {
+        return {
+            ...furthest,
+            distanceFromGoalPercentage: furthest.equityType.goalPercentage - furthest.currentPercentage
+        }
+    }).sort((a, b) => a.distanceFromGoalPercentage > b.distanceFromGoalPercentage)
 
+    console.log(furthestFromGoal)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 
@@ -68,7 +82,7 @@ export default function Dashboard() {
             <Button color="primary"
                 onPress={onOpen}
             >
-                Oppdater målprosent
+                {t('dashboard.updateGoalPercentage')}
             </Button>
             <Spacer y={4} />
             <div className="w-full text-center flex flex-col justify-center">
@@ -124,6 +138,26 @@ export default function Dashboard() {
                     <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
                     <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
                 </div>
+            }
+
+            <Spacer y={4} />
+            {
+                selectedFilter === filters[1] ?
+                <div className="justify-center">
+                <Divider />
+                <Spacer y={4} />
+                <h4 className="text-large leading-none text-default-600">
+                    {
+                        t('dashboard.investmentToFocus',
+                            {
+                                equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
+                                distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
+                            }
+                        )
+                    }
+                </h4>
+            </div>
+            : ''
             }
         </>
     )

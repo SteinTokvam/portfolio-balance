@@ -5,7 +5,9 @@
     },
     "dashboard": {
         "biggestInvestment": "Largest investment",
-        "total": "Total value"
+        "total": "Total value",
+        "updateGoalPercentage": "Update goal percentage",
+        "investmentToFocus": "{{equityType}} are furthest from it's goal percentage with {{distanceFromGoalPercentage}}%. Consider to prioritize this investment for a while."
     },
     "navbar": {
         "brand": "Portfolio rebalancer",

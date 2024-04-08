@@ -5,7 +5,9 @@
     },
     "dashboard": {
         "biggestInvestment": "Største investering:",
-        "total": "Total verdi"
+        "total": "Total verdi",
+        "updateGoalPercentage": "Oppdater målprosent",
+        "investmentToFocus": "{{equityType}} er lengst unna målet sitt med {{distanceFromGoalPercentage}}%. Vurder å fokusere på denne investeringen fremover."
     },
     "navbar": {
         "brand": "Portfolio rebalancer",
