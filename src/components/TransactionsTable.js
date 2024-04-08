@@ -48,7 +48,7 @@ export default function TransactionsTable({ account, children }) {
         { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
         { key: 'equityShare', label: t('transactionsTable.equityShare') },
         { key: 'date', label: t('transactionsTable.date') },
-        { key: 'action', label: 'Action'}
+        { key: 'action', label: 'Action' }
     ];
 
     useEffect(() => {
@@ -85,7 +85,9 @@ export default function TransactionsTable({ account, children }) {
                         equityShare: parseFloat(transaction.amount),
                         date: transaction.date,
                         type: transaction.type,
-                        equityPrice: 0,
+                        equityPrice: matchedTransaction ?
+                            ((1 / parseFloat(transaction.amount)) * parseFloat(matchedTransaction.amount) * -1).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
+                            "N/A",
                         cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
                     }
                 })
@@ -118,9 +120,9 @@ export default function TransactionsTable({ account, children }) {
     }
 
     function renderCell(item, columnKey) {
-        switch(columnKey) {
+        switch (columnKey) {
             case 'action':
-                return  <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" />
+                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" />
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -130,7 +132,7 @@ export default function TransactionsTable({ account, children }) {
         <div>
             {account.type === 'Kryptovaluta' ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -142,7 +144,7 @@ export default function TransactionsTable({ account, children }) {
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         Ny transaksjon
                     </Button>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto"/>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" />
                 </div>
             }
 
