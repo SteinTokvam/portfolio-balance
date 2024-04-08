@@ -46,5 +46,11 @@
     "supportDevelopment": {
         "header": "Støtt utviklingen",
         "ethAdress": "Ethereum adresse:"
+    },
+    "equityTypes": {
+        "fund": "Fond",
+        "stock": "Aksje",
+        "cryptocurrency": "Kryptobaluta",
+        "loan": "Obligasjonslån"
     }
 }

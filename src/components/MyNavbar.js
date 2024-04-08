@@ -42,7 +42,7 @@ export default function MyNavbar() {
       </NavbarContent>
 
       <NavbarContent justify="end" className="hidden sm:flex lg:flex">
-        <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false}>
+        <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
           <SettingsModalContent />
         </EmptyModal>
         {menuItems.map((item, index) => (

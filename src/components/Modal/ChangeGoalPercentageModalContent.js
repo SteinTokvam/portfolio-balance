@@ -57,8 +57,8 @@ export default function ChangeGoalPercentageModalContent() {
                             selectedKeys={selectedEquityTypeKey}
                         >
                             {equityTypes.map((equityType) => (
-                                <SelectItem key={equityType.key} value={equityType.label} >
-                                    {equityType.label}
+                                <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
+                                    {t(`equityTypes.${equityType.key.toLowerCase()}`)}
                                 </SelectItem>
                             ))}
                         </Select>

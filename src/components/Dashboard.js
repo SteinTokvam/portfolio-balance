@@ -96,7 +96,7 @@ export default function Dashboard() {
                             equityTypes.map(equityType => {
                                 return (
                                     <div key={equityType.key}>
-                                        <h2 className="text-medium font-semibold leading-none text-default-600">{equityType.label}</h2>
+                                        <h2 className="text-medium font-semibold leading-none text-default-600">{t(`equityTypes.${equityType.key.toLowerCase()}`)}</h2>
                                         <Spacer y={2} />
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             totalValue
