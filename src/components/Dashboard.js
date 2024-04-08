@@ -2,7 +2,7 @@ import { Select, SelectItem, Spacer } from "@nextui-org/react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
-import { equityTypes, getHoldings, setTotalValues } from "../Util/Global";
+import { equityGoalPercentage, equityTypes, getHoldings, setTotalValues } from "../Util/Global";
 
 export default function Dashboard() {
 
