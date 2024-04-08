@@ -4,11 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
 import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
+import { setAllPercentages } from "../../actions/equityType"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t, i18n } = useTranslation();
     const accounts = useSelector(state => state.rootReducer.accounts)
+    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const hiddenFileInput = useRef(null);
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
@@ -25,8 +27,6 @@ export default function SettingsModalContent() {
     };
 
     const importInvestmentsFile = e => {
-        //TODO: denne må også legge inn kontoer under accounts
-        //TODO: lag reducere som importerer account objektet
         const fileReader = new FileReader();
         fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
         fileReader.onload = e => {
@@ -35,6 +35,7 @@ export default function SettingsModalContent() {
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
             dispatch(importAccounts(json.accounts))
+            dispatch(setAllPercentages(json.equitytypes))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
         };
@@ -43,7 +44,8 @@ export default function SettingsModalContent() {
     const processFile = () => {
         return JSON.stringify({
             settings: JSON.parse(window.localStorage.getItem('settings')),
-            accounts: accounts
+            accounts: accounts,
+            equitytypes: equityTypes
         })
     }
 

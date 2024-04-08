@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next"
 import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
-import { equityTypes, getHoldings } from "../../Util/Global";
+import { getHoldings } from "../../Util/Global";
+import { useSelector } from "react-redux";
 
 export default function ImportTransactionsModalContent({ account }) {
 
@@ -17,6 +18,8 @@ export default function ImportTransactionsModalContent({ account }) {
     const handleClick = () => {
         hiddenFileInput.current.click();
     };
+
+    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
     const selectedInvestmentType = useMemo(

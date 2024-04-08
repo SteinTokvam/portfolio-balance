@@ -1,15 +1,20 @@
-import { Select, SelectItem, Spacer } from "@nextui-org/react";
+import { Select, SelectItem, Spacer, useDisclosure, Button } from "@nextui-org/react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
-import { equityGoalPercentage, equityTypes, getHoldings, setTotalValues } from "../Util/Global";
+import { getHoldings, setTotalValues } from "../Util/Global";
+import EmptyModal from "./Modal/EmptyModal";
+import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 
 export default function Dashboard() {
 
     const { t } = useTranslation();
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
+    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
     const [totalValue, setTotalValue] = useState([]);
     const biggestInvestment = totalValue.length !== 0 && totalValue.reduce((a, b) => a.value > b.value ? a : b)
+
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 
     const filters = ["Konto", "Investeringstype"]
@@ -21,7 +26,7 @@ export default function Dashboard() {
 
     const hasLoadedBefore = useRef(true)
     useEffect(() => {
-        if(hasLoadedBefore.current) {
+        if (hasLoadedBefore.current) {
             accounts.forEach(account => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
                     const mergedWithTotalValue = [...totalValue, ...newHoldings]
@@ -37,6 +42,9 @@ export default function Dashboard() {
 
     return (
         <>
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
+                <ChangeGoalPercentageModalContent />
+            </EmptyModal>
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
@@ -57,6 +65,11 @@ export default function Dashboard() {
                     </SelectItem>
                 ))}
             </Select>
+            <Button color="primary"
+                onPress={onOpen}
+            >
+                Oppdater målprosent
+            </Button>
             <Spacer y={4} />
             <div className="w-full text-center flex flex-col justify-center">
                 <div className="grid grid-cols-2 gap-20 justify-between">
@@ -80,21 +93,21 @@ export default function Dashboard() {
                                     }%</h4>
                                 </div>)
                         }) :
-                            equityTypes.map((equityType, index) => {
+                            equityTypes.map(equityType => {
                                 return (
-                                    <div key={equityType}>
-                                        <h2 className="text-medium font-semibold leading-none text-default-600">{equityType}</h2>
+                                    <div key={equityType.key}>
+                                        <h2 className="text-medium font-semibold leading-none text-default-600">{equityType.label}</h2>
                                         <Spacer y={2} />
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             totalValue
-                                                .filter(holding => holding.type === equityType)
+                                                .filter(holding => holding.type === equityType.key)
                                                 .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                         }</h4>
                                         <h4 className="text-large font-bold leading-none text-default-400">{
                                             ((totalValue
-                                                .filter(holding => holding.type === equityType)
+                                                .filter(holding => holding.type === equityType.key)
                                                 .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                        }% / {equityGoalPercentage[index]}%</h4>
+                                        }% / {equityType.goalPercentage}%</h4>
                                     </div>)
                             })
                         : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>

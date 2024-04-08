@@ -30,9 +30,6 @@ export const routes = {
   portfolio: '/portfolio',
 }
 
-export const equityTypes = ["Fund", "Stock", "Cryptocurrency", "Loan"]
-export const equityGoalPercentage = [45, 29, 13, 13]
-
 export const accountTypes = [
   "Aksjesparekonto",
   "Individuell pensjonskonto",

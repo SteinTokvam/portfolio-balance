@@ -2,9 +2,10 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { equityTypes, getHoldings, textInputStyle } from "../../Util/Global";
+import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
+import { useSelector } from "react-redux";
 
 
 export default function NewTransactionModalContent({ account }) {
@@ -16,6 +17,8 @@ export default function NewTransactionModalContent({ account }) {
     const [equityPrice, setEquityPrice] = useState(0)
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState(0)
+
+    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
         "BUY",
