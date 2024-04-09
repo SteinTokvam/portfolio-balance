@@ -1,4 +1,4 @@
-import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Accordion, AccordionItem, Link } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,8 @@ export default function NewTransactionModalContent({ account }) {
     const [equityPrice, setEquityPrice] = useState(0)
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState(0)
+
+    const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
 
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
@@ -107,12 +109,39 @@ export default function NewTransactionModalContent({ account }) {
                             value={equityPrice}
                             onValueChange={setEquityPrice} />
 
-                        <Input type="text"
-                            classNames={textInputStyle}
-                            label={"E24 ID"}
-                            value={e24Key}
-                            onValueChange={setE24Key} />
-
+                        <div className="border rounded-xl p-1 grid grid-cols-1 gap-4">
+                            <Input type="text"
+                                classNames={textInputStyle}
+                                label={"E24 ID"}
+                                value={e24Key}
+                                onValueChange={setE24Key}
+                            />
+                            <Accordion
+                                
+                            >
+                                <AccordionItem
+                                    title={<h1 className="border-b">Hvordan fylle ut</h1>}
+                                >
+                                    <div className="">
+                                        <p>Gå til <Link
+                                            href="https://e24.no/bors/nyheter"
+                                            isExternal
+                                            showAnchorIcon
+                                        >
+                                            E24
+                                        </Link> og søk opp investeringen.
+                                            <br />Eksempel: <Link
+                                                isExternal
+                                                showAnchorIcon
+                                                href="https://e24.no/bors/instrument/KR-KINGL.OSE"
+                                            >
+                                                Kron Indeks Global
+                                            </Link> så er det verdien "KR-KINGL" som står rett over "Kron Indeks Global" som skal inn i tekstboksen.
+                                        </p>
+                                    </div>
+                                </AccordionItem>
+                            </Accordion>
+                        </div>
                         <Input type="number"
                             classNames={textInputStyle}
                             label={"Antall"}
