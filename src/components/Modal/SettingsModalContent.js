@@ -55,7 +55,7 @@ export default function SettingsModalContent() {
         i18n.changeLanguage(selectedLanguage)
         window.localStorage.setItem('settings', JSON.stringify({ language: selectedLanguage }))
         
-    }, [selectedLanguage, i18n])
+    }, [selectedLanguage])
 
     return (
         <ModalContent>
