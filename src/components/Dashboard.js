@@ -25,7 +25,14 @@ export default function Dashboard() {
             ...furthest,
             distanceFromGoalPercentage: furthest.equityType.goalPercentage - furthest.currentPercentage
         }
-    }).sort((a, b) => a.distanceFromGoalPercentage > b.distanceFromGoalPercentage)
+    }).sort((a, b) => {
+        if (a.distanceFromGoalPercentage < b.distanceFromGoalPercentage) {
+            return 1
+        } else if (a.distanceFromGoalPercentage > b.distanceFromGoalPercentage) {
+            return -1
+        }
+        return 0
+    })
 
     console.log(furthestFromGoal)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -85,8 +92,8 @@ export default function Dashboard() {
                 {t('dashboard.updateGoalPercentage')}
             </Button>
             <Spacer y={4} />
-            <div className="w-full text-center flex flex-col justify-center">
-                <div className="grid grid-cols-2 gap-20 justify-between">
+            <div className="p-4">
+                <div className="grid grid-cols-2 gap-20 content-evenly">
                     {accounts.length > 0 ?
                         selectedFilter === filters[0] ? accounts.map(account => {
                             return (
@@ -109,7 +116,7 @@ export default function Dashboard() {
                         }) :
                             equityTypes.map(equityType => {
                                 return (
-                                    <div key={equityType.key}>
+                                    <div key={equityType.key} className="sm:text-center">
                                         <h2 className="text-medium font-semibold leading-none text-default-600">{t(`equityTypes.${equityType.key.toLowerCase()}`)}</h2>
                                         <Spacer y={2} />
                                         <h4 className="text-large font-bold leading-none text-default-400">{
@@ -131,33 +138,50 @@ export default function Dashboard() {
 
             {
                 biggestInvestment &&
-                <div className="full text-center mx-auto flex flex-col justify-center">
-                    <Spacer y={20} />
-                    <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
-                    <Spacer y={2} />
-                    <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
-                    <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
+                <div className="full mx-auto flex justify-center">
+                    <div>
+                        <Spacer y={20} />
+                        <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
+                        <Spacer y={2} />
+                        <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
+                        <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
+                    </div>
                 </div>
             }
 
             <Spacer y={4} />
             {
                 selectedFilter === filters[1] ?
-                <div className="justify-center">
-                <Divider />
-                <Spacer y={4} />
-                <h4 className="text-large leading-none text-default-600">
-                    {
-                        t('dashboard.investmentToFocus',
-                            {
-                                equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
-                                distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
-                            }
-                        )
-                    }
-                </h4>
-            </div>
-            : ''
+                    <div className="w-full flex flex-col justify-center">
+                        <Divider />
+                        <Spacer y={4} />
+                        <div className="flex flex-col sm:grid grid-cols-2 gap-20 justify-between p-4" >
+                            <h4 className="text-large leading-none text-default-600">
+                                {
+                                    t('dashboard.investmentToFocus',
+                                        {
+                                            bullet: '\u{2022}',
+                                            equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
+                                            distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
+                                        }
+                                    )
+                                }
+                            </h4>
+
+                            <h4 className="text-large leading-none text-default-600">
+                                {
+                                    t('dashboard.investmentOverbought',
+                                        {
+                                            bullet: '\u{2022}',
+                                            equityType: t(`equityTypes.${furthestFromGoal[furthestFromGoal.length - 1].equityType.key.toLowerCase()}`),
+                                            distanceFromGoalPercentage: Math.abs(furthestFromGoal[furthestFromGoal.length - 1].distanceFromGoalPercentage).toFixed(2)
+                                        }
+                                    )
+                                }
+                            </h4>
+                        </div>
+                    </div>
+                    : ''
             }
         </>
     )

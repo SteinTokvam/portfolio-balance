@@ -7,7 +7,8 @@
         "biggestInvestment": "Largest investment",
         "total": "Total value",
         "updateGoalPercentage": "Update goal percentage",
-        "investmentToFocus": "{{equityType}} are furthest from it's goal percentage with {{distanceFromGoalPercentage}}%. Consider to prioritize this investment for a while."
+        "investmentToFocus": "{{bullet}} {{equityType}} are furthest from it's goal percentage with {{distanceFromGoalPercentage}}%. Consider to prioritize this investment for a while.",
+        "investmentOverbought": "{{bullet}} {{equityType}} are beyond it's target by {{distanceFromGoalPercentage}}%. Consider to not invest more before it is closer to it's target."
     },
     "navbar": {
         "brand": "Portfolio rebalancer",
