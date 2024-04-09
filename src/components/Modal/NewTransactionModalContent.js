@@ -18,8 +18,6 @@ export default function NewTransactionModalContent({ account }) {
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState(0)
 
-    const [tooltipIsOpen, setTooltipIsOpen] = useState(false);
-
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
@@ -117,7 +115,7 @@ export default function NewTransactionModalContent({ account }) {
                                 onValueChange={setE24Key}
                             />
                             <Accordion
-                                
+
                             >
                                 <AccordionItem
                                     title={<h1 className="border-b">Hvordan fylle ut</h1>}
@@ -156,8 +154,8 @@ export default function NewTransactionModalContent({ account }) {
                             selectedKeys={selectedInvestmentKeys}
                         >
                             {equityTypes.map((equityType) => (
-                                <SelectItem key={equityType} value={equityType} >
-                                    {equityType}
+                                <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
+                                    {t(`equityTypes.${equityType.key.toLowerCase()}`)}
                                 </SelectItem>
                             ))}
                         </Select>
