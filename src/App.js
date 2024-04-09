@@ -11,7 +11,6 @@ import Portfolio from './components/Portfolio';
 import { routes } from './Util/Global';
 import Footer from './components/Footer';
 
-
 function App() {
 
   const dispatch = useDispatch()

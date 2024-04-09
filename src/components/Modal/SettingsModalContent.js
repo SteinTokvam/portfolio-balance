@@ -5,10 +5,12 @@ import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
 import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
+import i18n from "../../i18n/config"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
+
     const accounts = useSelector(state => state.rootReducer.accounts)
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
