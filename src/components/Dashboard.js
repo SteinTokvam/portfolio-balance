@@ -39,7 +39,7 @@ export default function Dashboard() {
 
 
     const filters = ["Konto", "Investeringstype"]
-    const [selectedKeys, setSelectedKeys] = useState([filters[0]]);
+    const [selectedKeys, setSelectedKeys] = useState([filters[1]]);
     const selectedFilter = useMemo(
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
         [selectedKeys]
