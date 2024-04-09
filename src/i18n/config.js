@@ -6,7 +6,7 @@ const lang = JSON.parse(window.localStorage.getItem('settings'))
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'us',
-  lng: lang.language,
+  lng: lang ? lang.language : 'us',
   resources: {
     us: {
       translations: require('./locales/us/translations.json')
