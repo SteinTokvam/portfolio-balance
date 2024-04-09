@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import SupportModalContent from "./Modal/SupportModalContent";
 import EmptyModal from "./Modal/EmptyModal";
 
-export default function Footer() {
+export default function Footer({isDark}) {
     const { t } = useTranslation()
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     return (
-        <footer className="rounded-lg shadow m-4 dark:bg-gray-800">
+        <footer className={`rounded-lg shadow m-4 ${isDark ? 'dark bg-background' : ''}`}>
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} size="5xl">
                 <SupportModalContent />
             </EmptyModal>

@@ -2,11 +2,11 @@ import { Button } from "@nextui-org/react";
 import DeleteIcon from "../icons/DeleteIcon";
 
 
-export default function DeleteButton({ handleDelete, buttonText }) {
+export default function DeleteButton({ handleDelete, buttonText, isDark }) {
     return (
         <Button
             color="danger"
-            startContent={<DeleteIcon />}
+            startContent={<DeleteIcon dark={isDark}/>}
             onPress={handleDelete}
             size="lg"
             variant="bordered"

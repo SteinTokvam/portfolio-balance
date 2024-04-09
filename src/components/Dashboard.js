@@ -34,7 +34,6 @@ export default function Dashboard() {
         return 0
     })
 
-    console.log(furthestFromGoal)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
 
@@ -72,25 +71,32 @@ export default function Dashboard() {
                 <Spacer y={2} />
                 <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
-            </div >
-            <Select
-                selectionMode="single"
-                label="Filtrer"
-                className="max-w-xs"
-                onSelectionChange={setSelectedKeys}
-                selectedKeys={selectedKeys}
-            >
-                {filters.map((filter) => (
-                    <SelectItem key={filter} value={filter}>
-                        {filter}
-                    </SelectItem>
-                ))}
-            </Select>
-            <Button color="primary"
-                onPress={onOpen}
-            >
-                {t('dashboard.updateGoalPercentage')}
-            </Button>
+            </div>
+            <div className="flex flex-col items-center">
+                <Select
+                    selectionMode="single"
+                    label="Filtrer"
+                    className="w-3/4 mb-4 sm:w-1/4"
+                    onSelectionChange={setSelectedKeys}
+                    selectedKeys={selectedKeys}
+                >
+                    {filters.map((filter) => (
+                        <SelectItem key={filter} value={filter}>
+                            {filter}
+                        </SelectItem>
+                    ))}
+                </Select>
+                {
+                    selectedFilter === filters[1] ? <Button
+                        color="primary"
+                        onPress={onOpen}
+                        className="w-3/4 sm:w-1/4"
+                    >
+                        {t('dashboard.updateGoalPercentage')}
+                    </Button> :
+                        ''
+                }
+            </div>
             <Spacer y={4} />
             <div className="p-4">
                 <div className="grid grid-cols-2 gap-20 content-evenly">
@@ -154,8 +160,8 @@ export default function Dashboard() {
                 selectedFilter === filters[1] ?
                     <div className="w-full flex flex-col justify-center">
                         <Divider />
-                        <Spacer y={4} />
-                        <div className="flex flex-col sm:grid grid-cols-2 gap-20 justify-between p-4" >
+
+                        <div className="flex flex-col gap-20 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between sm:p-4" >
                             <h4 className="text-large leading-none text-default-600">
                                 {
                                     t('dashboard.investmentToFocus',

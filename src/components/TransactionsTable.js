@@ -8,10 +8,10 @@ import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
-import DeleteButton from "./DeleteButton";
 import { getHoldings } from "../Util/Global";
+import DeleteButton from "./DeleteButton";
 
-export default function TransactionsTable({ account, children }) {
+export default function TransactionsTable({ account, isDark, children }) {
 
     const { t } = useTranslation()
 
@@ -122,7 +122,7 @@ export default function TransactionsTable({ account, children }) {
     function renderCell(item, columnKey) {
         switch (columnKey) {
             case 'action':
-                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" />
+                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" isDark={isDark}/>
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -132,7 +132,7 @@ export default function TransactionsTable({ account, children }) {
         <div>
             {account.type === 'Kryptovaluta' ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark}/>
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -144,7 +144,7 @@ export default function TransactionsTable({ account, children }) {
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         Ny transaksjon
                     </Button>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark}/>
                 </div>
             }
 

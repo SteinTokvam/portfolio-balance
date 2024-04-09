@@ -21,20 +21,20 @@ function App() {
 
   const isDark = false
   return (
-    <>
-      <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
-        <MyNavbar />
-        <Routes>
-          <Route path={routes.dashboard} element={
-            <Dashboard />
-          } />
-          <Route path={routes.portfolio} element={
-            <Portfolio />
-          } />
-        </Routes>
-      </div>
-      <Footer />
-    </>
+
+    <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
+      <MyNavbar />
+      <Routes>
+        <Route path={routes.dashboard} element={
+          <Dashboard isDark={isDark} />
+        } />
+        <Route path={routes.portfolio} element={
+          <Portfolio isDark={isDark} />
+        } />
+      </Routes>
+
+      <Footer isDark={isDark} />
+    </div>
   );
 }
 

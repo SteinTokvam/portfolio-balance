@@ -8,7 +8,7 @@ import { getHoldings, setTotalValues } from "../Util/Global";
 
 
 
-export default function Portfolio() {
+export default function Portfolio({ isDark }) {
 
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
@@ -40,13 +40,17 @@ export default function Portfolio() {
                             accounts.map((account) => {
                                 return (
                                     <div key={account.key}>
-                                        <Accordion >
-                                            <AccordionItem aria-label="Accordion"
+                                        <Accordion
+                                            isCompact
+                                            variant="light"
+                                        >
+                                            <AccordionItem
+                                                aria-label="Accordion"
                                                 title={account.name}
                                                 startContent={
                                                     <Avatar isBordered showFallback radius="full" size="md" src={`https://logo.uplead.com/${account.name.toLowerCase()}.no`} fallback={<CompanyIcon />} />
                                                 }
-                                                className="border border-default-300 rounded-3xl p-4 mb-4"
+                                                className="sm:mb-4"
                                                 subtitle={
                                                     <div className="max-w-full flex flex-row justify-between">
                                                         <div className="flex flex-col">
@@ -62,12 +66,12 @@ export default function Portfolio() {
                                                     </div>
                                                 }
                                             >
-                                                <TransactionsTable account={account}>
+                                                <TransactionsTable account={account} isDark={isDark}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
                                                             totalValue.map(totalValue => {
                                                                 if (totalValue.accountKey === account.key) {
-                                                                    if(totalValue.value < 1) {
+                                                                    if (totalValue.value < 1) {
                                                                         return ''
                                                                     }
                                                                     return (
