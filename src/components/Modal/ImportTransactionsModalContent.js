@@ -80,9 +80,9 @@ export default function ImportTransactionsModalContent({ account }) {
                                 onSelectionChange={setSelectedInvestmentKeys}
                                 selectedKeys={selectedInvestmentKeys}
                             >
-                                {equityTypes.map((equityTypes) => (
-                                    <SelectItem key={equityTypes} value={equityTypes} >
-                                        {equityTypes}
+                                {equityTypes.map((equityType) => (
+                                    <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
+                                        {t(`equityTypes.${equityType.key.toLowerCase()}`)}
                                     </SelectItem>
                                 ))}
                             </Select>

@@ -3,7 +3,6 @@ import { initReactI18next } from 'react-i18next';
 import { languages } from '../Util/Global';
 
 const lang = JSON.parse(window.localStorage.getItem('settings'))
-console.log(lang)
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'us',

@@ -98,6 +98,7 @@ export function getHoldings(transactions, account) {
           equityShare,
           equityType: transactions.filter(transaction => transaction.name === name)[0].equityType,
           value: cost,
+          e24Key: transactions.filter(transaction => transaction.name === name)[0].e24Key,
           goalPercentage: 0
         }
       )
@@ -145,6 +146,8 @@ export function setTotalValues(account, holdings) {
           return {
             name: holding.name,
             value: price.value * holding.equityShare,
+            equityShare: holding.equityShare,
+            price: price.value,
             accountKey: holding.accountKey,
             type: holding.equityType
           }
@@ -152,42 +155,3 @@ export function setTotalValues(account, holdings) {
     }
   })
 }
-
-/*
-
-holdings.forEach(holding => {
-    if (accountType === 'Kryptovaluta') {
-      getValueInFiat([holding.name], account.apiInfo.accessKey)
-        .then(cryptoPrice => {
-          const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
-          setTotalValue(prevState => {
-            if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {
-              return [...prevState, { name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
-            }
-            return [{ name: holding.name, value: parseFloat(last), accountKey: holding.accountKey, type: holding.equityType }]
-          })
-        })
-    } else if (accountType === 'Obligasjon') {
-      setTotalValue(prevState => {
-        if (prevState.filter(item => item.name === holding.name).length === 0) {
-          return [...prevState, { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
-        }
-        return [{ name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }]
-      })
-    } else {
-      fetchTicker(holding.e24Key, "OSE", holding.equityType, "1months").then(res => res)
-        .then(prices => prices[prices.length - 1])
-        .then(price => setTotalValue(prevState => {
-          if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
-            return [...prevState]
-          }
-
-          if (prevState.filter(item => item.name === holding.name && item.accountKey === holding.accountKey).length === 0) {//har ikke denne investeringen fra før
-            return [...prevState, { name: holding.name, value: price.value * holding.equityShare, accountKey: holding.accountKey, type: holding.equityType }]
-          }
-          return [...prevState]
-        }))
-    }
-  })
-  
-  */
