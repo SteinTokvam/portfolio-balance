@@ -53,7 +53,7 @@
     "equityTypes": {
         "fund": "Fond",
         "stock": "Aksje",
-        "cryptocurrency": "Kryptobaluta",
+        "cryptocurrency": "Kryptovaluta",
         "loan": "Obligasjonslån"
     }
 }
