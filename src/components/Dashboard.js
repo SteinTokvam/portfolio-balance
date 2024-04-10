@@ -157,36 +157,38 @@ export default function Dashboard() {
 
             <Spacer y={4} />
             {
-                selectedFilter === filters[1] ?
-                    <div className="w-full flex flex-col justify-center">
-                        <Divider />
+                accounts.length > 0 ?
+                    selectedFilter === filters[1] ?
+                        <div className="w-full flex flex-col justify-center">
+                            <Divider />
 
-                        <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between" >
-                            <h4 className="text-large leading-none text-default-600">
-                                {
-                                    t('dashboard.investmentToFocus',
-                                        {
-                                            bullet: '\u{2022}',
-                                            equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
-                                            distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
-                                        }
-                                    )
-                                }
-                            </h4>
+                            <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between" >
+                                <h4 className="text-large leading-none text-default-600">
+                                    {
+                                        t('dashboard.investmentToFocus',
+                                            {
+                                                bullet: '\u{2022}',
+                                                equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
+                                                distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
+                                            }
+                                        )
+                                    }
+                                </h4>
 
-                            <h4 className="text-large leading-none text-default-600">
-                                {
-                                    t('dashboard.investmentOverbought',
-                                        {
-                                            bullet: '\u{2022}',
-                                            equityType: t(`equityTypes.${furthestFromGoal[furthestFromGoal.length - 1].equityType.key.toLowerCase()}`),
-                                            distanceFromGoalPercentage: Math.abs(furthestFromGoal[furthestFromGoal.length - 1].distanceFromGoalPercentage).toFixed(2)
-                                        }
-                                    )
-                                }
-                            </h4>
+                                <h4 className="text-large leading-none text-default-600">
+                                    {
+                                        t('dashboard.investmentOverbought',
+                                            {
+                                                bullet: '\u{2022}',
+                                                equityType: t(`equityTypes.${furthestFromGoal[furthestFromGoal.length - 1].equityType.key.toLowerCase()}`),
+                                                distanceFromGoalPercentage: Math.abs(furthestFromGoal[furthestFromGoal.length - 1].distanceFromGoalPercentage).toFixed(2)
+                                            }
+                                        )
+                                    }
+                                </h4>
+                            </div>
                         </div>
-                    </div>
+                        : ''
                     : ''
             }
         </>
