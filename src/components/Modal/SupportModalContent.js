@@ -20,7 +20,7 @@ export default function SupportModalContent() {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" variant="light" onPress={onClose}>
-                            {t('rebalancingModal.close')}
+                            {t('general.closeButton')}
                         </Button>
                     </ModalFooter>
                 </>

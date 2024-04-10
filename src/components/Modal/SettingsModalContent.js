@@ -1,20 +1,18 @@
-import { Avatar, Button, Divider, Input, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
+import { Avatar, Button, Divider, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
-import { deleteInvestments, importInvestments } from "../../actions/investments"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { languages, textInputStyle } from "../../Util/Global"
-import { addInitialAccountTypes, deleteAllAccountTypes, setFiriAccessKey } from "../../actions/account"
+import { languages } from "../../Util/Global"
+import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
+import { setAllPercentages } from "../../actions/equityType"
+import i18n from "../../i18n/config"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
-    const { t, i18n } = useTranslation();
-    const investments = useSelector(state => state.rootReducer.investments.investments)
-    const accountTypes = useSelector(state => state.rootReducer.accounts.accountTypes)
+    const { t } = useTranslation();
 
-    const accessKey = useSelector(state => state.rootReducer.accounts.firi)
-
-    const [accessKeyInput, setAccessKeyInput] = useState("")
+    const accounts = useSelector(state => state.rootReducer.accounts)
+    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const hiddenFileInput = useRef(null);
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
@@ -36,10 +34,10 @@ export default function SettingsModalContent() {
         fileReader.onload = e => {
             console.log("e.target.result", e.target.result);
             const json = JSON.parse(e.target.result)
-            dispatch(importInvestments(json.investments));
-            dispatch(addInitialAccountTypes(json.accountTypes))
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
+            dispatch(importAccounts(json.accounts))
+            dispatch(setAllPercentages(json.equitytypes))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
         };
@@ -47,22 +45,17 @@ export default function SettingsModalContent() {
 
     const processFile = () => {
         return JSON.stringify({
-            investments: investments,
             settings: JSON.parse(window.localStorage.getItem('settings')),
-            accountTypes: accountTypes
+            accounts: accounts,
+            equitytypes: equityTypes
         })
     }
 
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage)
         window.localStorage.setItem('settings', JSON.stringify({ language: selectedLanguage }))
-        if(accessKeyInput !== "") {
-            dispatch(setFiriAccessKey(accessKeyInput))   
-        }
-        if(accessKey !== "") {
-            setAccessKeyInput(accessKey)
-        }
-    }, [selectedLanguage, i18n, accessKeyInput, accessKey, dispatch])
+        
+    }, [selectedLanguage])
 
     return (
         <ModalContent>
@@ -85,8 +78,6 @@ export default function SettingsModalContent() {
                         </Select>
                         <Divider />
 
-                        <Input type="text" classNames={textInputStyle} label="Firi access key" value={accessKeyInput} onValueChange={setAccessKeyInput} />
-                        <Divider />
                         <Button color="primary" variant="flat" onPress={handleClick}>
                             <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput} />
                             {t('settings.importButton')}
@@ -101,8 +92,7 @@ export default function SettingsModalContent() {
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteInvestments())
-                            dispatch(deleteAllAccountTypes(t('valuators.defaultAccountType')))
+                            dispatch(deleteAllAccounts())
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

@@ -1,75 +1,36 @@
 {
-    "valuators": {
-        "currency": "Kr",
-        "percentage": "%",
-        "defaultAccountType": "Cash"
+    "general": {
+        "closeButton": "Close",
+        "save": "Add"
     },
     "dashboard": {
         "biggestInvestment": "Largest investment",
-        "total": "Total value"
-    },
-    "newInvestment" : {
-        "add" : "+"
-    },
-    "investmentModal": {
-        "editTitle": "Edit investment:",
-        "newTitle": "Add new Investment:",
-        "type": "Type of Investment",
-        "typeLabel": "Choose type of Investment",
-        "nameOfAccount": "Name of Account",
-        "nameOfInvestment": "Name of Investment",
-        "value": "Value",
-        "goalPercentage": "Goal percentage for investment",
-        "close": "Close",
-        "saveChanges": "Save Changes",
-        "save": "Add",
-        "textAreaDescription": "Comment for this investment.",
-        "textAreaPlaceholder": "Add a note."
-    },
-    "investmentInfoModal": {
-        "type": "Type:",
-        "value": "Value:",
-        "currentPercentage": "Current percentage for asset type:",
-        "goalPercentage": "Goal percentage:",
-        "note": "Note:",
-        "edit": "Edit"
-    },
-    "portfolio":{
-        "investmentsTab": "Investments",
-        "accountTypesTab": "Account types"
-    },
-    "investmentTable": {
-        "columnTypeLabel": "TYPE",
-        "columnAccountLabel": "ACCOUNT",
-        "columnNameLabel": "NAME",
-        "columnValueLabel": "VALUE",
-        "columnCurrentPercentLabel": "CURRENT PERCENT",
-        "columnGoalPercentLabel": "GOAL PERCENT",
-        "columnDistanceToTargetLabel": "DISTANCE TO TARGET PERCENT",
-        "tableLabel": "Table over different investments.",
-        "emptyTable": "No investments added yet."
-    },
-    "statistics": {
-        "cardTitle": "Statistics",
-        "cardSubTitle": "Key statistics about your investments.",
-        "cardTotalValue": "Total value: {{value}} {{currency}}",
-        "cardShareOfValue": "Share of {{investment}}: {{percentage}}%"
-    },
-    "investmentTypes": {
-        "stock": "Stock",
-        "equityFund": "Equity Fund",
-        "crypto": "Cryptocurrency",
-        "cash": "Cash"
+        "total": "Total value",
+        "updateGoalPercentage": "Update goal percentage",
+        "investmentToFocus": "{{bullet}} {{equityType}} are furthest from it's goal percentage with {{distanceFromGoalPercentage}}%. Consider to prioritize this investment for a while.",
+        "investmentOverbought": "{{bullet}} {{equityType}} are beyond it's target by {{distanceFromGoalPercentage}}%. Consider to not invest more before it is closer to it's target."
     },
     "navbar": {
         "brand": "Portfolio rebalancer",
         "dashboard": "Dashboard",
         "portfolio": "Portfolio",
-        "rebalancing": "Rebalancing",
         "settings": "Settings"
     },
     "accountModal": {
-        "title": "Add new account type:"
+        "title": "Add new account:",
+        "addAccountButton": "Add account"
+    },
+    "importTransactionsModal": {
+        "title": "Import transactions",
+        "uploadFiles": "Upload file"
+    },
+    "transactionsTable": {
+        "name": "Name",
+        "cost": "Cost",
+        "type": "Type",
+        "equityPrice": "Unit price",
+        "equityShare": "Quantity",
+        "date": "Date"
     },
     "settings": {
         "header": "Settings",
@@ -80,10 +41,7 @@
         "deleteAlert": "All user data deleted.",
         "closeButton": "Close",
         "selectType": "Language",
-        "selectLabel": "Choose language",
-        "accountType": "Account type",
-        "accountTypeGoalPercentage": "Goal percentage",
-        "addAccountButton": "Add account"
+        "selectLabel": "Choose language"
     },
     "footer": {
         "github": "View source on GitHub",
@@ -93,26 +51,10 @@
         "header": "Support development",
         "ethAdress": "Ethereum adress:"
     },
-    "rebalancer": {
-        "textbox": "Sum to invest:",
-        "minimumSum": "Minimum to invest:",
-        "header": "Portfolio rebalancing",
-        "subTitle": "Current allocations:",
-        "rebalanceButton": "Rebalance portfolio",
-        "canSellInvestmentsCheck": "Do you wish to sell investments to rebalance protfolio?",
-        "closestToGoalCheck": "Do you wish to purchase investments closest to allocation target?",
-        "text": "To rebalance the portfolio, click on the investment category you want to rebalance according to the target percentage set. Remember to enter any new deposits."
-    },
-    "rebalancingModal": {
-        "header": "Rebalancing result",
-        "close": "close",
-        "toBuy": "To buy/sell:",
-        "newValue": "New value:",
-        "noRebalancing": "No rebalancing necessary.",
-        "table": {
-            "name": "NAME",
-            "buySell": "BUY/SELL",
-            "newValue": "NEW VALUE"
-        }
+    "equityTypes": {
+        "fund": "Fund",
+        "stock": "Stock",
+        "cryptocurrency": "Cryptocurrency",
+        "loan": "Loan"
     }
 }

@@ -1,8 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { languages } from '../Util/Global';
+
+const lang = JSON.parse(window.localStorage.getItem('settings'))
 
 i18n.use(initReactI18next).init({
   fallbackLng: 'us',
+  lng: lang ? lang.language : 'us',
   resources: {
     us: {
       translations: require('./locales/us/translations.json')
@@ -15,6 +19,6 @@ i18n.use(initReactI18next).init({
   defaultNS: 'translations'
 });
 
-i18n.languages = ['us', 'no'];
+i18n.languages = languages;
 
 export default i18n;
