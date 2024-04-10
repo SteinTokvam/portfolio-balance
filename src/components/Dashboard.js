@@ -161,7 +161,7 @@ export default function Dashboard() {
                     <div className="w-full flex flex-col justify-center">
                         <Divider />
 
-                        <div className="flex flex-col gap-20 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between sm:p-4" >
+                        <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between" >
                             <h4 className="text-large leading-none text-default-600">
                                 {
                                     t('dashboard.investmentToFocus',
