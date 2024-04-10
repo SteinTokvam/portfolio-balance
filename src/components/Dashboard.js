@@ -103,7 +103,7 @@ export default function Dashboard() {
                     {accounts.length > 0 ?
                         selectedFilter === filters[0] ? accounts.map(account => {
                             return (
-                                <div key={account.key}>
+                                <div key={account.key} className="sm:text-center">
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{account.name}</h2>
                                     <Spacer y={2} />
                                     <h4 className="text-large font-bold leading-none text-default-400">{
