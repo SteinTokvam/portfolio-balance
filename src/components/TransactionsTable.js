@@ -41,15 +41,30 @@ export default function TransactionsTable({ account, isDark, children }) {
         });
     }, [sortDescriptor, account]);
 
-    const columns = [
-        { key: 'name', label: t('transactionsTable.name') },
-        { key: 'cost', label: t('transactionsTable.cost') },
-        { key: 'type', label: t('transactionsTable.type') },
-        { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
-        { key: 'equityShare', label: t('transactionsTable.equityShare') },
-        { key: 'date', label: t('transactionsTable.date') },
-        { key: 'action', label: 'Action' }
-    ];
+
+    const getColumns = (accountType) => {
+        switch (accountType) {
+            case 'Obligasjon': 
+            return [
+                { key: 'name', label: t('transactionsTable.name') },
+                { key: 'cost', label: t('transactionsTable.cost') },
+                { key: 'type', label: t('transactionsTable.type') },
+                { key: 'date', label: t('transactionsTable.date') },
+                { key: 'action', label: 'Action' }
+            ];
+            default:
+                return [
+                    { key: 'name', label: t('transactionsTable.name') },
+                    { key: 'cost', label: t('transactionsTable.cost') },
+                    { key: 'type', label: t('transactionsTable.type') },
+                    { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
+                    { key: 'equityShare', label: t('transactionsTable.equityShare') },
+                    { key: 'date', label: t('transactionsTable.date') },
+                    { key: 'action', label: 'Action' }
+                ];
+        }
+    }
+
 
     useEffect(() => {
         if (account.isManual) {
@@ -122,7 +137,7 @@ export default function TransactionsTable({ account, isDark, children }) {
     function renderCell(item, columnKey) {
         switch (columnKey) {
             case 'action':
-                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" isDark={isDark}/>
+                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" isDark={isDark} />
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -132,7 +147,7 @@ export default function TransactionsTable({ account, isDark, children }) {
         <div>
             {account.type === 'Kryptovaluta' ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark}/>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark} />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -144,7 +159,7 @@ export default function TransactionsTable({ account, isDark, children }) {
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         Ny transaksjon
                     </Button>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark}/>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark} />
                 </div>
             }
 
@@ -162,7 +177,7 @@ export default function TransactionsTable({ account, isDark, children }) {
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
             >
-                <TableHeader columns={columns}>
+                <TableHeader columns={getColumns(account.type)}>
                     {(column) => {
                         if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
                             return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>

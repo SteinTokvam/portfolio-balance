@@ -20,9 +20,8 @@ export default function Portfolio({ isDark }) {
             accounts.forEach(account => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
                     const mergedWithTotalValue = [...totalValue, ...newHoldings]
-                    const removeDuplicates = mergedWithTotalValue.filter((value, index) => mergedWithTotalValue.indexOf(value) === index)
                     setTotalValue(prevState => {
-                        return [...prevState, ...removeDuplicates]
+                        return [...prevState, ...mergedWithTotalValue]
                     })
                 })
             })
