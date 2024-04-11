@@ -93,12 +93,13 @@ export default function TransactionsTable({ account, isDark, children }) {
                 .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
                 .map(transaction => {
                     const matchedTransaction = allMatches.filter(match => match.date === transaction.date)[0]
-
+                    const dateString = transaction.date.toString().split('.')[0].split('T')
+                    const date = dateString[0] + ' ' + dateString[1]
                     return {
                         key: transaction.id,
                         name: transaction.currency,
                         equityShare: parseFloat(transaction.amount),
-                        date: transaction.date,
+                        date,
                         type: transaction.type,
                         equityPrice: matchedTransaction ?
                             ((1 / parseFloat(transaction.amount)) * parseFloat(matchedTransaction.amount) * -1).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :

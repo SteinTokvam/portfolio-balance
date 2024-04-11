@@ -44,16 +44,31 @@ export default function NewTransactionModalContent({ account }) {
     const dispatch = useDispatch()
 
     function handleSubmit() {
-        const transactionToAdd = {
-            key: uuidv4(),
-            cost: parseFloat(cost),
-            name: transactionName,
-            type: selectedTransactionType,
-            date,
-            equityPrice: parseFloat(equityPrice),
-            e24Key,
-            equityShare: parseFloat(equityShare),
-            equityType: selectedInvestmentType
+        var transactionToAdd = {}
+        if(account.type === 'Obligasjon') {
+            transactionToAdd = {
+                key: uuidv4(),
+                cost: parseFloat(cost),
+                name: transactionName,
+                type: selectedTransactionType,
+                date,
+                equityPrice: parseFloat(cost),
+                e24Key,
+                equityShare: 1,
+                equityType: selectedInvestmentType
+            }
+        } else {
+            transactionToAdd = {
+                key: uuidv4(),
+                cost: parseFloat(cost),
+                name: transactionName,
+                type: selectedTransactionType,
+                date,
+                equityPrice: parseFloat(equityPrice),
+                e24Key,
+                equityShare: parseFloat(equityShare),
+                equityType: selectedInvestmentType
+            }
         }
         dispatch(
             newTransaction(account.key,
@@ -101,50 +116,55 @@ export default function NewTransactionModalContent({ account }) {
                             value={date}
                             onValueChange={setDate} />
 
-                        <Input type="number"
-                            classNames={textInputStyle}
-                            label={"Enhetspris"}
-                            value={equityPrice}
-                            onValueChange={setEquityPrice} />
+                        {
+                            account.type !== 'Obligasjon' &&
+                            <>
+                                <Input type="number"
+                                    classNames={textInputStyle}
+                                    label={"Enhetspris"}
+                                    value={equityPrice}
+                                    onValueChange={setEquityPrice} />
 
-                        <div className="border rounded-xl p-1 grid grid-cols-1 gap-4">
-                            <Input type="text"
-                                classNames={textInputStyle}
-                                label={"E24 ID"}
-                                value={e24Key}
-                                onValueChange={setE24Key}
-                            />
-                            <Accordion
+                                <div className="border rounded-xl p-1 grid grid-cols-1 gap-4">
+                                    <Input type="text"
+                                        classNames={textInputStyle}
+                                        label={"E24 ID"}
+                                        value={e24Key}
+                                        onValueChange={setE24Key}
+                                    />
+                                    <Accordion
 
-                            >
-                                <AccordionItem
-                                    title={<h1 className="border-b">Hvordan fylle ut</h1>}
-                                >
-                                    <div className="">
-                                        <p>Gå til <Link
-                                            href="https://e24.no/bors/nyheter"
-                                            isExternal
-                                            showAnchorIcon
+                                    >
+                                        <AccordionItem
+                                            title={<h1 className="border-b">Hvordan fylle ut</h1>}
                                         >
-                                            E24
-                                        </Link> og søk opp investeringen.
-                                            <br />Eksempel: <Link
-                                                isExternal
-                                                showAnchorIcon
-                                                href="https://e24.no/bors/instrument/KR-KINGL.OSE"
-                                            >
-                                                Kron Indeks Global
-                                            </Link> så er det verdien "KR-KINGL" som står rett over "Kron Indeks Global" som skal inn i tekstboksen.
-                                        </p>
-                                    </div>
-                                </AccordionItem>
-                            </Accordion>
-                        </div>
-                        <Input type="number"
-                            classNames={textInputStyle}
-                            label={"Antall"}
-                            value={equityShare}
-                            onValueChange={setEquityShare} />
+                                            <div className="">
+                                                <p>Gå til <Link
+                                                    href="https://e24.no/bors/nyheter"
+                                                    isExternal
+                                                    showAnchorIcon
+                                                >
+                                                    E24
+                                                </Link> og søk opp investeringen.
+                                                    <br />Eksempel: <Link
+                                                        isExternal
+                                                        showAnchorIcon
+                                                        href="https://e24.no/bors/instrument/KR-KINGL.OSE"
+                                                    >
+                                                        Kron Indeks Global
+                                                    </Link> så er det verdien "KR-KINGL" som står rett over "Kron Indeks Global" som skal inn i tekstboksen.
+                                                </p>
+                                            </div>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </div>
+                                <Input type="number"
+                                    classNames={textInputStyle}
+                                    label={"Antall"}
+                                    value={equityShare}
+                                    onValueChange={setEquityShare} />
+                            </>
+                        }
 
                         <Select
                             label={"Investeringstype"}
