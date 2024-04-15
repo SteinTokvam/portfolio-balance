@@ -1,4 +1,4 @@
-import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs } from "@nextui-org/react"
+import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs, Accordion, AccordionItem, Link } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
 import { accountTypes, textInputStyle } from "../../Util/Global"
 import { useMemo, useState } from "react"
@@ -107,9 +107,28 @@ export function NewAccountTypeModalContent({ setScreen = () => { } }) {
                                 <Input type="text"
                                     classNames={textInputStyle}
                                     className="pt-4"
-                                    label="Firi access key"
+                                    label="Firi api key"
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
+                                    <Accordion>
+                                    <AccordionItem
+                                        title={<h1 className="border-b">Hvordan finne Firi API-nøkkel</h1>}
+                                    >
+                                        <div className="">
+                                            <p>For å hente API-nøkkel fra Firi, så logger du inn på <Link
+                                                href="https://firi.no"
+                                                isExternal
+                                                showAnchorIcon
+                                            >
+                                                Firi
+                                            </Link> kontoen din.
+                                                Så trykker du på navnet ditt øverst til høyre og velger Innstillinger. I menyen som kommer opp så trykker du på "API" og så velger du "Legg til ny nøkkel".
+                                                I boksen som kommer opp så må du kopiere med deg det som står under API nøkkel. Denne informasjonen vises bare 1 gang.
+                                                Om du vil så kan du også gå inn på Endre tillatelser og velger at nøkkelen kun skal ha lesetilgang til kontoen din. Nøkkelen som du har kopiert med deg limer du inn i tekstboksen under her.
+                                            </p>
+                                        </div>
+                                    </AccordionItem>
+                                </Accordion>
                             </Tab>
                         </Tabs>
 
