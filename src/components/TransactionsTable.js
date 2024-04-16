@@ -138,7 +138,7 @@ export default function TransactionsTable({ account, isDark, children }) {
     function renderCell(item, columnKey) {
         switch (columnKey) {
             case 'action':
-                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText="Slett transaksjon" isDark={isDark} />
+                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -148,7 +148,7 @@ export default function TransactionsTable({ account, isDark, children }) {
         <div>
             {account.type === 'Kryptovaluta' ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark} />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText={t('transactionsTable.deleteAccount')} isDark={isDark} />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -158,9 +158,9 @@ export default function TransactionsTable({ account, isDark, children }) {
                         {t('importTransactionsModal.title')} <UploadIcon />
                     </Button>
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
-                        Ny transaksjon
+                        {t('transactionsTable.newTransaction')}
                     </Button>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText="Slett konto" isDark={isDark} />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText={t('transactionsTable.deleteAccount')} isDark={isDark} />
                 </div>
             }
 

@@ -103,7 +103,7 @@ export default function SettingsModalContent() {
                         <Button color="primary" variant="flat" aria-label="close" onPress={() => {
                             onClose()
                         }}>
-                            {t('settings.closeButton')}
+                            {t('general.closeButton')}
                         </Button>
                     </ModalFooter>
                 </>

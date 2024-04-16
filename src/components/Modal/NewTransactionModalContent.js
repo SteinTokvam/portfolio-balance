@@ -21,13 +21,13 @@ export default function NewTransactionModalContent({ account }) {
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
-        "BUY",
-        "SELL",
-        "PLATFORM_FEE",
-        "DIVIDEND",
-        "YIELD",
-        "DEPOSIT",
-        "WITHDRAWAL",
+        {key: "BUY", label: t('transactionType.buy')},
+        {key: "SELL", label: t('transactionType.sell')},
+        {key: "PLATFORM_FEE", label: t('transactionType.plattform_fee')},
+        {key: "DIVIDEND", label: t('transactionType.dividend')},
+        {key: "YIELD", label: t('transactionType.yield')},
+        {key: "DEPOSIT", label: t('transactionType.deposit')},
+        {key: "WITHDRAWAL", label: t('transactionType.withdrawal')},
     ]
     const [selectedTransactionKeys, setSelectedTransactionKeys] = useState([]);
     const selectedTransactionType = useMemo(
@@ -104,8 +104,8 @@ export default function NewTransactionModalContent({ account }) {
                             selectedKeys={selectedTransactionKeys}
                         >
                             {transactionType.map((transactionType) => (
-                                <SelectItem key={transactionType} value={transactionType} >
-                                    {transactionType}
+                                <SelectItem key={transactionType.key} value={transactionType.key} >
+                                    {transactionType.label}
                                 </SelectItem>
                             ))}
                         </Select>
@@ -136,24 +136,25 @@ export default function NewTransactionModalContent({ account }) {
 
                                     >
                                         <AccordionItem
-                                            title={<h1 className="border-b">Hvordan fylle ut</h1>}
+                                            title={<h1 className="border-b">{t('accountModal.e24AccordionTitle')}</h1>}
                                         >
                                             <div className="">
-                                                <p>Gå til <Link
+                                                <p>{t('accountModal.e24HelpText1')}<Link
                                                     href="https://e24.no/bors/nyheter"
                                                     isExternal
                                                     showAnchorIcon
                                                 >
                                                     E24
-                                                </Link> og søk opp investeringen.
-                                                    <br />Eksempel: <Link
+                                                </Link> {t('accountModal.e24HelpText2')}</p>
+                                                
+                                                    <p><br />{t('accountModal.e24HelpText3')}</p><Link
                                                         isExternal
                                                         showAnchorIcon
                                                         href="https://e24.no/bors/instrument/KR-KINGL.OSE"
                                                     >
                                                         Kron Indeks Global
-                                                    </Link> så er det verdien "KR-KINGL" som står rett over "Kron Indeks Global" som skal inn i tekstboksen.
-                                                </p>
+                                                    </Link> 
+                                                <p>{t('accountModal.e24HelpText4')}</p>
                                             </div>
                                         </AccordionItem>
                                     </Accordion>

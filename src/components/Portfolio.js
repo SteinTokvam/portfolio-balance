@@ -12,7 +12,7 @@ export default function Portfolio({ isDark }) {
 
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
-    const [totalValue, setTotalValue] = useState([]);
+    const [totalValue, setTotalValue] = useState([]);//TODO: dette burde vært en reducer?
 
     const hasLoadedBefore = useRef(true)
     useEffect(() => {

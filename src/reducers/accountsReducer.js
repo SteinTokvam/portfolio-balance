@@ -164,7 +164,7 @@ const accountReducer = (state = initialState, action) => {
                 }
             ]
             window.localStorage.setItem("accounts", JSON.stringify(newAccounts))
-            return {//TODO: må oppdatere holdings
+            return {
                 ...state,
                 accounts: newAccounts
             }
