@@ -12,14 +12,14 @@ export default function Portfolio({ isDark }) {
 
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
-    const [totalValue, setTotalValue] = useState([]);//TODO: dette burde vært en reducer?
+    const [totalValue, setTotalValue] = useState([]);//TODO: dette burde vært en reducer? er lik som den i dashboard
 
     const hasLoadedBefore = useRef(true)
     useEffect(() => {
         if (hasLoadedBefore.current) {
             accounts.forEach(account => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    const mergedWithTotalValue = [...totalValue, ...newHoldings]
+                    const mergedWithTotalValue = [...totalValue, ...newHoldings].filter(elem => elem.value >= 1)
                     setTotalValue(prevState => {
                         return [...prevState, ...mergedWithTotalValue]
                     })
