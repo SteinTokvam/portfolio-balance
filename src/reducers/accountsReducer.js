@@ -42,18 +42,6 @@ const initialState = {
     accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
 }
 
-/*
-
-const transactionTypes = [
-    "BUY",
-    "SELL",
-    "PLATFORM_FEE",
-    "DIVIDEND",
-    "DEPOSIT",
-    "WITHDRAWAL",
-]
-*/
-
 const accountReducer = (state = initialState, action) => {
     var currentAccounts = []
     var currentHoldings = []

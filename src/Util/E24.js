@@ -1,24 +1,26 @@
 
 export async function fetchTicker(ticker, exchange = "OSE", type, period = "1weeks") {
-    if(!type) {
-        return [{date: "", value: 0}]
+    if (!type) {
+        return [{ date: "", value: 0 }]
     }
 
-    if(!ticker || ticker === "") {
+    if (!ticker || ticker === "") {
         return []
     }
-    const proxy = 'https://corsproxy.io/?'
-    const useProxy = false
-    const response = await fetch(`${useProxy ? proxy : ''}https://api.e24.no/bors/chart/${ticker}.${exchange}?period=${period}&type=${type.toLowerCase()}`)
-        .then(res => res.json())
-        .then(data => {
-            return data.data.map(item => {
-                return {
-                    date: new Date(item[0]),
-                    value: item[1]
-                }
-            })
+    const response = await fetch(`https://portfolio-balance-backend.onrender.com/e24`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ticker,
+            exchange,
+            type,
+            period
         })
+    })
+        .then(res => res.json())
+
         .catch(error => {
             console.log(error)
             return []
