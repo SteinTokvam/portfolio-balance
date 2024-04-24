@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Avatar } from "@nextui-org/react";
+import { Accordion, AccordionItem, Avatar, Skeleton } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
 import { useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
@@ -56,9 +56,17 @@ export default function Portfolio({ isDark }) {
                                                             <p>{account.type}</p>
                                                             <div>
                                                                 <p className="text-default-800 font-bold">
-                                                                    {
-                                                                        totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                                                    }
+                                                                    <Skeleton
+                                                                        className="rounded-lg"
+                                                                        isLoaded={
+                                                                            totalValue
+                                                                                .filter(totalValue => totalValue.accountKey === account.key)
+                                                                                .reduce((sum, item) => sum + item.value, 0) > 0
+                                                                        }>
+                                                                        {
+                                                                            totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                        }
+                                                                    </Skeleton>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -70,13 +78,14 @@ export default function Portfolio({ isDark }) {
                                                         {
                                                             totalValue.map(totalValue => {
                                                                 if (totalValue.accountKey === account.key) {
+                                                                    console.log(totalValue.value)
                                                                     if (totalValue.value < 1) {
                                                                         return ''
                                                                     }
                                                                     return (
                                                                         <div key={totalValue.name} className="p-1 w-1/3">
                                                                             <p className="text-default-600">{totalValue.name}</p>
-                                                                            <p className="text-default-800 font-bold">{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
+                                                                            <Skeleton className="rounded-lg" isLoaded={totalValue.value > 0}><p className="text-default-800 font-bold">{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
                                                                         </div>
                                                                     )
                                                                 }
