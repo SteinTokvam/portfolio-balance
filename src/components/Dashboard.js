@@ -1,4 +1,4 @@
-import { Select, SelectItem, Spacer, useDisclosure, Button, Divider } from "@nextui-org/react";
+import { Select, SelectItem, Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux"
@@ -105,35 +105,64 @@ export default function Dashboard() {
                                 <div key={account.key} className="sm:text-center">
                                     <h2 className="text-medium font-semibold leading-none text-default-600">{account.name}</h2>
                                     <Spacer y={2} />
-                                    <h4 className="text-large font-bold leading-none text-default-400">{
-                                        account.type === 'Cryptocurrency' ?
-                                            account.holdings.reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
-                                            totalValue
+
+                                    <Skeleton
+                                        className="rounded-lg"
+                                        isLoaded={
+                                            account.type === 'Cryptocurrency' ?
+                                                account.holdings.reduce((sum, item) => sum + item.value, 0) > 0 :
+                                                totalValue
+                                                    .filter(holding => holding.accountKey === account.key)
+                                                    .reduce((acc, cur) => acc + cur.value, 0) > 0
+                                        }><h4 className="text-large font-bold leading-none text-default-400">{
+                                            account.type === 'Cryptocurrency' ?
+                                                account.holdings.reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
+                                                totalValue
+                                                    .filter(holding => holding.accountKey === account.key)
+                                                    .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                        }</h4>
+                                    </Skeleton>
+
+                                    <Skeleton
+                                        className="rounded-lg"
+                                        isLoaded={
+                                            account.type === 'Cryptocurrency' ?
+                                                account.holdings.reduce((sum, item) => sum + item.value, 0) > 0 :
+                                                totalValue
+                                                    .filter(holding => holding.accountKey === account.key)
+                                                    .reduce((acc, cur) => acc + cur.value, 0) > 0
+                                        }><h4 className="text-large font-bold leading-none text-default-400">{
+                                            ((totalValue
                                                 .filter(holding => holding.accountKey === account.key)
-                                                .reduce((acc, cur) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                    }</h4>
-                                    <h4 className="text-large font-bold leading-none text-default-400">{
-                                        ((totalValue
-                                            .filter(holding => holding.accountKey === account.key)
-                                            .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                    }%</h4>
-                                </div>)
+                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                        }%</h4>
+                                    </Skeleton>
+                                </div>
+                            )
                         }) :
                             equityTypes.map(equityType => {
                                 return (
-                                    <div key={equityType.key} className="sm:text-center">
+                                    <div key={equityType.key} className="sm:text-center sm:justify-center">
                                         <h2 className="text-medium font-semibold leading-none text-default-600">{t(`equityTypes.${equityType.key.toLowerCase()}`)}</h2>
                                         <Spacer y={2} />
-                                        <h4 className="text-large font-bold leading-none text-default-400">{
-                                            totalValue
-                                                .filter(holding => holding.type === equityType.key)
-                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                        }</h4>
-                                        <h4 className="text-large font-bold leading-none text-default-400">{
-                                            ((totalValue
-                                                .filter(holding => holding.type === equityType.key)
-                                                .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                        }% / {equityType.goalPercentage}%</h4>
+                                        <Skeleton className="rounded-lg" isLoaded={totalValue
+                                            .filter(holding => holding.type === equityType.key)
+                                            .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) > 0}>
+                                            <h4 className="text-large font-bold leading-none text-default-400">{
+                                                totalValue
+                                                    .filter(holding => holding.type === equityType.key)
+                                                    .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                            }</h4>
+                                        </Skeleton>
+                                        <Skeleton className="rounded-lg" isLoaded={totalValue
+                                            .filter(holding => holding.type === equityType.key)
+                                            .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) > 0}>
+                                            <h4 className="text-large font-bold leading-none text-default-400">{
+                                                ((totalValue
+                                                    .filter(holding => holding.type === equityType.key)
+                                                    .reduce((acc, cur) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a, b) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                            }% / {equityType.goalPercentage}%</h4>
+                                        </Skeleton>
                                     </div>)
                             })
                         : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
