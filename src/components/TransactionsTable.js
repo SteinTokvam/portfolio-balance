@@ -43,7 +43,17 @@ export default function TransactionsTable({ account, isDark, children }) {
     }, [sortDescriptor, account]);
 
 
-    const getColumns = (accountType) => {
+    const getColumns = (account) => {
+        const accountType = account.accountType
+        if (!accountType.isManual && accountType.name === 'Kron') {
+            return [
+                { key: 'name', label: t('transactionsTable.name') },
+                { key: 'cost', label: t('transactionsTable.cost') },
+                { key: 'type', label: t('transactionsTable.type') },
+                { key: 'date', label: t('transactionsTable.date') },
+                { key: 'action', label: 'Action' }
+            ]
+        }
         switch (accountType) {
             case 'Obligasjon':
                 return [
@@ -114,7 +124,7 @@ export default function TransactionsTable({ account, isDark, children }) {
 
                 console.log("Fetched transactions.")
                 dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
-            } else if(account.name === 'Kron') {
+            } else if (account.name === 'Kron') {
                 const transactions = await fetchTransactions(account)
                 const holdings = await fetchHoldings(account)
 
@@ -187,7 +197,7 @@ export default function TransactionsTable({ account, isDark, children }) {
                 sortDescriptor={sortDescriptor}
                 onSortChange={setSortDescriptor}
             >
-                <TableHeader columns={getColumns(account.type)}>
+                <TableHeader columns={getColumns(account)}>
                     {(column) => {
                         if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
                             return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
