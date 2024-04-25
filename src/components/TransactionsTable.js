@@ -45,7 +45,7 @@ export default function TransactionsTable({ account, isDark, children }) {
 
     const getColumns = (account) => {
         const accountType = account.accountType
-        if (!accountType.isManual && accountType.name === 'Kron') {
+        if (!account.isManual && accountType.name === 'Kron') {
             return [
                 { key: 'name', label: t('transactionsTable.name') },
                 { key: 'cost', label: t('transactionsTable.cost') },
