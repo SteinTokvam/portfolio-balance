@@ -51,7 +51,6 @@ export default function TransactionsTable({ account, isDark, children }) {
                 { key: 'cost', label: t('transactionsTable.cost') },
                 { key: 'type', label: t('transactionsTable.type') },
                 { key: 'date', label: t('transactionsTable.date') },
-                { key: 'action', label: 'Action' }
             ]
         }
         switch (accountType) {
@@ -64,7 +63,7 @@ export default function TransactionsTable({ account, isDark, children }) {
                     { key: 'action', label: 'Action' }
                 ];
             default:
-                return [
+                return account.isManual ? [
                     { key: 'name', label: t('transactionsTable.name') },
                     { key: 'cost', label: t('transactionsTable.cost') },
                     { key: 'type', label: t('transactionsTable.type') },
@@ -72,6 +71,14 @@ export default function TransactionsTable({ account, isDark, children }) {
                     { key: 'equityShare', label: t('transactionsTable.equityShare') },
                     { key: 'date', label: t('transactionsTable.date') },
                     { key: 'action', label: 'Action' }
+                ] : 
+                [
+                    { key: 'name', label: t('transactionsTable.name') },
+                    { key: 'cost', label: t('transactionsTable.cost') },
+                    { key: 'type', label: t('transactionsTable.type') },
+                    { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
+                    { key: 'equityShare', label: t('transactionsTable.equityShare') },
+                    { key: 'date', label: t('transactionsTable.date') }
                 ];
         }
     }
