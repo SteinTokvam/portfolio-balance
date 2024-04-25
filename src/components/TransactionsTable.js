@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import { getHoldings } from "../Util/Global";
 import DeleteButton from "./DeleteButton";
+import { fetchHoldings, fetchTransactions } from "../Util/Kron";
 
 export default function TransactionsTable({ account, isDark, children }) {
 
@@ -44,14 +45,14 @@ export default function TransactionsTable({ account, isDark, children }) {
 
     const getColumns = (accountType) => {
         switch (accountType) {
-            case 'Obligasjon': 
-            return [
-                { key: 'name', label: t('transactionsTable.name') },
-                { key: 'cost', label: t('transactionsTable.cost') },
-                { key: 'type', label: t('transactionsTable.type') },
-                { key: 'date', label: t('transactionsTable.date') },
-                { key: 'action', label: 'Action' }
-            ];
+            case 'Obligasjon':
+                return [
+                    { key: 'name', label: t('transactionsTable.name') },
+                    { key: 'cost', label: t('transactionsTable.cost') },
+                    { key: 'type', label: t('transactionsTable.type') },
+                    { key: 'date', label: t('transactionsTable.date') },
+                    { key: 'action', label: 'Action' }
+                ];
             default:
                 return [
                     { key: 'name', label: t('transactionsTable.name') },
@@ -72,46 +73,54 @@ export default function TransactionsTable({ account, isDark, children }) {
         }
 
         async function fetchData() {
-            const transactions = await getTransactionsFromFiri(account.apiInfo.accessKey).then(orders => {
-                if (orders.name === "ApiKeyNotFound") {
-                    return ["FEIL"]
-                }
-                const allCurrencies = [...new Set(orders.map(order => order.currency))]
-                const valueOfCurrency = calculateValue(orders, allCurrencies)
-                return { allCurrencies, valueOfCurrency, orders }
-            })
-
-            if (transactions[0] === "FEIL") {
-                return
-            }
-
-            const allMatches = transactions.orders
-                .filter(order => order.type === 'Match')
-
-            const allTransactions = transactions.orders
-                .filter(order => order.currency !== 'NOK')
-                .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
-                .map(transaction => {
-                    const matchedTransaction = allMatches.filter(match => match.date === transaction.date)[0]
-                    const dateString = transaction.date.toString().split('.')[0].split('T')
-                    const date = dateString[0] + ' ' + dateString[1]
-                    return {
-                        key: transaction.id,
-                        name: transaction.currency,
-                        equityShare: parseFloat(transaction.amount),
-                        date,
-                        type: transaction.type,
-                        equityPrice: matchedTransaction ?
-                            ((1 / parseFloat(transaction.amount)) * parseFloat(matchedTransaction.amount) * -1).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
-                            "N/A",
-                        cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
+            if (account.name === 'Firi') {
+                const transactions = await getTransactionsFromFiri(account.apiInfo.accessKey).then(orders => {
+                    if (orders.name === "ApiKeyNotFound") {
+                        return ["FEIL"]
                     }
+                    const allCurrencies = [...new Set(orders.map(order => order.currency))]
+                    const valueOfCurrency = calculateValue(orders, allCurrencies)
+                    return { allCurrencies, valueOfCurrency, orders }
                 })
 
-            const holdings = getHoldings(allTransactions, account)
+                if (transactions[0] === "FEIL") {
+                    return
+                }
 
-            console.log("Fetched transactions.")
-            dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
+                const allMatches = transactions.orders
+                    .filter(order => order.type === 'Match')
+
+                const allTransactions = transactions.orders
+                    .filter(order => order.currency !== 'NOK')
+                    .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
+                    .map(transaction => {
+                        const matchedTransaction = allMatches.filter(match => match.date === transaction.date)[0]
+                        const dateString = transaction.date.toString().split('.')[0].split('T')
+                        const date = dateString[0] + ' ' + dateString[1]
+                        return {
+                            key: transaction.id,
+                            name: transaction.currency,
+                            equityShare: parseFloat(transaction.amount),
+                            date,
+                            type: transaction.type,
+                            equityPrice: matchedTransaction ?
+                                ((1 / parseFloat(transaction.amount)) * parseFloat(matchedTransaction.amount) * -1).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
+                                "N/A",
+                            cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
+                        }
+                    })
+
+                const holdings = getHoldings(allTransactions, account)
+
+                console.log("Fetched transactions.")
+                dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
+            } else if(account.name === 'Kron') {
+                const transactions = await fetchTransactions(account)
+                const holdings = await fetchHoldings(account)
+
+                console.log(holdings)
+                dispatch(importTransactions({ key: account.key, transactions, holdings }))
+            }
         }
 
         if (account.apiInfo.accessKey === "") {

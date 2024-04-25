@@ -45,6 +45,14 @@ export function getHoldings(transactions, account) {
   }
 
   if (!account.isManual) {
+    if (account.name === "Kron") {
+      return account.holdings.map(holding => {
+        return {
+          ...holding,
+          accountKey: account.key
+        }
+      })
+    }
     const allCurrencies = [...new Set(transactions.map(order => order.name))]
     const holdings = []
 
@@ -115,8 +123,9 @@ export function setTotalValues(account, holdings) {
 
   const accountType = account.type
 
+  console.log(holdings)
   return holdings.map(holding => {
-    if (accountType === 'Kryptovaluta') {
+    if (accountType === 'Kryptovaluta' && !account.isManual) {
       return getValueInFiat([holding.name], account.apiInfo.accessKey)
         .then(cryptoPrice => {
           const last = parseFloat(cryptoPrice[0].last) * holding.equityShare
@@ -127,7 +136,10 @@ export function setTotalValues(account, holdings) {
             type: holding.equityType
           }
         })
-    } else if (accountType === 'Obligasjon') {
+    } else if (account.name === "Kron" && !account.isManual) {
+      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
+    }
+    else if (accountType === 'Obligasjon') {
       return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
     } else {
       const period = holding.equityType === 'Stock' ? '1opendays' : '1weeks'
