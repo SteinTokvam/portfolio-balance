@@ -13,6 +13,7 @@ export type Account = {
 
 export type ApiInfo = {
     accessKey: string
+    kronAccountId: string
 }
 
 export type Holding = {

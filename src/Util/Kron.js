@@ -19,8 +19,8 @@ function getOptions(api_key, account_id, accountKey) {
 
 
 export async function fetchTransactions(account) {
-   const account_id = 'ff16ab6d-159a-4c94-908a-6606370f4570'
-    const response = await fetch(`${baseUrl}/kron/transactions`, getOptions(account.apiInfo.accessKey, account_id, account.accountKey))
+
+    const response = await fetch(`${baseUrl}/kron/transactions`, getOptions(account.apiInfo.accessKey, account.apiInfo.kronAccountId, account.accountKey))
         .then(response => response.json())
         .catch(error => {
             console.log(error)
@@ -31,9 +31,7 @@ export async function fetchTransactions(account) {
 }
 
 export async function fetchHoldings(account) {
-    console.log(account)
-    const account_id = 'ff16ab6d-159a-4c94-908a-6606370f4570'
-    const response = await fetch(`${baseUrl}/kron/holdings`, getOptions(account.apiInfo.accessKey, account_id, account.accountKey))
+    const response = await fetch(`${baseUrl}/kron/holdings`, getOptions(account.apiInfo.accessKey, account.apiInfo.kronAccountId, account.accountKey))
         .then(response => response.json())
         .catch(error => {
             console.log(error)

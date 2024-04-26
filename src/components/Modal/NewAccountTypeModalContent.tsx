@@ -23,6 +23,8 @@ export function NewAccountTypeModalContent() {
 
     const [accessKeyText, setAccessKeyText] = useState("")
 
+    const [kronAccountId, setKronAccountId] = useState("")
+
     const dispatch = useDispatch()
 
     function handleSubmit() {
@@ -51,7 +53,8 @@ export function NewAccountTypeModalContent() {
                     yield: 0,
                     isManual: false,
                     apiInfo: {
-                        accessKey: accessKeyText
+                        accessKey: accessKeyText,
+                        kronAccountId
                     },
                     holdings: []
                 }
@@ -105,6 +108,14 @@ export function NewAccountTypeModalContent() {
                                     label={selectedRadio === "Firi" ? "Firi api key" : "Kron access key"}
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
+                                {
+                                    selectedRadio === 'Kron' && <Input type="text"
+                                        classNames={textInputStyle}
+                                        className="pt-4"
+                                        label="Kron account id"
+                                        value={kronAccountId}
+                                        onValueChange={setKronAccountId} />
+                                }
                                 <Accordion>
                                     <AccordionItem
                                         title={<h1 className="border-b">{selectedRadio === "Firi" ? t('accountModal.firiAccordionTitle') : t('accountModal.kronAccordionTitle')}</h1>}
