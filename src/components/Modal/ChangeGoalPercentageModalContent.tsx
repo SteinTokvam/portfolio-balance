@@ -6,12 +6,7 @@ import { useDispatch } from "react-redux";
 import { textInputStyle } from "../../Util/Global";
 import { useSelector } from "react-redux";
 import { changeGoalPercentage } from "../../actions/equityType";
-
-type EquityType = {
-    key: string,
-    label: string,
-    goalPercentage: number
-}
+import { EquityType } from "../../types/Types";
 
 export default function ChangeGoalPercentageModalContent() {
     const { t } = useTranslation()
