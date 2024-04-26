@@ -1,3 +1,4 @@
+import React from "react"
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs, Accordion, AccordionItem, Link, RadioGroup, Radio } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
 import { accountTypes, textInputStyle } from "../../Util/Global"
@@ -6,7 +7,7 @@ import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount } from "../../actions/accounts"
 
-export function NewAccountTypeModalContent({ setScreen = () => { } }) {
+export function NewAccountTypeModalContent() {
 
     const { t } = useTranslation()
 
@@ -25,9 +26,8 @@ export function NewAccountTypeModalContent({ setScreen = () => { } }) {
     const dispatch = useDispatch()
 
     function handleSubmit() {
-        setScreen(true)
         console.log(selectedRadio)
-        if (selectedRadio !== "Firi" && selectedRadio !== "Kron") {
+        if (true){//selectedRadio !== "Firi" && selectedRadio !== "Kron") {
             dispatch(addNewAccount(
                 {
                     name: accountName,
@@ -77,6 +77,7 @@ export function NewAccountTypeModalContent({ setScreen = () => { } }) {
                                     label={"Kontotype"}
                                     placeholder={"Kontotype"}
                                     className="pt-4 drop-shadow-xl"
+                                    // @ts-ignore
                                     onSelectionChange={setSelectedKeys}
                                     selectedKeys={selectedKeys}
                                 >
@@ -141,7 +142,6 @@ export function NewAccountTypeModalContent({ setScreen = () => { } }) {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" variant="light" onPress={() => {
-                            setScreen(true)
                             onClose()
                         }}>
                             {t('general.closeButton')}

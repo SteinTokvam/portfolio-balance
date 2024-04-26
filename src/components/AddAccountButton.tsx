@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, useDisclosure } from "@nextui-org/react";
 import EmptyModal from "./Modal/EmptyModal";
 import { NewAccountTypeModalContent } from "./Modal/NewAccountTypeModalContent";

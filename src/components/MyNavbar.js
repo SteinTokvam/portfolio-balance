@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useReducer } from "react";
 import { routes } from "../Util/Global.js";
 import { useNavigate } from "react-router-dom";
-import EmptyModal from "./Modal/EmptyModal.js";
+import EmptyModal from "./Modal/EmptyModal";
 
 export default function MyNavbar() {
 
