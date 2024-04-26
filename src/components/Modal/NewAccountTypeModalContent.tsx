@@ -26,8 +26,7 @@ export function NewAccountTypeModalContent() {
     const dispatch = useDispatch()
 
     function handleSubmit() {
-        console.log(selectedRadio)
-        if (true){//selectedRadio !== "Firi" && selectedRadio !== "Kron") {
+        if (accessKeyText === "") {
             dispatch(addNewAccount(
                 {
                     name: accountName,
@@ -92,7 +91,6 @@ export function NewAccountTypeModalContent() {
 
                                 <RadioGroup
                                     label="Velg type konto"
-                                    defaultValue="Kryptovaluta"
                                     orientation="horizontal"
                                     value={selectedRadio}
                                     onValueChange={setSelectedRadio}

@@ -1,9 +1,9 @@
 import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMenuToggle, Link, NavbarMenuItem, Button } from "@nextui-org/react";
-import { Logo } from "../icons/Logo.jsx";
-import SettingsModalContent from "./Modal/SettingsModalContent.js";
+import { Logo } from "../icons/Logo";
+import SettingsModalContent from "./Modal/SettingsModalContent";
 import { useTranslation } from "react-i18next";
 import { useReducer } from "react";
-import { routes } from "../Util/Global.js";
+import { routes } from "../Util/Global";
 import { useNavigate } from "react-router-dom";
 import EmptyModal from "./Modal/EmptyModal";
 
