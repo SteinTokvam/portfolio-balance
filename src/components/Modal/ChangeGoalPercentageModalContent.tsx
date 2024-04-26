@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -6,10 +7,16 @@ import { textInputStyle } from "../../Util/Global";
 import { useSelector } from "react-redux";
 import { changeGoalPercentage } from "../../actions/equityType";
 
+type EquityType = {
+    key: string,
+    label: string,
+    goalPercentage: number
+}
 
 export default function ChangeGoalPercentageModalContent() {
     const { t } = useTranslation()
 
+    // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const [selectedEquityTypeKey, setSelectedTransactionKeys] = useState(["Fund"]);
@@ -18,22 +25,22 @@ export default function ChangeGoalPercentageModalContent() {
         [selectedEquityTypeKey]
     );
 
-    const [goalPercentage, setGoalPercentage] = useState(equityTypes.filter(equityType => equityType.key === selectedEquityType)[0].goalPercentage)
+    const [goalPercentage, setGoalPercentage] = useState(equityTypes.filter((equityType: EquityType) => equityType.key === selectedEquityType)[0].goalPercentage)
 
     const dispatch = useDispatch()
 
-    const validatePercentage = (newPercentage, equityTypeKey) => {
-        return equityTypes.filter(equityType => equityType.key !== equityTypeKey).reduce((a, b) => a + b.goalPercentage, 0) + newPercentage > 100
+    const validatePercentage = (newPercentage: number, equityTypeKey: string) => {
+        return equityTypes.filter((equityType: EquityType) => equityType.key !== equityTypeKey).reduce((a: number, b: EquityType) => a + b.goalPercentage, 0) + newPercentage > 100
     }
 
     const [isInvalid, setIsInvalid] = useState(false)
 
     useEffect(() => {
-        setGoalPercentage(parseInt(equityTypes.filter(equityType => equityType.key === selectedEquityType)[0].goalPercentage))
+        setGoalPercentage(parseInt(equityTypes.filter((equityType: EquityType) => equityType.key === selectedEquityType)[0].goalPercentage))
     }, [selectedEquityType, equityTypes])
 
     function handleSubmit() {
-        const newGoalPercentage = equityTypes.filter(equityType => equityType.key === selectedEquityType).map(equityType => {
+        const newGoalPercentage = equityTypes.filter((equityType: EquityType) => equityType.key === selectedEquityType).map((equityType: EquityType) => {
             return {
                 ...equityType,
                 goalPercentage: parseInt(goalPercentage)
@@ -53,10 +60,11 @@ export default function ChangeGoalPercentageModalContent() {
                             label={"Transaksjonstype"}
                             placeholder={"Transaksjonstype"}
                             className="pt-4 drop-shadow-xl"
+                            // @ts-ignore
                             onSelectionChange={setSelectedTransactionKeys}
                             selectedKeys={selectedEquityTypeKey}
                         >
-                            {equityTypes.map((equityType) => (
+                            {equityTypes.map((equityType: EquityType) => (
                                 <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
                                     {t(`equityTypes.${equityType.key.toLowerCase()}`)}
                                 </SelectItem>
@@ -69,12 +77,16 @@ export default function ChangeGoalPercentageModalContent() {
                             classNames={textInputStyle}
                             label={"Målprosent"}
                             value={goalPercentage}
-                            onValueChange={(newValue) => {
+                            onValueChange={(newValue: string) => {
                                 setIsInvalid(validatePercentage(parseInt(newValue), selectedEquityType))
                                 setGoalPercentage(parseInt(newValue))
                             }}
                             isInvalid={isInvalid}
-                            errorMessage={isInvalid ? `Målprosent for alle investeringstyper kan ikke overstige 100%. Nåværende ville blitt: ${equityTypes.filter(equityType => equityType.key !== selectedEquityType).reduce((a, b) => a + b.goalPercentage, 0) + goalPercentage}` : ''}
+                            errorMessage={
+                                isInvalid ?
+                                    `Målprosent for alle investeringstyper kan ikke overstige 100%. Nåværende ville blitt: ${equityTypes.filter((equityType: EquityType) => equityType.key !== selectedEquityType).reduce((a: number, b: EquityType) => a + b.goalPercentage, 0) + goalPercentage}` :
+                                    ''
+                            }
                         />
                     </ModalBody>
                     <ModalFooter>

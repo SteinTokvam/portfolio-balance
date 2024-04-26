@@ -1,9 +1,14 @@
+import React from "react";
 import { Link, Button, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import SupportModalContent from "./Modal/SupportModalContent";
 import EmptyModal from "./Modal/EmptyModal";
 
-export default function Footer({isDark}) {
+type Props = {
+    isDark: boolean
+}
+
+export default function Footer({isDark}: Props) {
     const { t } = useTranslation()
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();

@@ -1,3 +1,4 @@
+import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMenuToggle, Link, NavbarMenuItem, Button } from "@nextui-org/react";
 import { Logo } from "../icons/Logo";
 import SettingsModalContent from "./Modal/SettingsModalContent";
@@ -21,7 +22,7 @@ export default function MyNavbar() {
 
   const navigate = useNavigate()
 
-  function handleClick(isHamburgerMenu, route) {
+  function handleClick(isHamburgerMenu: boolean, route: () => void) {
     route()
     if (isHamburgerMenu) {
       setIsMenuOpen()
@@ -49,6 +50,7 @@ export default function MyNavbar() {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
+              // @ts-ignore
               onPress={() => item.name === t('navbar.settings') ? handleClick(false, onOpen) : handleClick(false, () => navigate(item.link))}
             >
               {item.name}
@@ -72,6 +74,7 @@ export default function MyNavbar() {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
               className="w-full"
+              // @ts-ignore
               onPress={() => item.name === t('navbar.settings') ? handleClick(true, onOpen) : handleClick(true, () => navigate(item.link))}
               size="lg"
             >
