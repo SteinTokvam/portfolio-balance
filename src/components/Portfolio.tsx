@@ -1,3 +1,4 @@
+import React from "react";
 import { Accordion, AccordionItem, Avatar, Skeleton } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
 import { useSelector } from "react-redux";
@@ -5,11 +6,21 @@ import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { useEffect, useState, useRef } from "react";
 import { getHoldings, setTotalValues } from "../Util/Global";
+import { Account } from "../types/Types";
 
+type Props = {
+    isDark: boolean
+}
 
+export default function Portfolio({ isDark }: Props) {
 
-export default function Portfolio({ isDark }) {
+    type TotalValue = {
+        value: number,
+        accountKey: string,
+        name: string
+    }
 
+    // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
     const [totalValue, setTotalValue] = useState([]);//TODO: dette burde vært en reducer? er lik som den i dashboard
@@ -17,9 +28,10 @@ export default function Portfolio({ isDark }) {
     const hasLoadedBefore = useRef(true)
     useEffect(() => {
         if (hasLoadedBefore.current) {
-            accounts.forEach(account => {
+            accounts.forEach((account: Account) => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
                     const mergedWithTotalValue = [...totalValue, ...newHoldings].filter(elem => elem.value >= 1)
+                    // @ts-ignore
                     setTotalValue(prevState => {
                         return [...prevState, ...mergedWithTotalValue]
                     })
@@ -36,7 +48,7 @@ export default function Portfolio({ isDark }) {
                 {accounts.length > 0 ?
                     <div>
                         {
-                            accounts.map((account) => {
+                            accounts.map((account: Account) => {
                                 return (
                                     <div key={account.key}>
                                         <Accordion
@@ -60,11 +72,11 @@ export default function Portfolio({ isDark }) {
                                                                         className="rounded-lg"
                                                                         isLoaded={
                                                                             totalValue
-                                                                                .filter(totalValue => totalValue.accountKey === account.key)
-                                                                                .reduce((sum, item) => sum + item.value, 0) > 0
+                                                                                .filter((totalValue: TotalValue) => totalValue.accountKey === account.key)
+                                                                                .reduce((sum: number, item: TotalValue) => sum + item.value, 0) > 0
                                                                         }>
                                                                         {
-                                                                            totalValue.filter(totalValue => totalValue.accountKey === account.key).reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                            totalValue.filter((totalValue: TotalValue) => totalValue.accountKey === account.key).reduce((sum: number, item: TotalValue) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                         }
                                                                     </Skeleton>
                                                                 </p>
@@ -76,7 +88,7 @@ export default function Portfolio({ isDark }) {
                                                 <TransactionsTable account={account} isDark={isDark}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
-                                                            totalValue.map(totalValue => {
+                                                            totalValue.map((totalValue: TotalValue) => {
                                                                 if (totalValue.accountKey === account.key) {
                                                                     console.log(totalValue.value)
                                                                     if (totalValue.value < 1) {

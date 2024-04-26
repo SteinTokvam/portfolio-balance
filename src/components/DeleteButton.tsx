@@ -1,8 +1,14 @@
+import React from "react";
 import { Button } from "@nextui-org/react";
 import DeleteIcon from "../icons/DeleteIcon";
 
+type Props = {
+    handleDelete: () => void
+    buttonText: string
+    isDark: boolean
+}
 
-export default function DeleteButton({ handleDelete, buttonText, isDark }) {
+export default function DeleteButton({ handleDelete, buttonText, isDark }: Props) {
     return (
         <Button
             color="danger"
