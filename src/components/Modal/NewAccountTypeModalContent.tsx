@@ -69,7 +69,7 @@ export function NewAccountTypeModalContent() {
                     <ModalHeader className="flex flex-col gap-1">{t('accountModal.title')}</ModalHeader>
                     <ModalBody className="">
                         <Tabs>
-                            <Tab key="Manual" title="Manual import" className="w-full">
+                            <Tab key="Manual" title={t('accountModal.manualTabTitle')} className="w-full">
                                 <Input type="text"
                                     classNames={textInputStyle}
                                     label={"Kontonavn"}
@@ -90,7 +90,7 @@ export function NewAccountTypeModalContent() {
                                     ))}
                                 </Select>
                             </Tab>
-                            <Tab key="Auto" title="Automatic import">
+                            <Tab key="Auto" title={t('accountModal.autoTabTitle')}>
 
                                 <RadioGroup
                                     label="Velg type konto"
@@ -112,7 +112,7 @@ export function NewAccountTypeModalContent() {
                                     selectedRadio === 'Kron' && <Input type="text"
                                         classNames={textInputStyle}
                                         className="pt-4"
-                                        label="Kron account id"
+                                        label={t('accountModal.kronAccountId')}
                                         value={kronAccountId}
                                         onValueChange={setKronAccountId} />
                                 }
@@ -121,7 +121,7 @@ export function NewAccountTypeModalContent() {
                                         title={<h1 className="border-b">{selectedRadio === "Firi" ? t('accountModal.firiAccordionTitle') : t('accountModal.kronAccordionTitle')}</h1>}
                                     >
                                         <div className="">
-                                            <p>{selectedRadio === "Firi" ? t('accountModal.firiHelpText1') : t('accountModal.kronHelpText1')}</p>
+                                            <p>{selectedRadio === "Firi" ? t('accountModal.firiHelpText1') : t('accountModal.kronHelpText1')}
 
                                             {
                                                 selectedRadio === "Firi" ? <Link
@@ -141,7 +141,9 @@ export function NewAccountTypeModalContent() {
                                             }
                                             {selectedRadio === "Firi" ?
                                                 t('accountModal.firiHelpText2') :
-                                                t('accountModal.kronHelpText2')}
+                                                t('accountModal.kronHelpText2')}</p>
+                                            <p>{selectedRadio === "Kron" && t('accountModal.kronHelpText3')}</p>
+                                            <p>{selectedRadio === "Kron" && t('accountModal.kronHelpText4')}</p>
                                         </div>
                                     </AccordionItem>
                                 </Accordion>
