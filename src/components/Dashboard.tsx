@@ -2,11 +2,12 @@ import React from "react";
 import { Select, SelectItem, Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/react";
 import { useEffect, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { getHoldings, setTotalValues } from "../Util/Global";
 import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 import { Account, EquityType, Holding } from "../types/Types";
+import { addHoldings } from "../actions/holdings";
 
 export default function Dashboard() {
 
@@ -18,19 +19,22 @@ export default function Dashboard() {
     }
 
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
     // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
-    const [totalValue, setTotalValue] = useState([]);
-    const biggestInvestment = totalValue.length !== 0 && totalValue.reduce((a: Holding, b: Holding) => {
+    // @ts-ignore
+    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
+
+    const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b
-    }, totalValue[0])
+    }, holdings[0])
     const furthestFromGoal = equityTypes.map((equityType: EquityType) => {
         return {
-            currentPercentage: parseFloat((totalValue
+            currentPercentage: parseFloat((holdings
                 .filter((holding: Holding) => holding.type === equityType.key)
-                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2)),
+                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2)),
             equityType
         }
     }).map((furthest: FurthestFromGoal) => {
@@ -57,21 +61,15 @@ export default function Dashboard() {
         [selectedKeys]
     );
 
-    const hasLoadedBefore = useRef(true)
     useEffect(() => {
-        if (hasLoadedBefore.current) {
-            accounts.forEach((account: Account)  => {
+        if (holdings.length === 0) {
+            accounts.forEach((account: Account) => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    const mergedWithTotalValue = [...totalValue, ...newHoldings].filter(elem => elem.value >= 1)
-                    // @ts-ignore
-                    setTotalValue(prevState => {
-                        return [...prevState, ...mergedWithTotalValue]
-                    })
+                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1)))
                 })
             })
-            hasLoadedBefore.current = false
         }
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+    }, [holdings])
 
     return (
         <>
@@ -82,7 +80,7 @@ export default function Dashboard() {
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">{totalValue.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">{holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
                 <Spacer y={20} />
             </div>
             <div className="flex flex-col items-center">
@@ -126,13 +124,13 @@ export default function Dashboard() {
                                         isLoaded={
                                             account.type === 'Cryptocurrency' ?
                                                 account.holdings.reduce((sum: number, item: Holding) => sum + item.value, 0) > 0 :
-                                                totalValue
+                                                holdings
                                                     .filter((holding: Holding) => holding.accountKey === account.key)
                                                     .reduce((acc: number, cur: Holding) => acc + cur.value, 0) > 0
                                         }><h4 className="text-large font-bold leading-none text-default-400">{
                                             account.type === 'Cryptocurrency' ?
                                                 account.holdings.reduce((sum, item) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
-                                                totalValue
+                                                holdings
                                                     .filter((holding: Holding) => holding.accountKey === account.key)
                                                     .reduce((acc: number, cur: Holding) => acc + cur.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                         }</h4>
@@ -143,13 +141,13 @@ export default function Dashboard() {
                                         isLoaded={
                                             account.type === 'Cryptocurrency' ?
                                                 account.holdings.reduce((sum: number, item: Holding) => sum + item.value, 0) > 0 :
-                                                totalValue
+                                                holdings
                                                     .filter((holding: Holding) => holding.accountKey === account.key)
-                                                    .reduce((acc, cur: Holding) => acc + cur.value, 0) > 0
+                                                    .reduce((acc: number, cur: Holding) => acc + cur.value, 0) > 0
                                         }><h4 className="text-large font-bold leading-none text-default-400">{
-                                            ((totalValue
+                                            ((holdings
                                                 .filter((holding: Holding) => holding.accountKey === account.key)
-                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
                                         }%</h4>
                                     </Skeleton>
                                 </div>
@@ -160,22 +158,22 @@ export default function Dashboard() {
                                     <div key={equityType.key} className="sm:text-center sm:justify-center">
                                         <h2 className="text-medium font-semibold leading-none text-default-600">{t(`equityTypes.${equityType.key.toLowerCase()}`)}</h2>
                                         <Spacer y={2} />
-                                        <Skeleton className="rounded-lg" isLoaded={totalValue
+                                        <Skeleton className="rounded-lg" isLoaded={holdings
                                             .filter((holding: Holding) => holding.type === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0}>
                                             <h4 className="text-large font-bold leading-none text-default-400">{
-                                                totalValue
+                                                holdings
                                                     .filter((holding: Holding) => holding.type === equityType.key)
                                                     .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                             }</h4>
                                         </Skeleton>
-                                        <Skeleton className="rounded-lg" isLoaded={totalValue
+                                        <Skeleton className="rounded-lg" isLoaded={holdings
                                             .filter((holding: Holding) => holding.type === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0}>
                                             <h4 className="text-large font-bold leading-none text-default-400">{
-                                                ((totalValue
+                                                ((holdings
                                                     .filter((holding: Holding) => holding.type === equityType.key)
-                                                    .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / totalValue.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                                    .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
                                             }% / {equityType.goalPercentage}%</h4>
                                         </Skeleton>
                                     </div>)

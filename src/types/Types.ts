@@ -44,3 +44,9 @@ export type EquityType = {
     label: string,
     goalPercentage: number
 }
+
+export type TotalValue = {
+    value: number,
+    accountKey: string,
+    name: string
+}
