@@ -6,9 +6,10 @@ type Props = {
     handleDelete: () => void
     buttonText: string
     isDark: boolean
+    showText: boolean
 }
 
-export default function DeleteButton({ handleDelete, buttonText, isDark }: Props) {
+export default function DeleteButton({ handleDelete, buttonText, isDark, showText}: Props) {
     return (
         <Button
             color="danger"
@@ -17,8 +18,9 @@ export default function DeleteButton({ handleDelete, buttonText, isDark }: Props
             size="lg"
             variant="bordered"
             className="m-2"
+            isIconOnly={!showText}
         >
-            {buttonText}
+            {showText && buttonText}
         </Button>
     )
 }
