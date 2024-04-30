@@ -11,6 +11,7 @@ import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import { getHoldings } from "../Util/Global";
 import DeleteButton from "./DeleteButton";
 import { fetchHoldings, fetchTransactions } from "../Util/Kron";
+import { updateHolding, updateHoldings } from "../actions/holdings";
 
 export default function TransactionsTable({ account, isDark, children }) {
 
@@ -131,12 +132,14 @@ export default function TransactionsTable({ account, isDark, children }) {
 
                 console.log("Fetched transactions.")
                 dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
+                dispatch(updateHoldings(holdings))
             } else if (account.name === 'Kron') {
                 const transactions = await fetchTransactions(account)
                 const holdings = await fetchHoldings(account)
 
                 console.log(holdings)
                 dispatch(importTransactions({ key: account.key, transactions, holdings }))
+                dispatch(updateHoldings(holdings))
             }
         }
 
@@ -164,7 +167,15 @@ export default function TransactionsTable({ account, isDark, children }) {
     function renderCell(item, columnKey) {
         switch (columnKey) {
             case 'action':
-                return <DeleteButton handleDelete={() => dispatch(deleteTransaction(item.key, account.key))} buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
+                return <DeleteButton handleDelete={() => {
+                    dispatch(deleteTransaction(item.key, account.key))
+                    /***
+                     * TODO: Update holdings
+                     * om verdi er større enn 0, oppdater verdi for holding. om verdi er lik 0, slett holding.
+                     */
+                    // dispatch(updateHoldings(holdings))
+                }
+            } buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
             default:
                 return getKeyValue(item, columnKey)
         }

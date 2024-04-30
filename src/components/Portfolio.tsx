@@ -4,9 +4,9 @@ import TransactionsTable from "./TransactionsTable";
 import { useDispatch, useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 import { getHoldings, setTotalValues } from "../Util/Global";
-import { Account, Holding, TotalValue } from "../types/Types";
+import { Account, Holding } from "../types/Types";
 import { addHoldings } from "../actions/holdings";
 
 type Props = {
@@ -64,11 +64,11 @@ export default function Portfolio({ isDark }: Props) {
                                                                         className="rounded-lg"
                                                                         isLoaded={
                                                                             holdings
-                                                                                .filter((totalValue: TotalValue) => totalValue.accountKey === account.key)
-                                                                                .reduce((sum: number, item: TotalValue) => sum + item.value, 0) > 0
+                                                                                .filter((totalValue: Holding) => totalValue.accountKey === account.key)
+                                                                                .reduce((sum: number, item: Holding) => sum + item.value, 0) > 0
                                                                         }>
                                                                         {
-                                                                            holdings.filter((totalValue: TotalValue) => totalValue.accountKey === account.key).reduce((sum: number, item: TotalValue) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                            holdings.filter((totalValue: Holding) => totalValue.accountKey === account.key).reduce((sum: number, item: Holding) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                         }
                                                                     </Skeleton>
                                                                 </p>
@@ -80,15 +80,15 @@ export default function Portfolio({ isDark }: Props) {
                                                 <TransactionsTable account={account} isDark={isDark}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
-                                                            holdings.map((totalValue: TotalValue) => {
-                                                                if (totalValue.accountKey === account.key) {
-                                                                    if (totalValue.value < 1) {
+                                                            holdings.map((holding: Holding) => {
+                                                                if (holding.accountKey === account.key) {
+                                                                    if (holding.value < 1) {
                                                                         return ''
                                                                     }
                                                                     return (
-                                                                        <div key={totalValue.name} className="p-1 w-1/3">
-                                                                            <p className="text-default-600">{totalValue.name}</p>
-                                                                            <Skeleton className="rounded-lg" isLoaded={totalValue.value > 0}><p className="text-default-800 font-bold">{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
+                                                                        <div key={holding.name} className="p-1 w-1/3">
+                                                                            <p className="text-default-600">{holding.name}</p>
+                                                                            <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
                                                                         </div>
                                                                     )
                                                                 }

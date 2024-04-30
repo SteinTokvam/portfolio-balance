@@ -8,6 +8,13 @@ export const addHolding = (holding: Holding) => {
     }
 }
 
+export const updateHolding = (holding: Holding) => {
+    return {
+        type: "UPDATE_HOLDING",
+        payload: [holding]
+    }
+}
+
 export const updateHoldings = (holdings: Holding[]) => {
     return {
         type: "UPDATE_HOLDINGS",

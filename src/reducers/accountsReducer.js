@@ -44,7 +44,6 @@ const initialState = {
 
 const accountReducer = (state = initialState, action) => {
     var currentAccounts = []
-    var currentHoldings = []
     var index = -1
     switch (action.type) {
         case 'ADD_NEW_ACCOUNT':
@@ -68,7 +67,6 @@ const accountReducer = (state = initialState, action) => {
                 currentAccounts[index] = {
                     ...currentAccounts[index],
                     transactions: action.payload.transactions,
-                    holdings: action.payload.holdings,
                 }
                 window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
                 return {
@@ -104,20 +102,9 @@ const accountReducer = (state = initialState, action) => {
                 }
             }
 
-            currentHoldings = [...state.accounts[index].holdings]
-
-            action.payload.holdings.forEach(newHolding => {
-                const index = currentHoldings.findIndex(curr => curr.e24Key === newHolding.e24Key)
-                if (index !== -1) {
-                    currentHoldings[index] = { ...currentHoldings[index], equityShare: currentHoldings[index].equityShare + newHolding.equityShare }
-                } else {
-                    currentHoldings.push(newHolding)
-                }
-            });
             currentAccounts[index] = {
                 ...currentAccounts[index],
-                transactions: [...currentAccounts[index].transactions, action.payload.transaction],
-                holdings: currentHoldings
+                transactions: [...currentAccounts[index].transactions, action.payload.transaction]
             }
 
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))

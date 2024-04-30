@@ -8,23 +8,26 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
 
     switch (action.type) {
         case 'ADD_HOLDING':
+            window.localStorage.setItem("holdings", JSON.stringify([...state.holdings, action.payload]))
             return {
                 ...state,
                 holdings: [...state.holdings, action.payload]
             }
-        case 'UPDATE_HOLDINGS':
-            const holdingsToUpdate = [...action.payload].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
-            const currentHoldings = [...state.holdings].map((holding: Holding) => {
-                if(holdingsToUpdate.some((updatedHolding: Holding) => updatedHolding.name === holding.name && updatedHolding.accountKey === holding.accountKey)) {
-                    return holdingsToUpdate.filter((updatedHolding: Holding) => updatedHolding.name === holding.name && updatedHolding.accountKey === holding.accountKey)[0]
+        case 'UPDATE_HOLDING':
+            console.log(action.payload)
+            const updatedHoldings = [...state.holdings].map((holding: Holding) => {
+                if(holding.name === action.payload[0].name && holding.accountKey === action.payload[0].accountKey) {
+                    return action.payload[0]
                 }
-                return holding
             })
-            localStorage.setItem('holdings', JSON.stringify(currentHoldings))
+            localStorage.setItem('holdings', JSON.stringify(updatedHoldings))
             return {
                 ...state,
-                holdings: currentHoldings
+                ...updatedHoldings
             }
+        case 'UPDATE_HOLDINGS':
+            //TODO: implement
+            return 
         case 'ADD_HOLDINGS':
             const newHoldings = [...action.payload].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
             const allHoldings = [...state.holdings, ...newHoldings]

@@ -6,6 +6,7 @@ import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
+import { addHolding } from "../../actions/holdings";
 
 
 export default function NewTransactionModalContent({ account }) {
@@ -70,12 +71,9 @@ export default function NewTransactionModalContent({ account }) {
                 equityType: selectedInvestmentType
             }
         }
-        dispatch(
-            newTransaction(account.key,
-                transactionToAdd,
-                getHoldings([transactionToAdd], account)
-            )
-        )
+        const holding = getHoldings([transactionToAdd], account)[0]
+        dispatch(newTransaction(account.key,transactionToAdd))
+        dispatch(addHolding(holding))
     }
     return (
         <ModalContent>
