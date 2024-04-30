@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import { Holding } from "../types/Types";
 
 const initialState = {
@@ -14,20 +15,23 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
                 holdings: [...state.holdings, action.payload]
             }
         case 'UPDATE_HOLDING':
-            console.log(action.payload)
-            const updatedHoldings = [...state.holdings].map((holding: Holding) => {
-                if(holding.name === action.payload[0].name && holding.accountKey === action.payload[0].accountKey) {
-                    return action.payload[0]
+            return {
+                ...state, 
+                holdings: [...state.holdings].map((holding: Holding) => {
+                if(holding.accountKey === action.payload[0].accountKey && holding.name === action.payload[0].name) {
+                    return {...holding, value: holding.value + action.payload[0].value}
                 }
-            })
+                return holding
+            })}
+        case 'UPDATE_HOLDINGS':
+            const holdingsForOtherAccounts = [...state.holdings].filter((holding: Holding) => holding.accountKey !== action.payload[0].accountKey)
+            const updatedHoldings = [...holdingsForOtherAccounts, ...action.payload]
+            console.log(updatedHoldings)
             localStorage.setItem('holdings', JSON.stringify(updatedHoldings))
             return {
                 ...state,
-                ...updatedHoldings
+                holdings: updatedHoldings
             }
-        case 'UPDATE_HOLDINGS':
-            //TODO: implement
-            return 
         case 'ADD_HOLDINGS':
             const newHoldings = [...action.payload].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
             const allHoldings = [...state.holdings, ...newHoldings]
@@ -51,6 +55,13 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
             }
         default:
             return state
+    }
+}
+
+function updateHolding(currentHolding: Holding, newHolding: Holding) {
+    return {
+        ...currentHolding,
+        value: currentHolding.value + newHolding.value
     }
 }
 

@@ -65,6 +65,7 @@ export function getHoldings(transactions, account) {
           goalPercentage: 0,
           equityShare,
           name: name,
+          value: 1
         }
       )
     })

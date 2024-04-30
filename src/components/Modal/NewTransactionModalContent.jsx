@@ -6,7 +6,7 @@ import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
-import { addHolding } from "../../actions/holdings";
+import { addHolding, updateHolding } from "../../actions/holdings";
 
 
 export default function NewTransactionModalContent({ account }) {
@@ -73,7 +73,11 @@ export default function NewTransactionModalContent({ account }) {
         }
         const holding = getHoldings([transactionToAdd], account)[0]
         dispatch(newTransaction(account.key,transactionToAdd))
-        dispatch(addHolding(holding))
+        if(account.transactions.some(transaction => transaction.name === transactionToAdd.name)) {
+            dispatch(updateHolding(holding))
+        } else {
+            dispatch(addHolding(holding))
+        }
     }
     return (
         <ModalContent>

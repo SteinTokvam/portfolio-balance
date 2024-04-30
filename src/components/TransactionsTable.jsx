@@ -8,10 +8,10 @@ import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
-import { getHoldings } from "../Util/Global";
+import { getHoldings, setTotalValues } from "../Util/Global";
 import DeleteButton from "./DeleteButton";
 import { fetchHoldings, fetchTransactions } from "../Util/Kron";
-import { updateHolding, updateHoldings } from "../actions/holdings";
+import { updateHoldings } from "../actions/holdings";
 
 export default function TransactionsTable({ account, isDark, children }) {
 
@@ -72,15 +72,15 @@ export default function TransactionsTable({ account, isDark, children }) {
                     { key: 'equityShare', label: t('transactionsTable.equityShare') },
                     { key: 'date', label: t('transactionsTable.date') },
                     { key: 'action', label: 'Action' }
-                ] : 
-                [
-                    { key: 'name', label: t('transactionsTable.name') },
-                    { key: 'cost', label: t('transactionsTable.cost') },
-                    { key: 'type', label: t('transactionsTable.type') },
-                    { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
-                    { key: 'equityShare', label: t('transactionsTable.equityShare') },
-                    { key: 'date', label: t('transactionsTable.date') }
-                ];
+                ] :
+                    [
+                        { key: 'name', label: t('transactionsTable.name') },
+                        { key: 'cost', label: t('transactionsTable.cost') },
+                        { key: 'type', label: t('transactionsTable.type') },
+                        { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
+                        { key: 'equityShare', label: t('transactionsTable.equityShare') },
+                        { key: 'date', label: t('transactionsTable.date') }
+                    ];
         }
     }
 
@@ -131,15 +131,15 @@ export default function TransactionsTable({ account, isDark, children }) {
                 const holdings = getHoldings(allTransactions, account)
 
                 console.log("Fetched transactions.")
-                dispatch(importTransactions({ key: account.key, transactions: allTransactions, holdings }))
-                dispatch(updateHoldings(holdings))
+                console.log(holdings)
+                dispatch(importTransactions({ key: account.key, transactions: allTransactions }))
+                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings)))
             } else if (account.name === 'Kron') {
                 const transactions = await fetchTransactions(account)
                 const holdings = await fetchHoldings(account)
 
-                console.log(holdings)
-                dispatch(importTransactions({ key: account.key, transactions, holdings }))
-                dispatch(updateHoldings(holdings))
+                dispatch(importTransactions({ key: account.key, transactions }))
+                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, accountKey: account.key } }))))
             }
         }
 
@@ -173,9 +173,9 @@ export default function TransactionsTable({ account, isDark, children }) {
                      * TODO: Update holdings
                      * om verdi er større enn 0, oppdater verdi for holding. om verdi er lik 0, slett holding.
                      */
-                    // dispatch(updateHoldings(holdings))
+                    Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, value: holding.name === item.name ? holding.value * -1 : holding.value } }))))
                 }
-            } buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
+                } buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
             default:
                 return getKeyValue(item, columnKey)
         }
