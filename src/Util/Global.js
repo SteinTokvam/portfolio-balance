@@ -1,5 +1,6 @@
 import { fetchTicker } from "./E24";
 import { getValueInFiat } from "./Firi";
+import { fetchHoldings } from "./Kron";
 
 export const languages = ["us", "no"];
 
@@ -46,13 +47,9 @@ export function getHoldings(transactions, account) {
 
   if (!account.isManual) {
     if (account.name === "Kron") {
-      return account.holdings.map(holding => {
-        return {
-          ...holding,
-          accountKey: account.key
-        }
-      })
+      return
     }
+    
     const allCurrencies = [...new Set(transactions.map(order => order.name))]
     const holdings = []
 
@@ -134,14 +131,14 @@ export function setTotalValues(account, holdings) {
             name: holding.name,
             value: parseFloat(last),
             accountKey: holding.accountKey,
-            type: holding.equityType
+            equityType: holding.equityType
           }
         })
     } else if (account.name === "Kron" && !account.isManual) {
-      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
+      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, equityType: holding.equityType }
     }
     else if (accountType === 'Obligasjon') {
-      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, type: holding.equityType }
+      return { name: holding.name, value: holding.value, accountKey: holding.accountKey, equityType: holding.equityType }
     } else {
       const period = holding.equityType === 'Stock' ? '1opendays' : '1weeks'
       return fetchTicker(holding.e24Key, "OSE", holding.equityType, period).then(res => res)
@@ -154,7 +151,7 @@ export function setTotalValues(account, holdings) {
                 .filter(transaction => transaction.name === holding.name)
                 .reduce((sum, item) => sum + item.cost, 0),
               accountKey: holding.accountKey,
-              type: holding.equityType
+              equityType: holding.equityType
             }
           }
           return {
@@ -163,7 +160,7 @@ export function setTotalValues(account, holdings) {
             equityShare: holding.equityShare,
             price: price.value,
             accountKey: holding.accountKey,
-            type: holding.equityType
+            equityType: holding.equityType
           }
         })
     }

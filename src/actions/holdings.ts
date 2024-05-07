@@ -8,31 +8,31 @@ export const addHolding = (holding: Holding) => {
     }
 }
 
-export const updateHolding = (holding: Holding) => {
+export const updateHolding = (holding: Holding, accountKey: string) => {
     return {
         type: "UPDATE_HOLDING",
-        payload: [holding]
+        payload: {holdings: [holding], accountKey}
     }
 }
 
-export const updateHoldings = (holdings: Holding[]) => {
+export const updateHoldings = (holdings: Holding[], accountKey: string) => {
     return {
         type: "UPDATE_HOLDINGS",
-        payload: holdings
+        payload: { holdings, accountKey }
     }
 }
 
-export const addHoldings = (holdings: Holding[]) => {
+export const addHoldings = (holdings: Holding[], accountKey: string) => {
     return {
         type: "ADD_HOLDINGS",
-        payload: holdings
+        payload: {holdings, accountKey}
     }
 }
 
-export const deleteHolding = (holding: Holding) => {
+export const deleteHolding = (holding: Holding, accountKey: string) => {
     return {
         type: "DELETE_HOLDING",
-        payload: holding
+        payload: {holding, accountKey}
     }
 }
 

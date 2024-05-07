@@ -27,7 +27,7 @@ export default function Portfolio({ isDark }: Props) {
         if (holdings.length === 0) {
             accounts.forEach((account: Account) => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1)))
+                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1), account.key))
                 })
             })
         }

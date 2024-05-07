@@ -168,12 +168,14 @@ export default function TransactionsTable({ account, isDark, children }) {
         switch (columnKey) {
             case 'action':
                 return <DeleteButton handleDelete={() => {
-                    dispatch(deleteTransaction(item.key, account.key))
                     /***
                      * TODO: Update holdings
                      * om verdi er større enn 0, oppdater verdi for holding. om verdi er lik 0, slett holding.
                      */
-                    Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, value: holding.name === item.name ? holding.value * -1 : holding.value } }))))
+                    Promise.all(setTotalValues(account, getHoldings(account.transactions.filter(transaction => transaction.key !== item.key), account))).then(holdings => {
+                        dispatch(updateHoldings(holdings, account.key))
+                    })
+                    dispatch(deleteTransaction(item.key, account.key))
                 }
                 } buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
             default:
