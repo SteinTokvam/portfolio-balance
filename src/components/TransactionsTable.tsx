@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { calculateValue, getTransactionsFromFiri } from "../Util/Firi";
@@ -12,8 +13,15 @@ import { getHoldings, setTotalValues } from "../Util/Global";
 import DeleteButton from "./DeleteButton";
 import { fetchHoldings, fetchTransactions } from "../Util/Kron";
 import { updateHoldings } from "../actions/holdings";
+import { Account, Transaction } from "../types/Types";
 
-export default function TransactionsTable({ account, isDark, children }) {
+interface Props {
+    account: Account,
+    isDark: boolean,
+    children?: React.ReactNode
+}
+
+export default function TransactionsTable({ account, isDark, children }: Props) {
 
     const { t } = useTranslation()
 
@@ -30,7 +38,9 @@ export default function TransactionsTable({ account, isDark, children }) {
 
     const sortedItems = useMemo(() => {
         return [...account.transactions].sort((a, b) => {
+            // @ts-ignore
             const first = a[sortDescriptor.column];
+            // @ts-ignore
             const second = b[sortDescriptor.column];
             var cmp = 0
             if (sortDescriptor.column === 'amount') {
@@ -44,8 +54,7 @@ export default function TransactionsTable({ account, isDark, children }) {
     }, [sortDescriptor, account]);
 
 
-    const getColumns = (account) => {
-        const accountType = account.accountType
+    const getColumns = (account: Account) => {
         if (!account.isManual && account.name === 'Kron') {
             return [
                 { key: 'name', label: t('transactionsTable.name') },
@@ -54,7 +63,7 @@ export default function TransactionsTable({ account, isDark, children }) {
                 { key: 'date', label: t('transactionsTable.date') },
             ]
         }
-        switch (accountType) {
+        switch (account.type) {
             case 'Obligasjon':
                 return [
                     { key: 'name', label: t('transactionsTable.name') },
@@ -96,22 +105,32 @@ export default function TransactionsTable({ account, isDark, children }) {
                     if (orders.name === "ApiKeyNotFound") {
                         return ["FEIL"]
                     }
+                    // @ts-ignore
+                    //TODO: konverter firi klassen til typescript og lag typer
                     const allCurrencies = [...new Set(orders.map(order => order.currency))]
                     const valueOfCurrency = calculateValue(orders, allCurrencies)
                     return { allCurrencies, valueOfCurrency, orders }
                 })
 
+                // @ts-ignore
                 if (transactions[0] === "FEIL") {
                     return
                 }
 
+                // @ts-ignore
                 const allMatches = transactions.orders
+                    // @ts-ignore
                     .filter(order => order.type === 'Match')
 
+                // @ts-ignore
                 const allTransactions = transactions.orders
+                    // @ts-ignore
                     .filter(order => order.currency !== 'NOK')
+                    // @ts-ignore
                     .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
+                    // @ts-ignore
                     .map(transaction => {
+                        // @ts-ignore
                         const matchedTransaction = allMatches.filter(match => match.date === transaction.date)[0]
                         const dateString = transaction.date.toString().split('.')[0].split('T')
                         const date = dateString[0] + ' ' + dateString[1]
@@ -133,13 +152,13 @@ export default function TransactionsTable({ account, isDark, children }) {
                 console.log("Fetched transactions.")
                 console.log(holdings)
                 dispatch(importTransactions({ key: account.key, transactions: allTransactions }))
-                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings)))
+                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings, account.key)))
             } else if (account.name === 'Kron') {
                 const transactions = await fetchTransactions(account)
                 const holdings = await fetchHoldings(account)
 
                 dispatch(importTransactions({ key: account.key, transactions }))
-                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, accountKey: account.key } }))))
+                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, accountKey: account.key } }), account.key)))
             }
         }
 
@@ -149,7 +168,7 @@ export default function TransactionsTable({ account, isDark, children }) {
         fetchData()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
-    function handleOpen(type, account) {
+    function handleOpen(type: string, account: Account) {
         switch (type) {
             case 'import':
                 setModalContent(<ImportTransactionsModalContent account={account} />)
@@ -158,13 +177,13 @@ export default function TransactionsTable({ account, isDark, children }) {
                 setModalContent(<NewTransactionModalContent account={account} />)
                 break
             default:
-                setModalContent(<ImportTransactionsModalContent accountKey={account} />)
+                setModalContent(<ImportTransactionsModalContent account={account} />)
                 break
         }
         onOpen()
     }
 
-    function renderCell(item, columnKey) {
+    function renderCell(item: Transaction, columnKey: string | number) {
         switch (columnKey) {
             case 'action':
                 return <DeleteButton handleDelete={() => {
@@ -177,7 +196,10 @@ export default function TransactionsTable({ account, isDark, children }) {
                     })
                     dispatch(deleteTransaction(item.key, account.key))
                 }
-                } buttonText={t('transactionsTable.deleteTransaction')} isDark={isDark} />
+                }
+                    buttonText={t('transactionsTable.deleteTransaction')}
+                    isDark={isDark}
+                    showText={false} />
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -187,7 +209,10 @@ export default function TransactionsTable({ account, isDark, children }) {
         <div>
             {account.type === 'Kryptovaluta' ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText={t('transactionsTable.deleteAccount')} isDark={isDark} />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
+                        buttonText={t('transactionsTable.deleteAccount')}
+                        isDark={isDark}
+                        showText={false} />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -199,41 +224,53 @@ export default function TransactionsTable({ account, isDark, children }) {
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         {t('transactionsTable.newTransaction')}
                     </Button>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))} buttonText={t('transactionsTable.deleteAccount')} isDark={isDark} />
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
+                        buttonText={t('transactionsTable.deleteAccount')}
+                        isDark={isDark}
+                        showText={false} />
                 </div>
             }
 
             <Spacer y={4} />
-            {children &&
+            {
+                children &&
                 <>
                     {children}
                     <Spacer y={4} />
-                </>}
-            <Table
-                isStriped
-                aria-label={"konto"}
-                className="text-foreground"
-                selectionMode="none"
-                sortDescriptor={sortDescriptor}
-                onSortChange={setSortDescriptor}
-            >
-                <TableHeader columns={getColumns(account)}>
-                    {(column) => {
-                        if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
-                            return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
-                        }
-                        return <TableColumn key={column.key}>{column.label}</TableColumn>
-                    }}
-                </TableHeader>
-                <TableBody classNames="text-left" items={sortedItems}
-                    emptyContent={"Ingen transaksjoner enda"}>
-                    {(item) => (
-                        <TableRow key={item.key}>
-                            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                </>
+            }
+            {
+                <Table
+                    isStriped
+                    aria-label={"konto"}
+                    className="text-foreground"
+                    selectionMode="none"
+                    // @ts-ignore
+                    sortDescriptor={sortDescriptor}
+                    // @ts-ignore
+                    onSortChange={setSortDescriptor}
+                >
+                    <TableHeader columns={getColumns(account)}>
+                        {(column) => {
+                            if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
+                                return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
+                            }
+                            return <TableColumn key={column.key}>{column.label}</TableColumn>
+                        }}
+                    </TableHeader>
+                    {
+                        // @ts-ignore
+                        <TableBody classNames="text-left" items={sortedItems}
+                            emptyContent={"Ingen transaksjoner enda"}>
+                            {(item) => (
+                                <TableRow key={item.key}>
+                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    }
+                </Table>
+            }
         </div>
     )
 }
