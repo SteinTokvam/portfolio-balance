@@ -31,7 +31,7 @@ export default function Portfolio({ isDark }: Props) {
                 })
             })
         }
-    }, [holdings])
+    }, [holdings, accounts, dispatch])
 
     return (
         <div>

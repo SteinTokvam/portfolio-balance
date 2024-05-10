@@ -63,7 +63,7 @@ export default function Dashboard() {
                 })
             })
         }
-    }, [holdings])
+    }, [holdings, accounts, dispatch])
 
     return (
         <>

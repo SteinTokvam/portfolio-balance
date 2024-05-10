@@ -1,6 +1,5 @@
 import { fetchTicker } from "./E24";
 import { getValueInFiat } from "./Firi";
-import { fetchHoldings } from "./Kron";
 
 export const languages = ["us", "no"];
 

@@ -65,11 +65,4 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
     }
 }
 
-function updateHolding(currentHolding: Holding, newHolding: Holding) {
-    return {
-        ...currentHolding,
-        value: currentHolding.value + newHolding.value
-    }
-}
-
 export default holdingsReducer;
