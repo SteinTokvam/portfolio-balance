@@ -24,9 +24,9 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
 
     const [selectedRadio, setSelectedRadio] = useState(isEdit && account && !account.isManual ? account.name : "Firi");
 
-    const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual ? account.apiInfo.accessKey : "")
+    const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual && account.apiInfo? account.apiInfo.accessKey : "")
 
-    const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual ? account.apiInfo.kronAccountId : "")
+    const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.kronAccountId : "")
 
     const dispatch = useDispatch()
 
@@ -43,13 +43,12 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
             dispatch(isEdit ? editAccount(
                 {
                     name: accountName,
-                    key: account && account.key,
+                    key: account ? account.key: uuidv4(),
                     type: selectedAccountType,
-                    transactions: [],
+                    transactions: account ? account.transactions : [],
                     totalValue: 0,
                     yield: 0,
                     isManual: true,
-                    apiInfo: {},
                 }
             ) : addNewAccount(
                 {
@@ -60,16 +59,15 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
                     totalValue: 0,
                     yield: 0,
                     isManual: true,
-                    apiInfo: {},
                 }
             ))
         } else {
             dispatch(isEdit ? editAccount(
                 {
                     name: selectedRadio,
-                    key: account && account.key,
-                    type: account && account.type,
-                    transactions: [],
+                    key: account ? account.key : uuidv4(),
+                    type: account ? account.type : "",
+                    transactions: account ? account.transactions : [],
                     totalValue: 0,
                     yield: 0,
                     isManual: false,

@@ -38,11 +38,14 @@
  *
  */
 
+import { Account, Transaction } from "../types/Types"
+
 const initialState = {
+    // @ts-ignore
     accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
 }
 
-const accountReducer = (state = initialState, action) => {
+const accountReducer = (state = initialState, action: { type: string; payload: {key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string} }) => {
     var currentAccounts = []
     var index = -1
     switch (action.type) {
@@ -50,10 +53,10 @@ const accountReducer = (state = initialState, action) => {
             window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
             return {
                 ...state,
-                accounts: [...state.accounts, action.payload]
+                accounts: [...state.accounts, action.payload.accounts[0]]
             }
             case 'EDIT_ACCOUNT':
-                const edited = [...state.accounts.filter(account => account.key !== action.payload.key), action.payload]
+                const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), action.payload]
                 window.localStorage.setItem("accounts", JSON.stringify(edited))
                 return {
                     ...state,
@@ -67,7 +70,7 @@ const accountReducer = (state = initialState, action) => {
             }
         case 'IMPORT_TRANSACTIONS':
             currentAccounts = [...state.accounts]
-            index = currentAccounts.findIndex(account => account.key === action.payload.key)
+            index = currentAccounts.findIndex(account => account.key === action.payload.accountKey)
             const isManual = currentAccounts[index].isManual
 
             if (!isManual) {
@@ -83,8 +86,8 @@ const accountReducer = (state = initialState, action) => {
             }
 
             const transactionsPayload = action.payload.transactions
-            const currentTransactionKeys = currentAccounts[index].transactions.map(transaction => transaction.key)
-            const newTransactions = transactionsPayload.filter(transaction => !currentTransactionKeys.includes(transaction.key))
+            const currentTransactionKeys = currentAccounts[index].transactions.map((transaction: Transaction) => transaction.key)
+            const newTransactions = transactionsPayload.filter((transaction: Transaction) => !currentTransactionKeys.includes(transaction.key))
 
             if (newTransactions.length === 0) {
                 console.log("no new transactions")
@@ -111,7 +114,7 @@ const accountReducer = (state = initialState, action) => {
 
             currentAccounts[index] = {
                 ...currentAccounts[index],
-                transactions: [...currentAccounts[index].transactions, action.payload.transaction]
+                transactions: [...currentAccounts[index].transactions, action.payload.transactions[0]]
             }
 
             window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
@@ -135,7 +138,7 @@ const accountReducer = (state = initialState, action) => {
                 }
             }
 
-            const remainingTransactions = currentAccounts[index].transactions.filter(transaction => transaction.key !== action.payload.transactionKey)
+            const remainingTransactions = currentAccounts[index].transactions.filter((transaction: Transaction) => transaction.key !== action.payload.transactionKey)
 
             const newAccounts = [
                 ...currentAccounts.filter(account => account.key !== action.payload.accountKey), 

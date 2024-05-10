@@ -1,5 +1,5 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Accordion, AccordionItem, Link } from "@nextui-org/react";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { getHoldings, textInputStyle } from "../../Util/Global";
@@ -7,18 +7,20 @@ import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
 import { addHolding, updateHoldings } from "../../actions/holdings";
+import { Account, EquityType, Transaction } from "../../types/Types";
 
 
-export default function NewTransactionModalContent({ account }) {
+export default function NewTransactionModalContent({ account }: { account: Account }) {
     const { t } = useTranslation()
 
     const [transactionName, setTransactionName] = useState("")
-    const [cost, setCost] = useState(0)
-    const [date, setDate] = useState(new Date())
-    const [equityPrice, setEquityPrice] = useState(0)
+    const [cost, setCost] = useState("0")
+    const [date, setDate] = useState("")
+    const [equityPrice, setEquityPrice] = useState("0")
     const [e24Key, setE24Key] = useState("")
-    const [equityShare, setEquityShare] = useState(0)
+    const [equityShare, setEquityShare] = useState("0")
 
+    // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
@@ -45,9 +47,9 @@ export default function NewTransactionModalContent({ account }) {
     const dispatch = useDispatch()
 
     function handleSubmit() {
-        var transactionToAdd = {}
+        var transactionToAdd: Transaction[] = []
         if(account.type === 'Obligasjon') {
-            transactionToAdd = {
+            transactionToAdd.push({
                 key: uuidv4(),
                 cost: parseFloat(cost),
                 name: transactionName,
@@ -57,9 +59,9 @@ export default function NewTransactionModalContent({ account }) {
                 e24Key,
                 equityShare: 1,
                 equityType: selectedInvestmentType
-            }
+            })
         } else {
-            transactionToAdd = {
+            transactionToAdd.push({
                 key: uuidv4(),
                 cost: parseFloat(cost),
                 name: transactionName,
@@ -69,16 +71,19 @@ export default function NewTransactionModalContent({ account }) {
                 e24Key,
                 equityShare: parseFloat(equityShare),
                 equityType: selectedInvestmentType
-            }
+            })
         }
         
-        if(account.transactions.some(transaction => transaction.name === transactionToAdd.name)) {
-            dispatch(updateHoldings(getHoldings([...account.transactions, transactionToAdd], account), account.key))
+        if(account.transactions.some((transaction: Transaction) => transaction.name === transactionToAdd[0].name)) {
+            // @ts-ignore
+            dispatch(updateHoldings(getHoldings([...account.transactions, transactionToAdd[0]], account), account.key))
         } else {
-            const holding = getHoldings([transactionToAdd], account)[0]
+            // må ignore.. returtypen er føkka da det ikke er en ts fil funksjonen er i
+            // @ts-ignore
+            const holding = getHoldings([transactionToAdd[0]], account)[0]
             dispatch(addHolding(holding))
         }
-        dispatch(newTransaction(account.key, transactionToAdd))
+        dispatch(newTransaction(account.key, transactionToAdd[0]))
     }
     return (
         <ModalContent>
@@ -93,7 +98,7 @@ export default function NewTransactionModalContent({ account }) {
                             value={transactionName}
                             onValueChange={setTransactionName} />
 
-                        <Input type="text"
+                        <Input type="number"
                             classNames={textInputStyle}
                             label={"Investeringskostnad"}
                             value={cost}
@@ -103,6 +108,7 @@ export default function NewTransactionModalContent({ account }) {
                             label={"Transaksjonstype"}
                             placeholder={"Transaksjonstype"}
                             className="pt-4 drop-shadow-xl"
+                            // @ts-ignore
                             onSelectionChange={setSelectedTransactionKeys}
                             selectedKeys={selectedTransactionKeys}
                         >
@@ -116,7 +122,9 @@ export default function NewTransactionModalContent({ account }) {
                         <Input type="date"
                             classNames={textInputStyle}
                             label={"Transaksjonsdato"}
+                            // @ts-ignore
                             value={date}
+                            // @ts-ignore
                             onValueChange={setDate} />
 
                         {
@@ -174,10 +182,11 @@ export default function NewTransactionModalContent({ account }) {
                             label={"Investeringstype"}
                             placeholder={"Investeringstype"}
                             className="pt-4 drop-shadow-xl"
+                            // @ts-ignore
                             onSelectionChange={setSelectedInvestmentKeys}
                             selectedKeys={selectedInvestmentKeys}
                         >
-                            {equityTypes.map((equityType) => (
+                            {equityTypes.map((equityType: EquityType) => (
                                 <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
                                     {t(`equityTypes.${equityType.key.toLowerCase()}`)}
                                 </SelectItem>

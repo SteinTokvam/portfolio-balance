@@ -1,13 +1,15 @@
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
-import { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
 import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
 import { getHoldings } from "../../Util/Global";
 import { useSelector } from "react-redux";
+import { Account, EquityType, Holding, Transaction } from "../../types/Types";
+import { updateHoldings } from "../../actions/holdings";
 
-export default function ImportTransactionsModalContent({ account }) {
+export default function ImportTransactionsModalContent({ account }: { account: Account }) {
 
     const { t } = useTranslation()
 
@@ -16,9 +18,11 @@ export default function ImportTransactionsModalContent({ account }) {
     const hiddenFileInput = useRef(null);
 
     const handleClick = () => {
+        // @ts-ignore
         hiddenFileInput.current.click();
     };
 
+    // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
@@ -27,14 +31,15 @@ export default function ImportTransactionsModalContent({ account }) {
         [selectedInvestmentKeys]
     );
 
-    function readCsv(event) {
-        var transactions = [];
+    function readCsv(event: any) {
+        var transactions: Transaction[] = [];
         if (event.target.files && event.target.files[0]) {
             const input = event.target.files[0];
             const reader = new FileReader();
             reader.onload = function (event) {
+                // @ts-ignore
                 const file = event.target.result.split('\n');
-                file.forEach((line, index) => {
+                file.forEach((line: string, index: number) => {
                     if (index !== 0) {
                         const data = line.split(',');
                         transactions.push({
@@ -51,8 +56,10 @@ export default function ImportTransactionsModalContent({ account }) {
                     }
                 })
 
-                const holdings = getHoldings(transactions, account)
-                dispatch(importTransactions({ key: account.key, transactions, holdings }))
+                // @ts-ignore
+                const holdings: Holding[] = getHoldings(transactions, account)
+                dispatch(updateHoldings(holdings, account.key))
+                dispatch(importTransactions(account.key, transactions))
             };
             reader.readAsText(input);
         }
@@ -77,14 +84,17 @@ export default function ImportTransactionsModalContent({ account }) {
                                 label={"Investeringstype"}
                                 placeholder={"Investeringstype"}
                                 className="pt-4 drop-shadow-xl"
+                                // @ts-ignore
                                 onSelectionChange={setSelectedInvestmentKeys}
                                 selectedKeys={selectedInvestmentKeys}
                             >
-                                {equityTypes.map((equityType) => (
-                                    <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
-                                        {t(`equityTypes.${equityType.key.toLowerCase()}`)}
-                                    </SelectItem>
-                                ))}
+                                {
+                                    equityTypes.map((equityType: EquityType) => (
+                                        <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
+                                            {t(`equityTypes.${equityType.key.toLowerCase()}`)}
+                                        </SelectItem>
+                                    ))
+                                }
                             </Select>
                             <Button color="primary" variant="bordered" onPress={handleClick} size="lg">
                                 <input type="file"

@@ -1,6 +1,6 @@
 import { Avatar, Button, Divider, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useMemo, useRef, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
 import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
@@ -11,10 +11,13 @@ export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t } = useTranslation();
 
+    // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts)
+    // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const hiddenFileInput = useRef(null);
+    // @ts-ignore
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
 
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
@@ -25,14 +28,15 @@ export default function SettingsModalContent() {
     );
 
     const handleClick = () => {
+        // @ts-ignore
         hiddenFileInput.current.click();
     };
 
-    const importInvestmentsFile = e => {
+    const importInvestmentsFile = (e: any) => {
         const fileReader = new FileReader();
         fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
         fileReader.onload = e => {
-            console.log("e.target.result", e.target.result);
+            // @ts-ignore
             const json = JSON.parse(e.target.result)
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
@@ -45,6 +49,7 @@ export default function SettingsModalContent() {
 
     const processFile = () => {
         return JSON.stringify({
+            // @ts-ignore
             settings: JSON.parse(window.localStorage.getItem('settings')),
             accounts: accounts,
             equitytypes: equityTypes
@@ -67,6 +72,7 @@ export default function SettingsModalContent() {
                             label={t('settings.selectType')}
                             placeholder={t('settings.selectLabel')}
                             className="max-w-xs"
+                            // @ts-ignore
                             onSelectionChange={setSelectedKeys}
                             selectedKeys={selectedKeys}
                         >

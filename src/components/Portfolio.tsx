@@ -32,7 +32,7 @@ export default function Portfolio({ isDark }: Props) {
                 })
             })
         }
-    }, [holdings, accounts, dispatch])
+    }, [])// eslint-exhaustive-deps
 
     return (
         <div>
@@ -91,7 +91,7 @@ export default function Portfolio({ isDark }: Props) {
                                                                     return (
                                                                         <div key={holding.name} className="p-1 w-1/3">
                                                                             <p className="text-default-600">{holding.name}</p>
-                                                                            <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
+                                                                            <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value && holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
                                                                         </div>
                                                                     )
                                                                 }

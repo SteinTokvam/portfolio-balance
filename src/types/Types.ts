@@ -7,7 +7,7 @@ export type Account = {
     totalValue: number
     yield: number
     isManual: boolean
-    apiInfo: ApiInfo
+    apiInfo?: ApiInfo
 }
 
 export type ApiInfo = {

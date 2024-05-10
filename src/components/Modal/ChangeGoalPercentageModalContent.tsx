@@ -35,7 +35,7 @@ export default function ChangeGoalPercentageModalContent() {
     }, [selectedEquityType, equityTypes])
 
     function handleSubmit() {
-        const newGoalPercentage = equityTypes.filter((equityType: EquityType) => equityType.key === selectedEquityType).map((equityType: EquityType) => {
+        const newGoalPercentage: EquityType = equityTypes.filter((equityType: EquityType) => equityType.key === selectedEquityType).map((equityType: EquityType) => {
             return {
                 ...equityType,
                 goalPercentage: parseInt(goalPercentage)

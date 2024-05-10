@@ -103,7 +103,7 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
 
         async function fetchData() {
             if (account.name === 'Firi') {
-                const transactions = await getTransactionsFromFiri(account.apiInfo.accessKey).then(orders => {
+                const transactions = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey).then(orders => {
                     if (orders.name === "ApiKeyNotFound") {
                         return ["FEIL"]
                     }
@@ -153,18 +153,18 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
 
                 console.log("Fetched transactions.")
                 console.log(holdings)
-                dispatch(importTransactions({ key: account.key, transactions: allTransactions }))
+                dispatch(importTransactions(account.key, allTransactions))
                 Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings, account.key)))
             } else if (account.name === 'Kron') {
                 const transactions = await fetchTransactions(account)
                 const holdings = await fetchHoldings(account)
 
-                dispatch(importTransactions({ key: account.key, transactions }))
+                dispatch(importTransactions(account.key, transactions))
                 Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, accountKey: account.key } }), account.key)))
             }
         }
 
-        if (account.apiInfo.accessKey === "") {
+        if (!account.apiInfo) {
             return
         }
         fetchData()

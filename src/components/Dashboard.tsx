@@ -63,7 +63,7 @@ export default function Dashboard() {
                 })
             })
         }
-    }, [holdings, accounts, dispatch])
+    }, [])// eslint-exhaustive-deps
 
     return (
         <>
