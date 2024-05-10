@@ -49,3 +49,22 @@ export type TotalValue = {
     accountKey: string,
     name: string
 }
+
+export type FiriOrder = {
+
+    id: string,
+    amount: string,
+    currency: string,
+    type: string,
+    date: string,
+    details: {
+        match_id: string,
+        deposit_id: string,
+        deposit_address: string,
+        deposit_txid: string,
+        withdraw_id: string,
+        withdraw_address: string,
+        withdraw_txid: string
+    }
+
+}

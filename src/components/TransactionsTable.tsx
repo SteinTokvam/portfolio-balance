@@ -103,13 +103,14 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
 
         async function fetchData() {
             if (account.name === 'Firi') {
-                const transactions = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey).then(orders => {
+                const transactions = await getTransactionsFromFiri(account.apiInfo !== undefined ? account.apiInfo.accessKey : "").then(orders => {
                     if (orders.name === "ApiKeyNotFound") {
                         return ["FEIL"]
                     }
+                    console.log(orders)
                     // @ts-ignore
                     //TODO: konverter firi klassen til typescript og lag typer
-                    const allCurrencies = [...new Set(orders.map(order => order.currency))]
+                    const allCurrencies: string[] = [...new Set(orders.map(order => order.currency))]
                     const valueOfCurrency = calculateValue(orders, allCurrencies)
                     return { allCurrencies, valueOfCurrency, orders }
                 })

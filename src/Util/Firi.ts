@@ -1,4 +1,6 @@
-export async function getTransactionsFromFiri(accessKey) {
+import { FiriOrder } from "../types/Types"
+
+export async function getTransactionsFromFiri(accessKey: string) {
     return await fetch('https://api.firi.com/v2/history/transactions', {
         method: 'GET',
         headers: {
@@ -11,7 +13,7 @@ export async function getTransactionsFromFiri(accessKey) {
         })
 }
 
-export function calculateValue(orders, currencies) {
+export function calculateValue(orders: FiriOrder[], currencies: string[]) {
     return currencies.map(currency => {
         var cryptoValue = 0.0
         orders.reverse()
@@ -23,7 +25,7 @@ export function calculateValue(orders, currencies) {
     })
 }
 
-export async function getValueInFiat(currencies, accessKey) {
+export async function getValueInFiat(currencies: string[], accessKey: string) {
     const value = currencies.map(async cryptocurrency => {
         const response = await fetch(`https://api.firi.com/v1/markets/${cryptocurrency}nok`, {
             method: 'GET',
