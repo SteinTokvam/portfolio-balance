@@ -32,7 +32,8 @@ export default function Portfolio({ isDark }: Props) {
                 })
             })
         }
-    }, [])// eslint-exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div>

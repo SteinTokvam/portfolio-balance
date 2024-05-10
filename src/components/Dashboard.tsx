@@ -63,7 +63,8 @@ export default function Dashboard() {
                 })
             })
         }
-    }, [])// eslint-exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
