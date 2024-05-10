@@ -40,7 +40,7 @@ export default function Portfolio({ isDark }: Props) {
                 {accounts.length > 0 ?
                     <div>
                         {
-                            accounts.map((account: Account) => {
+                            accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                                 return (
                                     <div key={account.key}>
                                         <Accordion

@@ -49,7 +49,7 @@ export function getHoldings(transactions, account) {
     if (account.name === "Kron") {
       return
     }
-    
+
     const allCurrencies = [...new Set(transactions.map(order => order.name))]
     const holdings = []
 
@@ -113,7 +113,7 @@ export function getHoldings(transactions, account) {
   return holdings
 }
 
-export function setTotalValues(account, holdings) {
+export function setTotalValues(account, holdings, transactions) {
   if (!holdings || holdings.length === 0) {
     console.log("no holdings")
     return []
@@ -121,7 +121,6 @@ export function setTotalValues(account, holdings) {
 
   const accountType = account.type
 
-  console.log(holdings)
   return holdings.map(holding => {
     if (accountType === 'Kryptovaluta' && !account.isManual) {
       return getValueInFiat([holding.name], account.apiInfo.accessKey)
@@ -137,7 +136,7 @@ export function setTotalValues(account, holdings) {
     } else if (account.name === "Kron" && !account.isManual) {
       return { name: holding.name, value: holding.value, accountKey: holding.accountKey, equityType: holding.equityType }
     }
-    else if (accountType === 'Obligasjon') {
+    else if (accountType === 'Obligasjon') {//holding.value er og rar her ved sletting tror jeg
       return { name: holding.name, value: holding.value, accountKey: holding.accountKey, equityType: holding.equityType }
     } else {
       const period = holding.equityType === 'Stock' ? '1opendays' : '1weeks'
@@ -147,9 +146,13 @@ export function setTotalValues(account, holdings) {
           if (price === undefined || price.length === 0 || price.date === undefined || price.date === "") {
             return {
               name: holding.name,
-              value: account.transactions
-                .filter(transaction => transaction.name === holding.name)
-                .reduce((sum, item) => sum + item.cost, 0),
+              value: transactions !== undefined ?
+                transactions
+                  .filter(transaction => transaction.name === holding.name)
+                  .reduce((sum, item) => sum + item.cost, 0) :
+                account.transactions
+                  .filter(transaction => transaction.name === holding.name)
+                  .reduce((sum, item) => sum + item.cost, 0),
               accountKey: holding.accountKey,
               equityType: holding.equityType
             }

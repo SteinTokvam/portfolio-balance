@@ -114,7 +114,6 @@ const accountReducer = (state = initialState, action) => {
             }
         case 'IMPORT_ACCOUNTS':
             window.localStorage.setItem("accounts", JSON.stringify(action.payload.accounts))
-            console.log(action.payload.accounts)
             return {
                 ...state,
                 accounts: action.payload.accounts

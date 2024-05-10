@@ -191,7 +191,9 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                      * TODO: Update holdings
                      * om verdi er større enn 0, oppdater verdi for holding. om verdi er lik 0, slett holding.
                      */
-                    Promise.all(setTotalValues(account, getHoldings(account.transactions.filter(transaction => transaction.key !== item.key), account))).then(holdings => {
+                    const transactions = account.transactions.filter(transaction => transaction.key !== item.key)
+                    const newHoldings = getHoldings(transactions, account)
+                    Promise.all(setTotalValues(account, newHoldings, transactions)).then(holdings => {
                         dispatch(updateHoldings(holdings, account.key))
                     })
                     dispatch(deleteTransaction(item.key, account.key))
