@@ -8,7 +8,6 @@ export type Account = {
     yield: number
     isManual: boolean
     apiInfo: ApiInfo
-    holdings: Holding[]
 }
 
 export type ApiInfo = {
@@ -21,7 +20,7 @@ export type Holding = {
     key: string
     accountKey: string
     value: number
-    type: string
+    equityType: string
     totalValue: number
     yield: number
     isManual: boolean
@@ -43,4 +42,10 @@ export type EquityType = {
     key: string,
     label: string,
     goalPercentage: number
+}
+
+export type TotalValue = {
+    value: number,
+    accountKey: string,
+    name: string
 }

@@ -1,12 +1,13 @@
 import React from "react";
 import { Accordion, AccordionItem, Avatar, Skeleton } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddAccountButton from "./AddAccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { useEffect, useState, useRef } from "react";
+import { useEffect } from "react";
 import { getHoldings, setTotalValues } from "../Util/Global";
-import { Account } from "../types/Types";
+import { Account, Holding } from "../types/Types";
+import { addHoldings } from "../actions/holdings";
 
 type Props = {
     isDark: boolean
@@ -14,32 +15,23 @@ type Props = {
 
 export default function Portfolio({ isDark }: Props) {
 
-    type TotalValue = {
-        value: number,
-        accountKey: string,
-        name: string
-    }
+    const dispatch = useDispatch();
 
     // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
 
-    const [totalValue, setTotalValue] = useState([]);//TODO: dette burde vært en reducer? er lik som den i dashboard
+    // @ts-ignore
+    const holdings = useSelector(state => state.rootReducer.holdings.holdings);
 
-    const hasLoadedBefore = useRef(true)
     useEffect(() => {
-        if (hasLoadedBefore.current) {
+        if (holdings.length === 0) {
             accounts.forEach((account: Account) => {
                 Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    const mergedWithTotalValue = [...totalValue, ...newHoldings].filter(elem => elem.value >= 1)
-                    // @ts-ignore
-                    setTotalValue(prevState => {
-                        return [...prevState, ...mergedWithTotalValue]
-                    })
+                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1), account.key))
                 })
             })
-            hasLoadedBefore.current = false
         }
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+    }, [holdings])
 
     return (
         <div>
@@ -48,7 +40,7 @@ export default function Portfolio({ isDark }: Props) {
                 {accounts.length > 0 ?
                     <div>
                         {
-                            accounts.map((account: Account) => {
+                            accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                                 return (
                                     <div key={account.key}>
                                         <Accordion
@@ -71,12 +63,12 @@ export default function Portfolio({ isDark }: Props) {
                                                                     <Skeleton
                                                                         className="rounded-lg"
                                                                         isLoaded={
-                                                                            totalValue
-                                                                                .filter((totalValue: TotalValue) => totalValue.accountKey === account.key)
-                                                                                .reduce((sum: number, item: TotalValue) => sum + item.value, 0) > 0
+                                                                            holdings
+                                                                                .filter((totalValue: Holding) => totalValue.accountKey === account.key)
+                                                                                .reduce((sum: number, item: Holding) => sum + item.value, 0) > 0
                                                                         }>
                                                                         {
-                                                                            totalValue.filter((totalValue: TotalValue) => totalValue.accountKey === account.key).reduce((sum: number, item: TotalValue) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                            holdings.filter((totalValue: Holding) => totalValue.accountKey === account.key).reduce((sum: number, item: Holding) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                                         }
                                                                     </Skeleton>
                                                                 </p>
@@ -88,16 +80,15 @@ export default function Portfolio({ isDark }: Props) {
                                                 <TransactionsTable account={account} isDark={isDark}>
                                                     <div className="max-w-full flex flex-wrap border-t border-default-300">
                                                         {
-                                                            totalValue.map((totalValue: TotalValue) => {
-                                                                if (totalValue.accountKey === account.key) {
-                                                                    console.log(totalValue.value)
-                                                                    if (totalValue.value < 1) {
+                                                            holdings.map((holding: Holding) => {
+                                                                if (holding.accountKey === account.key) {
+                                                                    if (holding.value < 1) {
                                                                         return ''
                                                                     }
                                                                     return (
-                                                                        <div key={totalValue.name} className="p-1 w-1/3">
-                                                                            <p className="text-default-600">{totalValue.name}</p>
-                                                                            <Skeleton className="rounded-lg" isLoaded={totalValue.value > 0}><p className="text-default-800 font-bold">{totalValue.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
+                                                                        <div key={holding.name} className="p-1 w-1/3">
+                                                                            <p className="text-default-600">{holding.name}</p>
+                                                                            <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p></Skeleton>
                                                                         </div>
                                                                     )
                                                                 }

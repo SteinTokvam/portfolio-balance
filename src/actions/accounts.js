@@ -54,10 +54,10 @@ export const importAccounts = (accounts) => {
     }
 }
 
-export const newTransaction = (accountKey, transaction, holdings) => {
+export const newTransaction = (accountKey, transaction) => {
     return {
         type: 'NEW_TRANSACTION',
-        payload: { accountKey, transaction, holdings }
+        payload: { accountKey, transaction }
     }
 }
 
