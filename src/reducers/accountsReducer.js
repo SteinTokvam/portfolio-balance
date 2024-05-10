@@ -52,6 +52,13 @@ const accountReducer = (state = initialState, action) => {
                 ...state,
                 accounts: [...state.accounts, action.payload]
             }
+            case 'EDIT_ACCOUNT':
+                const edited = [...state.accounts.filter(account => account.key !== action.payload.key), action.payload]
+                window.localStorage.setItem("accounts", JSON.stringify(edited))
+                return {
+                    ...state,
+                    accounts: edited
+                }
         case 'ADD_AUTOMATIC_ACCOUNT':
             window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
             return {

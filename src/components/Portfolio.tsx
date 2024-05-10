@@ -2,12 +2,13 @@ import React from "react";
 import { Accordion, AccordionItem, Avatar, Skeleton } from "@nextui-org/react";
 import TransactionsTable from "./TransactionsTable";
 import { useDispatch, useSelector } from "react-redux";
-import AddAccountButton from "./AddAccountButton";
+import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { useEffect } from "react";
 import { getHoldings, setTotalValues } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { addHoldings } from "../actions/holdings";
+import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 
 type Props = {
     isDark: boolean
@@ -36,7 +37,9 @@ export default function Portfolio({ isDark }: Props) {
     return (
         <div>
             <div className="flex flex-col space-y-4">
-                <AddAccountButton />
+                <AccountButton isEdit={false}>
+                    <AccountTypeModalContent isEdit={false} />
+                </AccountButton>
                 {accounts.length > 0 ?
                     <div>
                         {

@@ -1,7 +1,8 @@
 {
     "general": {
         "closeButton": "Lukk",
-        "save": "Legg til"
+        "save": "Legg til",
+        "saveEdit": "Lagre endringer"
     },
     "dashboard": {
         "biggestInvestment": "Største investering:",
@@ -18,7 +19,9 @@
     },
     "accountModal": {
         "title": "Legg til ny konto:",
+        "editTitle": "Endring av konto:",
         "addAccountButton": "Legg til konto",
+        "editAccountButton": "Endre konto",
         "autoTabTitle": "Automatisk import",
         "manualTabTitle": "Manuell import",
         "kronAccountId": "Kron konto-ID",

@@ -14,6 +14,8 @@ import DeleteButton from "./DeleteButton";
 import { fetchHoldings, fetchTransactions } from "../Util/Kron";
 import { updateHoldings } from "../actions/holdings";
 import { Account, Transaction } from "../types/Types";
+import AccountButton from "./AccountButton";
+import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 
 interface Props {
     account: Account,
@@ -214,7 +216,10 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
                         buttonText={t('transactionsTable.deleteAccount')}
                         isDark={isDark}
-                        showText={false} />
+                        showText={true} />
+                    <AccountButton isEdit={true}>
+                        <AccountTypeModalContent isEdit={true} account={account} />
+                    </AccountButton>
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
@@ -226,6 +231,9 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
                         {t('transactionsTable.newTransaction')}
                     </Button>
+                    <AccountButton isEdit={true}>
+                        <AccountTypeModalContent isEdit={true} account={account} />
+                    </AccountButton>
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
                         buttonText={t('transactionsTable.deleteAccount')}
                         isDark={isDark}

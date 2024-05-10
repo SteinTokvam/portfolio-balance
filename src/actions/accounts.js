@@ -6,6 +6,13 @@ export const addNewAccount = (account) => {
     }
 }
 
+export const editAccount = (account) => {
+    return {
+        type: 'EDIT_ACCOUNT',
+        payload: account
+    }
+}
+
 export const addAutomaticAccount = (account) => {
     return {
         type: 'ADD_AUTOMATIC_ACCOUNT',

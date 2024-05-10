@@ -1,17 +1,20 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs, Accordion, AccordionItem, Link, RadioGroup, Radio } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
 import { accountTypes, textInputStyle } from "../../Util/Global"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addAutomaticAccount, addNewAccount } from "../../actions/accounts"
+import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
+import { Account } from "../../types/Types"
 
-export function NewAccountTypeModalContent() {
+export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, account?: Account }) {
 
     const { t } = useTranslation()
 
-    const [accountName, setAccountName] = useState("")
+    const [accountName, setAccountName] = useState(isEdit && account ? account.name : "")
+    const [selected, setSelected] = useState("Manual");
+    console.log(selected)
 
     const [selectedKeys, setSelectedKeys] = useState([]);
     const selectedAccountType = useMemo(
@@ -19,17 +22,36 @@ export function NewAccountTypeModalContent() {
         [selectedKeys]
     );
 
-    const [selectedRadio, setSelectedRadio] = useState("Firi");
+    const [selectedRadio, setSelectedRadio] = useState(isEdit && account && !account.isManual ? account.name : "Firi");
 
-    const [accessKeyText, setAccessKeyText] = useState("")
+    const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual ? account.apiInfo.accessKey : "")
 
-    const [kronAccountId, setKronAccountId] = useState("")
+    const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual ? account.apiInfo.kronAccountId : "")
 
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        if (isEdit) {
+            setSelected(account && account.isManual ? "Manual" : "Auto")
+        } else {
+            setSelected("Manual")
+        }
+    }, [isEdit, account])
+
     function handleSubmit() {
         if (accessKeyText === "") {
-            dispatch(addNewAccount(
+            dispatch(isEdit ? editAccount(
+                {
+                    name: accountName,
+                    key: account && account.key,
+                    type: selectedAccountType,
+                    transactions: [],
+                    totalValue: 0,
+                    yield: 0,
+                    isManual: true,
+                    apiInfo: {},
+                }
+            ) : addNewAccount(
                 {
                     name: accountName,
                     key: uuidv4(),
@@ -39,11 +61,24 @@ export function NewAccountTypeModalContent() {
                     yield: 0,
                     isManual: true,
                     apiInfo: {},
-                    holdings: []
                 }
             ))
         } else {
-            dispatch(addAutomaticAccount(
+            dispatch(isEdit ? editAccount(
+                {
+                    name: selectedRadio,
+                    key: account && account.key,
+                    type: account && account.type,
+                    transactions: [],
+                    totalValue: 0,
+                    yield: 0,
+                    isManual: false,
+                    apiInfo: {
+                        accessKey: accessKeyText,
+                        kronAccountId
+                    }
+                }
+            ) : addAutomaticAccount(
                 {
                     name: selectedRadio,
                     key: uuidv4(),
@@ -55,8 +90,7 @@ export function NewAccountTypeModalContent() {
                     apiInfo: {
                         accessKey: accessKeyText,
                         kronAccountId
-                    },
-                    holdings: []
+                    }
                 }
             ))
         }
@@ -66,9 +100,12 @@ export function NewAccountTypeModalContent() {
         <ModalContent>
             {(onClose) => (
                 <>
-                    <ModalHeader className="flex flex-col gap-1">{t('accountModal.title')}</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">{isEdit ? t('accountModal.editTitle') : t('accountModal.title')}</ModalHeader>
                     <ModalBody className="">
-                        <Tabs>
+                        <Tabs
+                            selectedKey={selected}
+                            // @ts-ignore
+                            onSelectionChange={setSelected}>
                             <Tab key="Manual" title={t('accountModal.manualTabTitle')} className="w-full">
                                 <Input type="text"
                                     classNames={textInputStyle}
@@ -123,25 +160,25 @@ export function NewAccountTypeModalContent() {
                                         <div className="">
                                             <p>{selectedRadio === "Firi" ? t('accountModal.firiHelpText1') : t('accountModal.kronHelpText1')}
 
-                                            {
-                                                selectedRadio === "Firi" ? <Link
-                                                    href="https://firi.no"
-                                                    isExternal
-                                                    showAnchorIcon
-                                                >
-                                                    Firi
-                                                </Link> :
-                                                    <Link
-                                                        href="https://kron.no"
+                                                {
+                                                    selectedRadio === "Firi" ? <Link
+                                                        href="https://firi.no"
                                                         isExternal
                                                         showAnchorIcon
                                                     >
-                                                        Kron
-                                                    </Link>
-                                            }
-                                            {selectedRadio === "Firi" ?
-                                                t('accountModal.firiHelpText2') :
-                                                t('accountModal.kronHelpText2')}</p>
+                                                        Firi
+                                                    </Link> :
+                                                        <Link
+                                                            href="https://kron.no"
+                                                            isExternal
+                                                            showAnchorIcon
+                                                        >
+                                                            Kron
+                                                        </Link>
+                                                }
+                                                {selectedRadio === "Firi" ?
+                                                    t('accountModal.firiHelpText2') :
+                                                    t('accountModal.kronHelpText2')}</p>
                                             <p>{selectedRadio === "Kron" && t('accountModal.kronHelpText3')}</p>
                                             <p>{selectedRadio === "Kron" && t('accountModal.kronHelpText4')}</p>
                                         </div>
@@ -157,11 +194,11 @@ export function NewAccountTypeModalContent() {
                         }}>
                             {t('general.closeButton')}
                         </Button>
-                        <Button color="success" variant="light" aria-label={t('general.save')} onPress={() => {
+                        <Button color="success" variant="light" aria-label={isEdit ? t('general.saveEdit') : t('general.save')} onPress={() => {
                             onClose()
                             handleSubmit()
                         }}>
-                            {t('general.save')}
+                            {isEdit ? t('general.saveEdit') : t('general.save')}
                         </Button>
                     </ModalFooter>
                 </>
