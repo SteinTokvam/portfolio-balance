@@ -1,6 +1,6 @@
 import React from "react";
-import { Select, SelectItem, Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
 import { getHoldings, setTotalValues } from "../Util/Global";
