@@ -56,7 +56,7 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 accounts: [...state.accounts, action.payload.accounts[0]]
             }
             case 'EDIT_ACCOUNT':
-                const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), action.payload]
+                const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), ...action.payload.accounts]
                 window.localStorage.setItem("accounts", JSON.stringify(edited))
                 return {
                     ...state,
