@@ -1,5 +1,6 @@
 import { fetchTicker } from "./E24";
 import { getValueInFiat } from "./Firi";
+import { fetchHoldings } from "./Kron";
 
 export const languages = ["us", "no"];
 
@@ -45,12 +46,14 @@ export function getHoldings(transactions, account) {
   }
 
   if (!account.isManual) {
+    const holdings = []
     if (account.name === "Kron") {
-      return
+      fetchHoldings(account).then(kronHoldings => {
+        holdings.push(...kronHoldings)
+      })
     }
 
     const allCurrencies = [...new Set(transactions.map(order => order.name))]
-    const holdings = []
 
     allCurrencies.forEach(name => {
       const equityShare = transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + parseFloat(transaction.equityShare), 0)
