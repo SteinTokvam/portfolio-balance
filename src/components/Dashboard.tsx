@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 import { Account, EquityType, Holding } from "../types/Types";
-import { addHoldings } from "../actions/holdings";
+import { addHoldings, deleteAllHoldings } from "../actions/holdings";
 import { getHoldings } from "../Util/Global";
 
 export default function Dashboard() {
@@ -181,6 +181,18 @@ export default function Dashboard() {
                     </div>
                     : ''
             }
+            <Button className="w-full" onClick={() => {
+                dispatch(deleteAllHoldings())
+                accounts.forEach((account: Account) => {
+                    getHoldings(account)
+                        .then(holdings => {
+                            if (holdings.length === 0) {
+                                return
+                            }
+                            dispatch(addHoldings(holdings, account.key))
+                        })
+                })
+            }}>Oppdater</Button>
         </>
     )
 }
