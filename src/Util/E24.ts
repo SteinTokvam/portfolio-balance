@@ -1,5 +1,5 @@
 
-export async function fetchTicker(ticker, exchange = "OSE", type, period = "1weeks") {
+export async function fetchTicker(ticker: string, exchange = "OSE", type: string, period = "1weeks") {
     if (!type) {
         return [{ date: "", value: 0 }]
     }
