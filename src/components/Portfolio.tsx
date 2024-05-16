@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { useEffect } from "react";
-import { getHoldings, setTotalValues } from "../Util/Global";
+import { getHoldings } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { addHoldings } from "../actions/holdings";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
@@ -25,15 +25,16 @@ export default function Portfolio({ isDark }: Props) {
     const holdings = useSelector(state => state.rootReducer.holdings.holdings);
 
     useEffect(() => {
-        if (holdings.length === 0) {
-            accounts.forEach((account: Account) => {
-                Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1), account.key))
+        accounts.forEach((account: Account) => {
+            getHoldings(account)
+                .then(holdings => {
+                    if (holdings.length === 0) {
+                        return
+                    }
+                    dispatch(addHoldings(holdings, account.key))
                 })
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        })
+    }, [accounts, dispatch])
 
     return (
         <div>

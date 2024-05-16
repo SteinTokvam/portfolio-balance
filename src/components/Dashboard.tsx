@@ -3,11 +3,12 @@ import { Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/re
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
-import { getHoldings, setTotalValues } from "../Util/Global";
+
 import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 import { Account, EquityType, Holding } from "../types/Types";
 import { addHoldings } from "../actions/holdings";
+import { getHoldings } from "../Util/Global";
 
 export default function Dashboard() {
 
@@ -26,7 +27,6 @@ export default function Dashboard() {
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
     // @ts-ignore
     const holdings = useSelector(state => state.rootReducer.holdings.holdings)
-    console.log(holdings)
 
     const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b
@@ -56,15 +56,16 @@ export default function Dashboard() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     useEffect(() => {
-        if (holdings.length === 0) {
-            accounts.forEach((account: Account) => {
-                Promise.all(setTotalValues(account, getHoldings(account.transactions, account))).then(newHoldings => {
-                    dispatch(addHoldings(newHoldings.filter(elem => elem.value >= 1), account.key))
+        accounts.forEach((account: Account) => {
+            getHoldings(account)
+                .then(holdings => {
+                    if (holdings.length === 0) {
+                        return
+                    }
+                    dispatch(addHoldings(holdings, account.key))
                 })
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        })
+    }, [accounts, dispatch])
 
     return (
         <>
@@ -106,7 +107,7 @@ export default function Dashboard() {
                                             .filter((holding: Holding) => holding.equityType === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0
                                     }>
-                                        <h4 className="text-large font-bold leading-none text-default-400">{
+                                        <h4 className="text-large font-bold leading-none text-default-400">{//verdien
                                             holdings
                                                 .filter((holding: Holding) => holding.equityType === equityType.key)
                                                 .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
@@ -116,7 +117,7 @@ export default function Dashboard() {
                                         holdings
                                             .filter((holding: Holding) => holding.equityType === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0}>
-                                        <h4 className="text-large font-bold leading-none text-default-400">{
+                                        <h4 className="text-large font-bold leading-none text-default-400">{//andel i prosent av total
                                             ((holdings
                                                 .filter((holding: Holding) => holding.equityType === equityType.key)
                                                 .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)

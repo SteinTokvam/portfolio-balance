@@ -9,13 +9,13 @@ import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
-import { getHoldings, setTotalValues } from "../Util/Global";
 import DeleteButton from "./DeleteButton";
-import { fetchHoldings, fetchTransactions } from "../Util/Kron";
-import { updateHoldings } from "../actions/holdings";
-import { Account, Transaction } from "../types/Types";
+import { fetchKronTransactions } from "../Util/Kron";
+import { Account, Holding, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
+import { getHoldings } from "../Util/Global";
+import { updateHoldings } from "../actions/holdings";
 
 interface Props {
     account: Account,
@@ -149,18 +149,9 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                         }
                     })
 
-                const holdings = getHoldings(allTransactions, account)
-
-                console.log("Fetched transactions.")
-                console.log(holdings)
                 dispatch(importTransactions(account.key, allTransactions))
-                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings, account.key)))
             } else if (account.name === 'Kron') {
-                const transactions = await fetchTransactions(account)
-                const holdings = await fetchHoldings(account)
-
-                dispatch(importTransactions(account.key, transactions))
-                Promise.all(setTotalValues(account, holdings)).then(holdings => dispatch(updateHoldings(holdings.map(holding => { return { ...holding, accountKey: account.key } }), account.key)))
+                dispatch(importTransactions(account.key, await fetchKronTransactions(account)))
             }
         }
 
@@ -189,18 +180,19 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
         switch (columnKey) {
             case 'action':
                 return <DeleteButton handleDelete={() => {
-                    /***
-                     * TODO: Update holdings
-                     * om verdi er større enn 0, oppdater verdi for holding. om verdi er lik 0, slett holding.
-                     */
-                    const transactions = account.transactions.filter(transaction => transaction.key !== item.key)
-                    const newHoldings = getHoldings(transactions, account)
-                    Promise.all(setTotalValues(account, newHoldings, transactions)).then(holdings => {
-                        dispatch(updateHoldings(holdings, account.key))
-                    })
                     dispatch(deleteTransaction(item.key, account.key))
-                }
-                }
+
+                    getHoldings({
+                        ...account,
+                        transactions: account.transactions.filter((transaction: Transaction) => transaction.key !== item.key)
+                    })
+                        .then((holdings: Holding[]) => {
+                            if (holdings.length === 0) {
+                                return
+                            }
+                            dispatch(updateHoldings(holdings, account.key))
+                        })
+                }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={isDark}
                     showText={false} />
@@ -261,7 +253,7 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     onSortChange={setSortDescriptor}
                 >
                     <TableHeader columns={getColumns(account)}>
-                        {(column) => {
+                        {(column: { key: string; label: any; }) => {
                             if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
                                 return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
                             }
@@ -272,9 +264,9 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                         // @ts-ignore
                         <TableBody classNames="text-left" items={sortedItems}
                             emptyContent={"Ingen transaksjoner enda"}>
-                            {(item) => (
+                            {(item: Transaction) => (
                                 <TableRow key={item.key}>
-                                    {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                    {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                                 </TableRow>
                             )}
                         </TableBody>

@@ -21,9 +21,9 @@ export type Holding = {
     accountKey: string
     value: number
     equityType: string
-    totalValue: number
+    equityShare: number
+    e24Key: string
     yield: number
-    isManual: boolean
 }
 
 export type Transaction = {
