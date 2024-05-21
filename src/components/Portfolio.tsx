@@ -39,7 +39,7 @@ export default function Portfolio({ isDark }: Props) {
     function renderEquityShare(account: Account, holding: Holding): JSX.Element {
         if(account.name === 'Kron') {
             return <p></p>
-        } else if (account.name != 'Firi' && holding.equityType === 'Fund') {
+        } else if (account.name !== 'Firi' && holding.equityType === 'Fund') {
             return <p>{holding.equityShare.toFixed(2)}</p>
         } else if(holding.equityType === 'Loan') {
             return <p></p>
