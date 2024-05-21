@@ -36,6 +36,17 @@ export default function Portfolio({ isDark }: Props) {
         })
     }, [accounts, dispatch])
 
+    function renderEquityShare(account: Account, holding: Holding): JSX.Element {
+        if(account.name === 'Kron') {
+            return <p></p>
+        } else if (account.name != 'Firi' && holding.equityType === 'Fund') {
+            return <p>{holding.equityShare.toFixed(2)}</p>
+        } else if(holding.equityType === 'Loan') {
+            return <p></p>
+        }
+        return <p>{holding.equityShare}</p>
+    }
+
     return (
         <div>
             <div className="flex flex-col space-y-4">
@@ -94,7 +105,7 @@ export default function Portfolio({ isDark }: Props) {
                                                                         <div key={holding.name} className="p-1 w-1/3">
                                                                             <p className="text-default-600">{holding.name}</p>
                                                                             <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value && holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                                                                                <p>{holding.equityShare}</p>
+                                                                                {renderEquityShare(account, holding)}
                                                                             </Skeleton>
                                                                         </div>
                                                                     )
