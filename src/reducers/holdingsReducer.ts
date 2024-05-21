@@ -6,10 +6,10 @@ const initialState = {
 
 const holdingsReducer = (state = initialState, action: { type: string; payload: {holdings: Holding[]; accountKey: string} }) => {
     var newHoldings = []
+    window.localStorage.removeItem('holdings')
 
     switch (action.type) {
         case 'ADD_HOLDING':
-            window.localStorage.removeItem("holdings")
             return {
                 ...state,
                 holdings: [...state.holdings, action.payload]
@@ -24,7 +24,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
                 }
                 return holding
             })
-            window.localStorage.removeItem("holdings")
             return {
                 ...state,
                 holdings: holdingsWithUpdate
@@ -34,7 +33,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
              * Forventer at alle transaksjoner for en holding sendes inn. beregn holdingen på nytt
              */
             newHoldings = [...[...state.holdings].filter((holding: Holding) => holding.accountKey !== action.payload.accountKey), ...action.payload.holdings]
-            window.localStorage.removeItem("holdings")
             return {
                 ...state,
                 holdings: newHoldings
@@ -42,20 +40,17 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
         case 'ADD_HOLDINGS':
             newHoldings = [...action.payload.holdings].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
             const allHoldings = [...state.holdings, ...newHoldings]
-            window.localStorage.removeItem("holdings")
             return {
                 ...state,
                 holdings: allHoldings
             }
         case 'DELETE_HOLDING':
             const remainingHoldings = state.holdings.filter((holding: Holding) => holding.accountKey !== action.payload.accountKey)
-            window.localStorage.removeItem("holdings")
             return {
                 ...state,
                 holdings: remainingHoldings
             }
         case 'DELETE_ALL_HOLDINGS':
-            localStorage.removeItem('holdings')
             return {
                 ...state,
                 holdings: []

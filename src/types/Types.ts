@@ -21,9 +21,9 @@ export type Holding = {
     accountKey: string
     value: number
     equityType: string
-    totalValue: number
+    equityShare: number
+    e24Key: string
     yield: number
-    isManual: boolean
 }
 
 export type Transaction = {
@@ -51,7 +51,6 @@ export type TotalValue = {
 }
 
 export type FiriOrder = {
-
     id: string,
     amount: string,
     currency: string,
@@ -66,5 +65,20 @@ export type FiriOrder = {
         withdraw_address: string,
         withdraw_txid: string
     }
+}
 
+export type FiriPricePoint = {
+    equityShare: number, 
+    currency: string, 
+    price: FiriPrice
+}
+
+export type FiriPrice = {
+    id: string,
+    last: string,
+    high: string,
+    change: string,
+    low: string,
+    volume: string,
+    message?: string
 }
