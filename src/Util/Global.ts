@@ -42,6 +42,7 @@ export const accountTypes = [
     "Obligasjon"
 ]
 
+
 export function getHoldings(account: Account): Promise<Holding[]> {
     if (account.isManual) {
         if (!account.transactions) {

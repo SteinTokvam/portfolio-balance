@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux"
 
 import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
-import { Account, EquityType, Holding } from "../types/Types";
+import { Account, EquityType, Holding, Transaction } from "../types/Types";
 import { addHoldings, deleteAllHoldings } from "../actions/holdings";
 import { getHoldings } from "../Util/Global";
+import { fetchFiriTransactions } from "../Util/Firi";
+import { importTransactions } from "../actions/accounts";
+import { fetchKronTransactions } from "../Util/Kron";
 
 export default function Dashboard() {
 
@@ -91,6 +94,34 @@ export default function Dashboard() {
                 >
                     {t('dashboard.updateGoalPercentage')}
                 </Button>
+                <Spacer y={2} />
+                <Button
+                    className="w-3/4 sm:w-1/4"
+                    onClick={() => {
+                        dispatch(deleteAllHoldings())
+
+                        accounts.forEach((account: Account) => {
+                            getHoldings(account)
+                                .then(holdings => {
+                                    if (holdings.length === 0) {
+                                        return
+                                    }
+                                    dispatch(addHoldings(holdings, account.key))
+                                })
+
+                            if (account.name === 'Kron') {
+                                fetchKronTransactions(account)
+                                    .then((transactions: Transaction[]) => {
+                                        dispatch(importTransactions(account.key, transactions))
+                                    })
+                            } else if (account.name === 'Firi') {
+                                fetchFiriTransactions(account, ['NOK'])
+                                    .then((transactions: Transaction[]) => {
+                                        dispatch(importTransactions(account.key, transactions))
+                                    })
+                            }
+                        })
+                    }}>Oppdater</Button>
             </div>
 
             <Spacer y={4} />
@@ -181,18 +212,6 @@ export default function Dashboard() {
                     </div>
                     : ''
             }
-            <Button className="w-full" onClick={() => {
-                dispatch(deleteAllHoldings())
-                accounts.forEach((account: Account) => {
-                    getHoldings(account)
-                        .then(holdings => {
-                            if (holdings.length === 0) {
-                                return
-                            }
-                            dispatch(addHoldings(holdings, account.key))
-                        })
-                })
-            }}>Oppdater</Button>
         </>
     )
 }

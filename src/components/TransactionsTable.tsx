@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue, useDisclosure } from "@nextui-org/react";
-import { calculateValue, getTransactionsFromFiri } from "../Util/Firi";
+import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
@@ -10,12 +9,13 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { fetchKronTransactions } from "../Util/Kron";
 import { Account, Holding, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { getHoldings } from "../Util/Global";
 import { updateHoldings } from "../actions/holdings";
+import { fetchFiriTransactions } from "../Util/Firi";
+import { fetchKronTransactions } from "../Util/Kron";
 
 interface Props {
     account: Account,
@@ -64,6 +64,14 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                 { key: 'type', label: t('transactionsTable.type') },
                 { key: 'date', label: t('transactionsTable.date') },
             ]
+        } else if (!account.isManual && account.name === 'Firi') {
+            return [
+                { key: 'name', label: t('transactionsTable.name') },
+                { key: 'cost', label: t('transactionsTable.cost') },
+                { key: 'type', label: t('transactionsTable.type') },
+                { key: 'equityShare', label: t('transactionsTable.equityShare') },
+                { key: 'date', label: t('transactionsTable.date') },
+            ]
         }
         switch (account.type) {
             case 'Obligasjon':
@@ -75,7 +83,7 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     { key: 'action', label: 'Action' }
                 ];
             default:
-                return account.isManual ? [
+                return [
                     { key: 'name', label: t('transactionsTable.name') },
                     { key: 'cost', label: t('transactionsTable.cost') },
                     { key: 'type', label: t('transactionsTable.type') },
@@ -83,83 +91,31 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     { key: 'equityShare', label: t('transactionsTable.equityShare') },
                     { key: 'date', label: t('transactionsTable.date') },
                     { key: 'action', label: 'Action' }
-                ] :
-                    [
-                        { key: 'name', label: t('transactionsTable.name') },
-                        { key: 'cost', label: t('transactionsTable.cost') },
-                        { key: 'type', label: t('transactionsTable.type') },
-                        { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
-                        { key: 'equityShare', label: t('transactionsTable.equityShare') },
-                        { key: 'date', label: t('transactionsTable.date') }
-                    ];
+                ]
         }
     }
-
 
     useEffect(() => {
         if (account.isManual) {
             return
         }
 
-        async function fetchData() {
-            if (account.name === 'Firi') {
-                const transactions = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey).then(orders => {
-                    if (orders.name === "ApiKeyNotFound") {
-                        return ["FEIL"]
-                    }
-                    // @ts-ignore
-                    //TODO: konverter firi klassen til typescript og lag typer
-                    const allCurrencies = [...new Set(orders.map(order => order.currency))]
-                    const valueOfCurrency = calculateValue(orders, allCurrencies)
-                    return { allCurrencies, valueOfCurrency, orders }
-                })
-
-                // @ts-ignore
-                if (transactions[0] === "FEIL") {
-                    return
-                }
-
-                // @ts-ignore
-                const allMatches = transactions.orders
-                    // @ts-ignore
-                    .filter(order => order.type === 'Match')
-
-                // @ts-ignore
-                const allTransactions = transactions.orders
-                    // @ts-ignore
-                    .filter(order => order.currency !== 'NOK')
-                    // @ts-ignore
-                    .filter(order => order.type !== 'Stake' && order.type !== 'InternalTransfer')
-                    // @ts-ignore
-                    .map(transaction => {
-                        // @ts-ignore
-                        const matchedTransaction = allMatches.filter(match => match.date === transaction.date)[0]
-                        const dateString = transaction.date.toString().split('.')[0].split('T')
-                        const date = dateString[0] + ' ' + dateString[1]
-                        return {
-                            key: transaction.id,
-                            name: transaction.currency,
-                            equityShare: parseFloat(transaction.amount),
-                            date,
-                            type: transaction.type,
-                            equityPrice: matchedTransaction ?
-                                ((1 / parseFloat(transaction.amount)) * parseFloat(matchedTransaction.amount) * -1).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) :
-                                "N/A",
-                            cost: matchedTransaction ? parseFloat(parseFloat(matchedTransaction.amount).toFixed(2)) : 0
-                        }
-                    })
-
-                dispatch(importTransactions(account.key, allTransactions))
-            } else if (account.name === 'Kron') {
-                dispatch(importTransactions(account.key, await fetchKronTransactions(account)))
-            }
-        }
-
         if (!account.apiInfo) {
             return
         }
-        fetchData()
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
+        fetchFiriTransactions(account, ['NOK'])
+            .then((transactions: Transaction[]) => {
+                dispatch(importTransactions(account.key, transactions))
+            })
+
+        fetchKronTransactions(account)
+            .then((transactions: Transaction[]) => {
+                dispatch(importTransactions(account.key, transactions))
+            })
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     function handleOpen(type: string, account: Account) {
         switch (type) {
@@ -196,6 +152,8 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={isDark}
                     showText={false} />
+            case 'cost':
+                return item.cost.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
             default:
                 return getKeyValue(item, columnKey)
         }
@@ -263,7 +221,8 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     {
                         // @ts-ignore
                         <TableBody classNames="text-left" items={sortedItems}
-                            emptyContent={"Ingen transaksjoner enda"}>
+                            emptyContent={account.isManual ? <p>Ingen transaksjoner enda</p> : <Spinner />}
+                        >
                             {(item: Transaction) => (
                                 <TableRow key={item.key}>
                                     {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
