@@ -161,15 +161,15 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
 
     return (
         <div>
-            {account.type === 'Kryptovaluta' ?
+            {!account.isManual ?
                 <div className="flex justify-end">
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
-                        buttonText={t('transactionsTable.deleteAccount')}
-                        isDark={isDark}
-                        showText={true} />
                     <AccountButton isEdit={true}>
                         <AccountTypeModalContent isEdit={true} account={account} />
                     </AccountButton>
+                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
+                        buttonText={t('transactionsTable.deleteAccount')}
+                        isDark={isDark}
+                        showText={false} />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>

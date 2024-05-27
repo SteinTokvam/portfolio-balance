@@ -60,7 +60,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
                 yield: 0
             }
         })
-        console.log('Fetched Firi holdings', holdings)
+        console.log('Fetched Firi Holdings', holdings)
 
     return new Promise((resolve, reject) => {
         resolve(holdings)
@@ -83,7 +83,7 @@ async function getTransactionsFromFiri(accessKey: string | undefined, excludedCu
         })
         .then((orders: FiriOrder[]) => {
             const res = orders.filter(order =>  !excludedCurrencies.includes(order.currency))
-            console.log('Fetched Firi transactions', res)
+            console.log('Fetched Firi Transactions', res)
             return res
         })
 }
