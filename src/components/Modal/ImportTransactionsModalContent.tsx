@@ -4,10 +4,8 @@ import { useTranslation } from "react-i18next"
 import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
-import { getHoldings } from "../../Util/Global";
 import { useSelector } from "react-redux";
-import { Account, EquityType, Holding, Transaction } from "../../types/Types";
-import { updateHoldings } from "../../actions/holdings";
+import { Account, EquityType, Transaction } from "../../types/Types";
 
 export default function ImportTransactionsModalContent({ account }: { account: Account }) {
 
@@ -56,11 +54,6 @@ export default function ImportTransactionsModalContent({ account }: { account: A
                     }
                 })
 
-                // @ts-ignore
-                const holdings = getHoldings(transactions, account)
-                .then((holdings: Holding[]) => {
-                    updateHoldings(holdings, account.key)
-                })
                 dispatch(importTransactions(account.key, transactions))
             };
             reader.readAsText(input);
