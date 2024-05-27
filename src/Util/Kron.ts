@@ -30,7 +30,9 @@ export async function fetchKronTransactions(account: Account): Promise<Transacti
     }
     try {
         const response = await fetch(`${baseUrl}/kron/transactions`, options)
-        return await response.json()
+        const res = await response.json()
+        console.log('Fetched Kron transactions', res)
+        return res
     } catch (error) {
         console.log(error)
         return []
@@ -44,7 +46,9 @@ export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
     }
     try {
         const response = await fetch(`${baseUrl}/kron/holdings`, options)
-        return await response.json()
+        const res = await response.json()
+        console.log('Fetched Kron holdings', res)
+        return res
     } catch (error) {
         console.log(error)
         return []

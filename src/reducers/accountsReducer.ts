@@ -50,10 +50,10 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
     var index = -1
     switch (action.type) {
         case 'ADD_NEW_ACCOUNT':
-            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
+            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload.accounts[0]]))
             return {
                 ...state,
-                accounts: [...state.accounts, action.payload.accounts[0]]
+                accounts: [...state.accounts, ...action.payload.accounts]
             }
             case 'EDIT_ACCOUNT':
                 const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), ...action.payload.accounts]
@@ -90,7 +90,7 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
             const newTransactions = transactionsPayload.filter((transaction: Transaction) => !currentTransactionKeys.includes(transaction.key))
 
             if (newTransactions.length === 0) {
-                console.log("no new transactions")
+                console.log("No new transactions")
                 return { ...state }
             }
             currentAccounts[index] = {

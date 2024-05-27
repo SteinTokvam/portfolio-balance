@@ -44,7 +44,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
             price: price.filter(price => price.cryptocurrency === currency)[0].price
         })
     })
-    console.log(firiPricePoint)
+    
     const holdings: Holding[] = firiPricePoint
         .filter(equityShare => equityShare.equityShare > 0.00000001)
         .filter(equityShare => !equityShare.price?.message)
@@ -60,6 +60,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
                 yield: 0
             }
         })
+        console.log('Fetched Firi holdings', holdings)
 
     return new Promise((resolve, reject) => {
         resolve(holdings)
@@ -81,7 +82,9 @@ async function getTransactionsFromFiri(accessKey: string | undefined, excludedCu
             return response.json()
         })
         .then((orders: FiriOrder[]) => {
-            return orders.filter(order =>  !excludedCurrencies.includes(order.currency))
+            const res = orders.filter(order =>  !excludedCurrencies.includes(order.currency))
+            console.log('Fetched Firi transactions', res)
+            return res
         })
 }
 

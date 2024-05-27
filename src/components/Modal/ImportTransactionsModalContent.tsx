@@ -57,8 +57,10 @@ export default function ImportTransactionsModalContent({ account }: { account: A
                 })
 
                 // @ts-ignore
-                const holdings: Holding[] = getHoldings(transactions, account)
-                dispatch(updateHoldings(holdings, account.key))
+                const holdings = getHoldings(transactions, account)
+                .then((holdings: Holding[]) => {
+                    updateHoldings(holdings, account.key)
+                })
                 dispatch(importTransactions(account.key, transactions))
             };
             reader.readAsText(input);

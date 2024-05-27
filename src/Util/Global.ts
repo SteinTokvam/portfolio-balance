@@ -118,7 +118,6 @@ async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: 
 
     const holdings: Holding[] = []
     const tickers = await fetchTickers(uniqueE24Keys)
-    console.log(tickers)
 
     for (let i = 0; i < uniqueE24Keys.length; i++) {
         const transactionName: Transaction | undefined = account.transactions.find(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)

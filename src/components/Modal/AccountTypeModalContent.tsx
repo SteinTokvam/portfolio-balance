@@ -14,7 +14,6 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
 
     const [accountName, setAccountName] = useState(isEdit && account ? account.name : "")
     const [selected, setSelected] = useState("Manual");
-    console.log(selected)
 
     const [selectedKeys, setSelectedKeys] = useState([]);
     const selectedAccountType = useMemo(

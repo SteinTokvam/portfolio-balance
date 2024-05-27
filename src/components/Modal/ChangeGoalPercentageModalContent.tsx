@@ -93,7 +93,7 @@ export default function ChangeGoalPercentageModalContent() {
                         <Button color="success" variant="light" aria-label={t('general.save')} onPress={() => {
                             setIsInvalid(validatePercentage(goalPercentage, selectedEquityType))
                             if (isInvalid) {
-                                console.log("Ny målprosent ikke valid")
+                                console.log("Invalid goal percentage")
                                 return
                             }
                             onClose()
