@@ -1,4 +1,4 @@
-import { Holding } from "../types/Types";
+import { Account, Holding } from "../types/Types";
 
 
 export const addHolding = (holding: Holding) => {
@@ -39,5 +39,12 @@ export const deleteHolding = (holding: Holding, accountKey: string) => {
 export const deleteAllHoldings = () => {
     return {
         type: "DELETE_ALL_HOLDINGS"
+    }
+}
+
+export const deleteHoldingsForAccount = (account: Account) => {
+    return {
+        type: "DELETE_HOLDINGS_FOR_ACCOUNT",
+        payload: {accountKey: account.key}
     }
 }

@@ -9,11 +9,10 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, Holding, Transaction } from "../types/Types";
+import { Account, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
-import { getHoldings } from "../Util/Global";
-import { updateHoldings } from "../actions/holdings";
+import { deleteHoldingsForAccount } from "../actions/holdings";
 import { fetchFiriTransactions } from "../Util/Firi";
 import { fetchKronTransactions } from "../Util/Kron";
 
@@ -136,18 +135,8 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
         switch (columnKey) {
             case 'action':
                 return <DeleteButton handleDelete={() => {
+                    dispatch(deleteHoldingsForAccount(account))
                     dispatch(deleteTransaction(item.key, account.key))
-
-                    getHoldings({
-                        ...account,
-                        transactions: account.transactions.filter((transaction: Transaction) => transaction.key !== item.key)
-                    })
-                        .then((holdings: Holding[]) => {
-                            if (holdings.length === 0) {
-                                return
-                            }
-                            dispatch(updateHoldings(holdings, account.key))
-                        })
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={isDark}

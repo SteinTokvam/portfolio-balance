@@ -33,6 +33,8 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
              * Forventer at alle transaksjoner for en holding sendes inn. beregn holdingen på nytt
              */
             newHoldings = [...[...state.holdings].filter((holding: Holding) => holding.accountKey !== action.payload.accountKey), ...action.payload.holdings]
+            console.log(newHoldings)
+            console.log('lol')
             return {
                 ...state,
                 holdings: newHoldings
@@ -40,6 +42,7 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
         case 'ADD_HOLDINGS':
             newHoldings = [...action.payload.holdings].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
             const allHoldings = [...state.holdings, ...newHoldings]
+            console.log(allHoldings.filter((holding: Holding) => holding.equityType === 'Loan'))
             return {
                 ...state,
                 holdings: allHoldings
@@ -54,6 +57,11 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
             return {
                 ...state,
                 holdings: []
+            }
+        case 'DELETE_HOLDINGS_FOR_ACCOUNT':
+            return {
+                ...state,
+                holdings: state.holdings.filter((holding: Holding) => holding.accountKey !== action.payload.accountKey)
             }
         default:
             return state

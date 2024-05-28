@@ -70,9 +70,13 @@ export function getHoldings(account: Account): Promise<Holding[]> {
             const uniquieHoldingNames = [...new Set(account.transactions.map(transaction => transaction.name))];
             uniquieHoldingNames.forEach(name => {
                 const equityShare = account.transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + transaction.equityShare, 0)
-                const cost = account.transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + transaction.cost, 0)
+                const value = account.transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + transaction.cost, 0)
 
-                if (cost > 0) {
+                if(account.type === "Obligasjon") {
+                    console.log(name, value)    
+                }
+                
+                if (value > 0) {
                     holdings.push(
                         {
                             name,
@@ -81,12 +85,18 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                             equityType: account.transactions.filter(transaction => transaction.name === name)[0].equityType,
                             e24Key: account.transactions.filter(transaction => transaction.name === name)[0].e24Key,
                             key: uuidv4(),
-                            value: cost,
+                            value,
                             yield: 0,
                         }
                     )
                 }
             })
+            if(account.type === "Obligasjon") {
+                console.log(holdings.map(holding => {
+                    return {name: holding.name, value: holding.value}
+                }))    
+            }
+            
             return new Promise((resolve, reject) => {
                 resolve(holdings)
             })
