@@ -8,14 +8,18 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
-import Portfolio from './components/Portfolio';
 import { routes } from './Util/Global';
 import Footer from './components/Footer';
+import TransactionsTable from './components/TransactionsTable';
+import Accounts from './components/Accounts';
 
 function App() {
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
+
+  // @ts-ignore
+  
 
   useEffect(() => {
   }, [dispatch, t])
@@ -31,7 +35,10 @@ function App() {
             <Dashboard />
           } />
           <Route path={routes.portfolio} element={
-            <Portfolio isDark={isDark} />
+            <Accounts />
+          } />
+          <Route path={routes.account} element={
+            <TransactionsTable />
           } />
         </Routes>
       </div>

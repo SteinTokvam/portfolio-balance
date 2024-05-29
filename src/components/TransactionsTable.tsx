@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure } from "@nextui-org/react";
-import { useDispatch } from "react-redux";
+import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
@@ -15,21 +15,25 @@ import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../actions/holdings";
 import { fetchFiriTransactions } from "../Util/Firi";
 import { fetchKronTransactions } from "../Util/Kron";
+import { useNavigate, useParams } from "react-router-dom";
+import { routes } from "../Util/Global";
+import Holdings from "./Holdings";
 
-interface Props {
-    account: Account,
-    isDark: boolean,
-    children?: React.ReactNode
-}
-
-export default function TransactionsTable({ account, isDark, children }: Props) {
+export default function TransactionsTable() {
 
     const { t } = useTranslation()
+
+    const { accountKey } = useParams();
 
     const [sortDescriptor, setSortDescriptor] = useState({
         column: "date",
         direction: "descending",
     });
+
+    const navigate = useNavigate()
+
+    // @ts-ignore
+    const account = useSelector(state => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
 
     const dispatch = useDispatch()
 
@@ -139,7 +143,7 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     dispatch(deleteTransaction(item.key, account.key))
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
-                    isDark={isDark}
+                    isDark={false}
                     showText={false} />
             case 'cost':
                 return item.cost.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
@@ -149,7 +153,11 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
     }
 
     return (
-        <div>
+        <div className="sm:w-1/2 sm:mx-auto">
+            <Breadcrumbs className="mx-4">
+                <BreadcrumbItem onClick={() => navigate(routes.portfolio)}>accounts</BreadcrumbItem>
+                <BreadcrumbItem>{account.name}</BreadcrumbItem>
+            </Breadcrumbs>
             {!account.isManual ?
                 <div className="flex justify-end">
                     <AccountButton isEdit={true}>
@@ -157,17 +165,17 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     </AccountButton>
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
                         buttonText={t('transactionsTable.deleteAccount')}
-                        isDark={isDark}
+                        isDark={false}
                         showText={false} />
                 </div> :
                 <div className="flex flex-col justify-between sm:flex-row">
                     <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
                         {modalContent}
                     </EmptyModal>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account)} size="lg" className="m-2">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('import', account)} size="lg" className="m-1">
                         {t('importTransactionsModal.title')} <UploadIcon />
                     </Button>
-                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-2">
+                    <Button color="primary" variant="bordered" onPress={() => handleOpen('transaction', account)} size="lg" className="m-1">
                         {t('transactionsTable.newTransaction')}
                     </Button>
                     <AccountButton isEdit={true}>
@@ -175,19 +183,13 @@ export default function TransactionsTable({ account, isDark, children }: Props) 
                     </AccountButton>
                     <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
                         buttonText={t('transactionsTable.deleteAccount')}
-                        isDark={isDark}
+                        isDark={false}
                         showText={false} />
                 </div>
             }
 
             <Spacer y={4} />
-            {
-                children &&
-                <>
-                    {children}
-                    <Spacer y={4} />
-                </>
-            }
+            <Holdings account={account} />
             {
                 <Table
                     isStriped

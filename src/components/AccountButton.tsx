@@ -16,9 +16,10 @@ export default function AccountButton({ isEdit, children }: { isEdit: boolean, c
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
                 {children}
             </EmptyModal>
-            <div className='w-2/3 mx-auto text-center flex flex-col justify-center space-y-4 space-x-0 lg:flex-row lg:space-x-4 lg:space-y-0'>
+            <div className='m-1'>
                 <Button color="primary"
                     onPress={onOpen}
+                    size="lg"
                     endContent={!isEdit ? <h1 className="text-xl font-bold">+</h1> : <EditIcon />}
                 >
                     {isEdit ? t('accountModal.editAccountButton') : t('accountModal.addAccountButton')}
