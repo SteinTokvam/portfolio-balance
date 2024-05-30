@@ -16,7 +16,7 @@ export default function Auth() {
 
     useEffect(() => {
         if(!supabase) {
-            return(<></>)
+            return
         }
         supabase.auth.getSession().then(({ data: { session } }) => {
             // @ts-ignore
@@ -41,7 +41,7 @@ export default function Auth() {
     }, [])
 
     if(!supabase) {
-        return(<></>)
+        return (<></>)
     }
 
     if (!session) {
