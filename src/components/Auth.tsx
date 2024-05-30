@@ -3,9 +3,12 @@ import { createClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link } from 'react-router-dom'
 
-const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
+const supabase = process.env.REACT_APP_SUPABASE_URL && createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
 
 export default function Auth() {
+    if(!supabase) {
+        return(<></>)
+    }
     const [session, setSession] = useState(null)
 
     const [countries, setCountries] = useState([]);
