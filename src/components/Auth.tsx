@@ -25,6 +25,9 @@ export default function Auth() {
         })
 
         async function getCountries() {
+            if(!supabase) {
+                return
+            }
             const { data } = await supabase.from("countries").select();
             // @ts-ignore
             setCountries(data);
