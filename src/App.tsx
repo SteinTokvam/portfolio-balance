@@ -12,6 +12,7 @@ import { routes } from './Util/Global';
 import Footer from './components/Footer';
 import TransactionsTable from './components/TransactionsTable';
 import Accounts from './components/Accounts';
+import AuthTest from './components/AuthTest';
 
 function App() {
 
@@ -39,6 +40,9 @@ function App() {
           } />
           <Route path={routes.account} element={
             <TransactionsTable />
+          } />
+          <Route path='/auth' element={
+            <AuthTest />
           } />
         </Routes>
       </div>
