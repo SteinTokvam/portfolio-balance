@@ -12,7 +12,7 @@ import { routes } from './Util/Global';
 import Footer from './components/Footer';
 import TransactionsTable from './components/TransactionsTable';
 import Accounts from './components/Accounts';
-import AuthTest from './components/AuthTest';
+import Auth from './components/Auth';
 
 function App() {
 
@@ -42,7 +42,7 @@ function App() {
             <TransactionsTable />
           } />
           <Route path='/auth' element={
-            <AuthTest />
+            <Auth />
           } />
         </Routes>
       </div>
