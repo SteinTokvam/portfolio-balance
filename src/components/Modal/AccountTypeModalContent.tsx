@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs, Accordion, AccordionItem, Link, RadioGroup, Radio } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
-import { accountTypes, textInputStyle } from "../../Util/Global"
+import { textInputStyle } from "../../Util/Global"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
