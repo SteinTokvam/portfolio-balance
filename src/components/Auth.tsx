@@ -6,9 +6,6 @@ import { Link } from 'react-router-dom'
 const supabase = process.env.REACT_APP_SUPABASE_URL && createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
 
 export default function Auth() {
-    if(!supabase) {
-        return(<></>)
-    }
     const [session, setSession] = useState(null)
 
     const [countries, setCountries] = useState([]);
@@ -16,6 +13,10 @@ export default function Auth() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
+
+    if(!supabase) {
+        return(<></>)
+    }
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
