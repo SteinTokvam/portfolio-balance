@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
 import { routes } from "../Util/Global";
@@ -10,8 +10,6 @@ import { useNavigate } from "react-router-dom";
 import Holdings from "./Holdings";
 
 export default function Accounts() {
-
-    const dispatch = useDispatch();
 
     // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
