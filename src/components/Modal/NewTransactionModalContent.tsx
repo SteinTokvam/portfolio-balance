@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
 import { Account, EquityType, Holding, Transaction, TransactionType } from "../../types/Types";
-import { updateHoldings } from "../../actions/holdings";
+import { deleteHoldingsForAccount, updateHoldings } from "../../actions/holdings";
 
 
 export default function NewTransactionModalContent({ account }: { account: Account }) {
@@ -58,6 +58,7 @@ export default function NewTransactionModalContent({ account }: { account: Accou
 
 function handleSubmit() {
     var transactionToAdd: Transaction[] = []
+    dispatch(deleteHoldingsForAccount(account))
     if (account.type === 'Obligasjon') {
         transactionToAdd.push({
             key: uuidv4(),

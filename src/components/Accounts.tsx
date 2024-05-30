@@ -3,10 +3,8 @@ import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Skeleton } from
 import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { useEffect } from "react";
-import { getHoldings, routes } from "../Util/Global";
+import { routes } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
-import { addHoldings } from "../actions/holdings";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
 import Holdings from "./Holdings";
@@ -22,18 +20,6 @@ export default function Accounts() {
     const holdings = useSelector(state => state.rootReducer.holdings.holdings);
 
     const navigate = useNavigate()
-
-    useEffect(() => {
-        accounts.forEach((account: Account) => {
-            getHoldings(account)
-                .then(holdings => {
-                    if (holdings.length === 0) {
-                        return
-                    }
-                    dispatch(addHoldings(holdings, account.key))
-                })
-        })
-    }, [accounts, dispatch])
 
     return (
         <div>
