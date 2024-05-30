@@ -14,11 +14,10 @@ export default function Auth() {
     const [error, setError] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
 
-    if(!supabase) {
-        return(<></>)
-    }
-
     useEffect(() => {
+        if(!supabase) {
+            return(<></>)
+        }
         supabase.auth.getSession().then(({ data: { session } }) => {
             // @ts-ignore
             setSession(session)
@@ -40,6 +39,10 @@ export default function Auth() {
 
         return () => subscription.unsubscribe()
     }, [])
+
+    if(!supabase) {
+        return(<></>)
+    }
 
     if (!session) {
         return (
