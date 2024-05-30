@@ -6,7 +6,7 @@ import { getHoldings, textInputStyle } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
-import { Account, EquityType, Holding, Transaction } from "../../types/Types";
+import { Account, EquityType, Holding, Transaction, TransactionType } from "../../types/Types";
 import { updateHoldings } from "../../actions/holdings";
 
 
@@ -26,13 +26,13 @@ export default function NewTransactionModalContent({ account }: { account: Accou
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
-        { key: "BUY", label: t('transactionType.buy') },
-        { key: "SELL", label: t('transactionType.sell') },
-        { key: "PLATFORM_FEE", label: t('transactionType.plattform_fee') },
-        { key: "DIVIDEND", label: t('transactionType.dividend') },
-        { key: "YIELD", label: t('transactionType.yield') },
-        { key: "DEPOSIT", label: t('transactionType.deposit') },
-        { key: "WITHDRAWAL", label: t('transactionType.withdrawal') },
+        { key: TransactionType.BUY, label: t('transactionType.buy') },
+        { key: TransactionType.SELL, label: t('transactionType.sell') },
+        { key: TransactionType.PLATFORM_FEE, label: t('transactionType.plattform_fee') },
+        { key: TransactionType.DIVIDEND, label: t('transactionType.dividend') },
+        { key: TransactionType.YIELD, label: t('transactionType.yield') },
+        { key: TransactionType.DEPOSIT, label: t('transactionType.deposit') },
+        { key: TransactionType.WITHDRAWAL, label: t('transactionType.withdrawal') },
     ]
     const [selectedTransactionKeys, setSelectedTransactionKeys] = useState([]);
     const selectedTransactionType = useMemo(

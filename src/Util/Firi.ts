@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Account, FiriOrder, FiriPrice, FiriPricePoint, Holding, Transaction } from '../types/Types';
+import { Account, EquityTypes, FiriOrder, FiriPrice, FiriPricePoint, Holding, Transaction } from '../types/Types';
 
 export async function fetchFiriTransactions(account: Account, currenciesToExclude: string[]): Promise<Transaction[]> {
-
     const firiOrders = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey, currenciesToExclude)
     const currencies = [...new Set(firiOrders.map((order: FiriOrder) => order.currency))]
     const price = await fetchPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
@@ -18,7 +17,7 @@ export async function fetchFiriTransactions(account: Account, currenciesToExclud
             equityPrice: parseFloat(lastPrice),
             e24Key: '',
             equityShare: parseFloat(parseFloat(firiOrder.amount).toFixed(8)),
-            equityType: 'Cryptocurrency',
+            equityType: EquityTypes.CRYPTOCURRENCY,
         }
     })
 
@@ -54,7 +53,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
                 key: uuidv4(),
                 accountKey: account.key,
                 value: parseFloat(equityShare.price.last) * equityShare.equityShare,
-                equityType: 'Cryptocurrency',
+                equityType: EquityTypes.CRYPTOCURRENCY,
                 equityShare: equityShare.equityShare,
                 e24Key: '',
                 yield: 0

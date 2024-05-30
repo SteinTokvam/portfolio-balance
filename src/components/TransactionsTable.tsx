@@ -42,7 +42,7 @@ export default function TransactionsTable() {
     const [modalContent, setModalContent] = useState(<></>)
 
     const sortedItems = useMemo(() => {
-        return [...account.transactions].sort((a, b) => {
+        return account ? [...account.transactions].sort((a, b) => {
             // @ts-ignore
             const first = a[sortDescriptor.column];
             // @ts-ignore
@@ -55,11 +55,22 @@ export default function TransactionsTable() {
             }
 
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
-        });
+        }) : [];
     }, [sortDescriptor, account]);
 
 
     const getColumns = (account: Account) => {
+        if (!account) {
+            return [
+                { key: 'name', label: t('transactionsTable.name') },
+                { key: 'cost', label: t('transactionsTable.cost') },
+                { key: 'type', label: t('transactionsTable.type') },
+                { key: 'equityPrice', label: t('transactionsTable.equityPrice') },
+                { key: 'equityShare', label: t('transactionsTable.equityShare') },
+                { key: 'date', label: t('transactionsTable.date') },
+                { key: 'action', label: 'Action' }
+            ]
+        }
         if (!account.isManual && account.name === 'Kron') {
             return [
                 { key: 'name', label: t('transactionsTable.name') },
@@ -99,6 +110,9 @@ export default function TransactionsTable() {
     }
 
     useEffect(() => {
+        if (!account) {
+            return
+        }
         if (account.isManual) {
             return
         }
@@ -107,15 +121,17 @@ export default function TransactionsTable() {
             return
         }
 
-        fetchFiriTransactions(account, ['NOK'])
-            .then((transactions: Transaction[]) => {
-                dispatch(importTransactions(account.key, transactions))
-            })
-
-        fetchKronTransactions(account)
-            .then((transactions: Transaction[]) => {
-                dispatch(importTransactions(account.key, transactions))
-            })
+        if (account.name === 'Firi') {
+            fetchFiriTransactions(account, ['NOK'])
+                .then((transactions: Transaction[]) => {
+                    dispatch(importTransactions(account.key, transactions))
+                })
+        } else if (account.name === 'Kron') {
+            fetchKronTransactions(account)
+                .then((transactions: Transaction[]) => {
+                    dispatch(importTransactions(account.key, transactions))
+                })
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -156,14 +172,18 @@ export default function TransactionsTable() {
         <div className="sm:w-1/2 sm:mx-auto">
             <Breadcrumbs className="mx-4">
                 <BreadcrumbItem onClick={() => navigate(routes.portfolio)}>accounts</BreadcrumbItem>
-                <BreadcrumbItem>{account.name}</BreadcrumbItem>
+                <BreadcrumbItem>{account && account.name}</BreadcrumbItem>
             </Breadcrumbs>
-            {!account.isManual ?
+            {account && !account.isManual ?
                 <div className="flex justify-end">
                     <AccountButton isEdit={true}>
                         <AccountTypeModalContent isEdit={true} account={account} />
                     </AccountButton>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
+                    <DeleteButton handleDelete={() => {
+                        dispatch(deleteAccount(account.key))
+                        console.log("hre")
+                        navigate(routes.portfolio)
+                    }}
                         buttonText={t('transactionsTable.deleteAccount')}
                         isDark={false}
                         showText={false} />
@@ -181,7 +201,10 @@ export default function TransactionsTable() {
                     <AccountButton isEdit={true}>
                         <AccountTypeModalContent isEdit={true} account={account} />
                     </AccountButton>
-                    <DeleteButton handleDelete={() => dispatch(deleteAccount(account.key))}
+                    <DeleteButton handleDelete={() => {
+                        dispatch(deleteAccount(account.key))
+                        navigate(routes.portfolio)
+                    }}
                         buttonText={t('transactionsTable.deleteAccount')}
                         isDark={false}
                         showText={false} />
@@ -212,7 +235,7 @@ export default function TransactionsTable() {
                     {
                         // @ts-ignore
                         <TableBody classNames="text-left" items={sortedItems}
-                            emptyContent={account.isManual ? <p>Ingen transaksjoner enda</p> : <Spinner />}
+                            emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
                         >
                             {(item: Transaction) => (
                                 <TableRow key={item.key}>

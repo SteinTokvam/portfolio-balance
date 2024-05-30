@@ -1,27 +1,27 @@
-import { EquityType } from "../types/Types";
+import { EquityType, EquityTypes } from "../types/Types";
 
 const initialState = {
     // @ts-ignore
     equityTypes: window.localStorage.getItem('equitytypes') ? JSON.parse(window.localStorage.getItem('equitytypes')) :
         [
             {
-                key: "Fund",
-                label: "Fund",
+                key: EquityTypes.FUND,
+                label: EquityTypes.FUND,
                 goalPercentage: 45
             },
             {
-                key: "Stock",
-                label: "Stock",
+                key: EquityTypes.STOCK,
+                label: EquityTypes.STOCK,
                 goalPercentage: 29
             },
             {
-                key: "Cryptocurrency",
-                label: "Cryptocurrency",
+                key: EquityTypes.CRYPTOCURRENCY,
+                label: EquityTypes.CRYPTOCURRENCY,
                 goalPercentage: 13
             },
             {
-                key: "Loan",
-                label: "Loan",
+                key: EquityTypes.LOAN,
+                label: EquityTypes.LOAN,
                 goalPercentage: 13
             }],
 }

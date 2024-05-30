@@ -22,7 +22,7 @@ export default function Holdings({ account }: {account: Account}) {
     return (
         <div className="w-full flex flex-wrap border-t border-default-300">
             {
-                holdings.map((holding: Holding) => {
+                account && holdings.map((holding: Holding) => {
                     if (holding.accountKey === account.key) {
                         if (holding.value < 1) {
                             return ''

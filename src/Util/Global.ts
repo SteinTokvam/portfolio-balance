@@ -1,4 +1,4 @@
-import { Account, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings } from "./Kron";
 import { fetchFiriHoldings } from "./Firi";
@@ -35,12 +35,12 @@ export const routes = {
 }
 
 export const accountTypes = [
-    "Aksjesparekonto",
-    "Individuell pensjonskonto",
-    "Kryptovaluta",
-    "Aksjefondskonto",
-    "Egen pensjonskonto",
-    "Obligasjon"
+    AccountTypes.AKSJESPAREKONTO,
+    AccountTypes.INDIVIDUELL_PENSJONSKONTO,
+    AccountTypes.CRYPTOCURRENCY,
+    AccountTypes.AKSJEFONDSKONTO,
+    AccountTypes.EGEN_PENSJONSKONTO,
+    AccountTypes.LOAN,
 ]
 
 

@@ -68,8 +68,8 @@ export type FiriOrder = {
 }
 
 export type FiriPricePoint = {
-    equityShare: number, 
-    currency: string, 
+    equityShare: number,
+    currency: string,
     price: FiriPrice
 }
 
@@ -81,4 +81,31 @@ export type FiriPrice = {
     low: string,
     volume: string,
     message?: string
+}
+
+export enum TransactionType {
+    BUY = "BUY",
+    SELL = "SELL",
+    PLATFORM_FEE = "PLATFORM_FEE",
+    DIVIDEND = "DIVIDEND",
+    YIELD = "YIELD",
+    DEPOSIT = "DEPOSIT",
+    WITHDRAWAL = "WITHDRAWAL",
+}
+
+export enum EquityTypes {
+    FUND = "Fund",
+    STOCK = "Stock",
+    CRYPTOCURRENCY = "Cryptocurrency",
+    LOAN = "Loan",
+}
+
+export enum AccountTypes {
+    AKSJESPAREKONTO = "Aksjesparekonto",
+    INDIVIDUELL_PENSJONSKONTO = "Individuell pensjonsparing",
+    CRYPTOCURRENCY = "Kryptovaluta",
+    AKSJEFONDSKONTO = "Aksjefondskonto",
+    EGEN_PENSJONSKONTO = "Egen pensjonskonto",
+    LOAN = "Obligasjon"
+
 }

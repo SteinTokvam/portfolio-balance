@@ -6,7 +6,7 @@ import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
-import { Account } from "../../types/Types"
+import { Account, AccountTypes } from "../../types/Types"
 
 export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, account?: Account }) {
 
@@ -79,7 +79,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
                 {
                     name: selectedRadio,
                     key: uuidv4(),
-                    type: selectedRadio === "Firi" ? "Kryptovaluta" : "Aksjesparekonto",
+                    type: selectedRadio === "Firi" ? AccountTypes.CRYPTOCURRENCY : AccountTypes.AKSJEFONDSKONTO,
                     transactions: [],
                     totalValue: 0,
                     yield: 0,
@@ -117,7 +117,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
                                     onSelectionChange={setSelectedKeys}
                                     selectedKeys={selectedKeys}
                                 >
-                                    {accountTypes.map((accountType) => (
+                                    {Object.values(AccountTypes).map(accountType => (
                                         <SelectItem key={accountType} value={accountType} >
                                             {accountType}
                                         </SelectItem>
