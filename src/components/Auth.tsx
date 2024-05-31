@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSession } from '../actions/auth'
 
@@ -34,7 +34,7 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
         })
 
         return () => subscription.unsubscribe()
-    }, [dispatch])
+    }, [dispatch, supabase])
 
     if (!supabase) {
         return (<></>)

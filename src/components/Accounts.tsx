@@ -7,7 +7,6 @@ import { routes } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
-import Holdings from "./Holdings";
 
 export default function Accounts() {
 
