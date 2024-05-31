@@ -36,7 +36,7 @@ export default function Auth({ children }: { children: JSX.Element }) {
         })
 
         return () => subscription.unsubscribe()
-    }, [])
+    }, [dispatch])
 
     if (!supabase) {
         return (<></>)
