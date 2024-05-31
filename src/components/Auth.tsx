@@ -53,7 +53,10 @@ export default function Auth() {
                 {error && <p className='text-red-500'>Wrong email or password</p>}
                 <Input type='email' label='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
                 <Input type='password' label='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
-                <Button onClick={() => isSignUp ? supabase.auth.signUp({ email, password }) : supabase.auth.signInWithPassword({ email, password })
+                <Button onClick={() => isSignUp ? supabase.auth.signUp({ email, password }) : supabase.auth.signInWithPassword({ 
+                    email: email, 
+                    password: password 
+                })
                     .then(({ error }) => {
                         if (error) {
                             setError(true)
