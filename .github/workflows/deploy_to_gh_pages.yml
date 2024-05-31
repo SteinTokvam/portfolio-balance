@@ -6,28 +6,38 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v2
 
-    - name: Deploy react app to github pages
-      runs: 
-        using: 'composite'
-        steps: 
-          - run : npm i
-            shell: bash
-          - run : npm ci
-            shell: bash
-          - run : npx react-scripts build
-            shell: bash
-          - run : git config user.name github-actions
-            shell: bash
-          - run : git config user.email github-actions@github.com
-            shell: bash
-          - run : git --work-tree build add --all
-            shell: bash
-          - run : git commit -m "Automatic Deploy action run by github-actions"
-            shell: bash
-          - run : git push origin HEAD:gh-pages --force
-            shell: bash
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy
+      run: |
+        git config --global user.name $user_name
+        git config --global user.email $user_email
+        git remote set-url origin https://${github_token}@github.com/${repository}
+        npm run deploy
+      env:
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
+        repository: ${{ github.repository }}
+        REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL }}
+        REACT_APP_SUPABASE_KEY: ${{ secrets.REACT_APP_SUPABASE_KEY }}
