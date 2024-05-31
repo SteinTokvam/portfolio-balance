@@ -30,7 +30,7 @@ export default function Accounts() {
 
                         accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (
-                                <Card
+                                <Card 
                                     aria-label="Card"
                                     title={account.name}
                                     key={account.key} className="items-center justify-center"
@@ -62,7 +62,6 @@ export default function Accounts() {
                                                         </Skeleton>
                                                     </p>
                                                 </div>
-                                                <Holdings account={account} />
                                             </div>
                                         </div>
                                     </CardBody>

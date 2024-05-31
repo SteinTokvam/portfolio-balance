@@ -14,6 +14,7 @@ import Accounts from './components/Accounts';
 import Auth from './components/Auth';
 import TransactionsTable from './components/TransactionsTable';
 import ConfirmMail from './components/ConfirmMail';
+import { createClient } from '@supabase/supabase-js';
 
 function App() {
 
@@ -26,25 +27,27 @@ function App() {
   useEffect(() => {
   }, [dispatch, t])
 
+  const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
+
   const isDark = false
   return (
 
     <div>
       <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
-        <MyNavbar />
+        <MyNavbar supabase={supabase}/>
         <Routes>
           <Route path={routes.dashboard} element={
-            <Auth>
+            <Auth supabase={supabase}>
               <Dashboard />
             </Auth>
           } />
           <Route path={routes.portfolio} element={
-            <Auth>
+            <Auth supabase={supabase}>
               <Accounts />
             </Auth>
           } />
           <Route path={routes.account} element={
-            <Auth>
+            <Auth supabase={supabase}>
               <TransactionsTable />
             </Auth>
           } />

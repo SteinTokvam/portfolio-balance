@@ -7,12 +7,17 @@ import { useReducer } from "react";
 import { routes } from "../Util/Global";
 import { useNavigate } from "react-router-dom";
 import EmptyModal from "./Modal/EmptyModal";
+import { useSelector } from "react-redux";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function MyNavbar() {
+export default function MyNavbar({ supabase }: {supabase: SupabaseClient}) {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
   const { t } = useTranslation();
+
+  // @ts-ignore
+  const session = useSelector(state => state.rootReducer.session.session)
 
   const menuItems = [
     { name: t('navbar.dashboard'), link: routes.dashboard },
@@ -57,6 +62,13 @@ export default function MyNavbar() {
             </Button>
           </NavbarMenuItem>
         ))}
+        {session && <NavbarMenuItem>
+          <Button onClick={() => {
+            supabase.auth.signOut().then(() => {
+              navigate('/')
+            })
+          }} >Logg ut</Button>
+        </NavbarMenuItem>}
       </NavbarContent>
 
       <NavbarContent justify="end">
@@ -82,6 +94,14 @@ export default function MyNavbar() {
             </Link>
           </NavbarMenuItem>
         ))}
+        {session && <NavbarMenuItem>
+          <Link onPress={() => {
+            supabase.auth.signOut().then(() => {
+              navigate('/')
+            })
+          }} 
+          size="lg">Logg ut</Link>
+        </NavbarMenuItem>}
       </NavbarMenu>
     </Navbar>
   )

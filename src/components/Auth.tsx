@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setSession } from '../actions/auth'
 
-const supabase = process.env.REACT_APP_SUPABASE_URL && createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
-
-export default function Auth({ children }: { children: JSX.Element }) {
+export default function Auth({ supabase, children }: { supabase: SupabaseClient, children: JSX.Element }) {
 
     // @ts-ignore
     const session = useSelector(state => state.rootReducer.session.session)
@@ -17,7 +15,7 @@ export default function Auth({ children }: { children: JSX.Element }) {
     const [isSignUp, setIsSignUp] = useState(false);
 
     const dispatch = useDispatch()
-    const navigate = useNavigate()
+
 
     useEffect(() => {
         if (!supabase) {
@@ -75,11 +73,6 @@ export default function Auth({ children }: { children: JSX.Element }) {
         return (
             <div>
                 {children}
-                <Button onClick={() => {
-                    supabase.auth.signOut().then(() => {
-                        navigate('/')    
-                    })
-                }} >Logg ut</Button>
             </div>
         )
     }
