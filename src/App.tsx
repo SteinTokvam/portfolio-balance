@@ -10,9 +10,10 @@ import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import { routes } from './Util/Global';
 import Footer from './components/Footer';
-import TransactionsTable from './components/TransactionsTable';
 import Accounts from './components/Accounts';
 import Auth from './components/Auth';
+import TransactionsTable from './components/TransactionsTable';
+import ConfirmMail from './components/ConfirmMail';
 
 function App() {
 
@@ -33,17 +34,21 @@ function App() {
         <MyNavbar />
         <Routes>
           <Route path={routes.dashboard} element={
-            <Dashboard />
+            <Auth>
+              <Dashboard />
+            </Auth>
           } />
           <Route path={routes.portfolio} element={
-            <Accounts />
+            <Auth>
+              <Accounts />
+            </Auth>
           } />
           <Route path={routes.account} element={
-            <TransactionsTable />
+            <Auth>
+              <TransactionsTable />
+            </Auth>
           } />
-          <Route path='/auth' element={
-            <Auth />
-          } />
+          <Route path={routes.confirmMail} element={<ConfirmMail />} />
         </Routes>
       </div>
       <Footer isDark={isDark} />

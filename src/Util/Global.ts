@@ -31,7 +31,8 @@ export const textInputStyle = {
 export const routes = {
     dashboard: '/',
     portfolio: '/portfolio',
-    account: '/account/:accountKey'
+    account: '/account/:accountKey',
+    confirmMail: '/confirm-mail',
 }
 
 export const accountTypes = [
