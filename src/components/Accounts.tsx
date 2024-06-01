@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Button, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
+import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
@@ -24,7 +24,7 @@ export default function Accounts() {
                 <AccountButton isEdit={false}>
                     <AccountTypeModalContent isEdit={false} />
                 </AccountButton>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-1/2 sm:mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
                     {accounts.length > 0 ?
 
                         accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
@@ -33,6 +33,8 @@ export default function Accounts() {
                                     aria-label="Card"
                                     title={account.name}
                                     key={account.key} className="items-center justify-center"
+                                    isPressable
+                                    onPress={() => navigate('/' + routes.account.split('/')[1] + '/' + account.key)}
                                 >
                                     <CardHeader className="justify-between">
                                         <div className="grid gap-5">
@@ -65,7 +67,7 @@ export default function Accounts() {
                                         </div>
                                     </CardBody>
                                     <CardFooter>
-                                        <Button className="w-full" onClick={() => navigate('/' + routes.account.split('/')[1] + '/' + account.key)}>Se mer</Button>
+
                                     </CardFooter>
                                 </Card>
                             )
