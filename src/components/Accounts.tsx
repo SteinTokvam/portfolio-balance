@@ -7,8 +7,9 @@ import { routes } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function Accounts() {
+export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
 
     // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts);
@@ -22,10 +23,10 @@ export default function Accounts() {
         <div>
             <div className="space-y-4">
                 <AccountButton isEdit={false}>
-                    <AccountTypeModalContent isEdit={false} />
+                    <AccountTypeModalContent isEdit={false} supabase={supabase} />
                 </AccountButton>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
-                    {accounts.length > 0 ?
+                    {accounts && accounts.length > 0 ?
 
                         accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (

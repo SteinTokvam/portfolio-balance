@@ -6,6 +6,8 @@ import { fetchTicker } from "./E24";
 
 export const languages = ["us", "no"];
 
+export const useDb = true
+
 export const textInputStyle = {
     label: "text-black/50 dark:text-white/90",
     input: [
@@ -46,6 +48,9 @@ export const accountTypes = [
 
 
 export function getHoldings(account: Account): Promise<Holding[]> {
+    if(!account) {
+        return Promise.resolve([])
+    }
     if (account.isManual) {
         if (!account.transactions) {
             console.log('No transactions. Aborting.')

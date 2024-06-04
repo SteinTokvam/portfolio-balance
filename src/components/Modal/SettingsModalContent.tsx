@@ -6,8 +6,11 @@ import { languages } from "../../Util/Global"
 import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 import i18n from "../../i18n/config"
+import { SupabaseClient } from "@supabase/supabase-js"
+import { addTransaction } from "../../Util/Supabase"
+import { Account, Transaction } from "../../types/Types"
 
-export default function SettingsModalContent() {
+export default function SettingsModalContent({supabase}: {supabase: SupabaseClient}) {
     const dispatch = useDispatch()
     const { t } = useTranslation();
 
@@ -15,11 +18,9 @@ export default function SettingsModalContent() {
     const accounts = useSelector(state => state.rootReducer.accounts)
     // @ts-ignore
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
-
     const hiddenFileInput = useRef(null);
     // @ts-ignore
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
-
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
 
     const selectedLanguage = useMemo(
@@ -40,7 +41,7 @@ export default function SettingsModalContent() {
             const json = JSON.parse(e.target.result)
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
-            dispatch(importAccounts(json.accounts))
+            dispatch(importAccounts(supabase, json.accounts.accounts))        
             dispatch(setAllPercentages(json.equitytypes))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
@@ -98,7 +99,7 @@ export default function SettingsModalContent() {
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteAllAccounts())
+                            dispatch(deleteAllAccounts(supabase))
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

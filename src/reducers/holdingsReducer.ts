@@ -33,8 +33,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
              * Forventer at alle transaksjoner for en holding sendes inn. beregn holdingen på nytt
              */
             newHoldings = [...[...state.holdings].filter((holding: Holding) => holding.accountKey !== action.payload.accountKey), ...action.payload.holdings]
-            console.log(newHoldings)
-            console.log('lol')
             return {
                 ...state,
                 holdings: newHoldings

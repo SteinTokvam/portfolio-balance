@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactNode } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { setSession } from '../actions/auth'
 
-export default function Auth({ supabase, children }: { supabase: SupabaseClient, children: JSX.Element }) {
+export default function Auth({ supabase, children }: { supabase: SupabaseClient, children: ReactNode }) {
 
     // @ts-ignore
-    const session = useSelector(state => state.rootReducer.session.session)
+    const [session, setSession] = useState(null)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
-
-    const dispatch = useDispatch()
 
 
     useEffect(() => {
@@ -23,18 +19,18 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
         }
         supabase.auth.getSession().then(({ data: { session } }) => {
             // @ts-ignore
-            dispatch(setSession(session))
+            setSession(session)
         })
 
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
             // @ts-ignore
-            dispatch(setSession(session))
+            setSession(session)
         })
 
         return () => subscription.unsubscribe()
-    }, [dispatch, supabase])
+    }, [])
 
     if (!supabase) {
         return (<></>)

@@ -6,8 +6,9 @@ import { UploadIcon } from "../../icons/UploadIcon";
 import { importTransactions } from "../../actions/accounts";
 import { useSelector } from "react-redux";
 import { Account, EquityType, Transaction } from "../../types/Types";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function ImportTransactionsModalContent({ account }: { account: Account }) {
+export default function ImportTransactionsModalContent({ account, supabase }: { account: Account, supabase: SupabaseClient }) {
 
     const { t } = useTranslation()
 
@@ -54,7 +55,7 @@ export default function ImportTransactionsModalContent({ account }: { account: A
                     }
                 })
 
-                dispatch(importTransactions(account.key, transactions))
+                dispatch(importTransactions(supabase, account.key, transactions))
             };
             reader.readAsText(input);
         }

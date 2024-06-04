@@ -49,7 +49,7 @@ export default function MyNavbar({ supabase }: {supabase: SupabaseClient}) {
 
       <NavbarContent justify="end" className="hidden sm:flex lg:flex">
         <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
-          <SettingsModalContent />
+          <SettingsModalContent supabase={supabase} />
         </EmptyModal>
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>

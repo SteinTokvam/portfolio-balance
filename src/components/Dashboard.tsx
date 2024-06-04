@@ -12,8 +12,9 @@ import { getHoldings } from "../Util/Global";
 import { fetchFiriTransactions } from "../Util/Firi";
 import { importTransactions } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function Dashboard() {
+export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
 
     type FurthestFromGoal = {
         currentPercentage: number,
@@ -112,12 +113,12 @@ export default function Dashboard() {
                             if (account.name === 'Kron') {
                                 fetchKronTransactions(account)
                                     .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(account.key, transactions))
+                                        dispatch(importTransactions(supabase, account.key, transactions))
                                     })
                             } else if (account.name === 'Firi') {
                                 fetchFiriTransactions(account, ['NOK'])
                                     .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(account.key, transactions))
+                                        dispatch(importTransactions(supabase, account.key, transactions))
                                     })
                             }
                         })
