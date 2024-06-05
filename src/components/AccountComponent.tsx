@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Spacer, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Image, Tabs, Tab } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
@@ -9,7 +9,7 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, Transaction } from "../types/Types";
+import { Account, Holding, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../actions/holdings";
@@ -20,7 +20,7 @@ import { routes } from "../Util/Global";
 import Holdings from "./Holdings";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function TransactionsTable({ supabase }: { supabase: SupabaseClient }) {
+export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
 
     const { t } = useTranslation()
 
@@ -35,6 +35,8 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
 
     // @ts-ignore
     const account = useSelector(state => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
+    // @ts-ignore
+    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
@@ -167,11 +169,7 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
     }
 
     return (
-        <div className="sm:w-1/2 sm:mx-auto">
-            <Breadcrumbs className="mx-4">
-                <BreadcrumbItem onClick={() => navigate(routes.portfolio)}>accounts</BreadcrumbItem>
-                <BreadcrumbItem>{account && account.name}</BreadcrumbItem>
-            </Breadcrumbs>
+        <div className="sm:w-2/3 sm:mx-auto">
             {account && !account.isManual ?
                 <div className="flex justify-end">
                     <AccountButton isEdit={true}>
@@ -197,7 +195,7 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
                         {t('transactionsTable.newTransaction')}
                     </Button>
                     <AccountButton isEdit={true}>
-                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase}/>
+                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
                         dispatch(deleteAccount(supabase, account.key))
@@ -209,41 +207,82 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
                 </div>
             }
 
-            <Spacer y={4} />
-            <Holdings account={account} />
-            {
-                <Table
-                    isStriped
-                    aria-label={"konto"}
-                    className="text-foreground"
-                    selectionMode="none"
-                    // @ts-ignore
-                    sortDescriptor={sortDescriptor}
-                    // @ts-ignore
-                    onSortChange={setSortDescriptor}
-                >
-                    <TableHeader columns={getColumns(account)}>
-                        {(column: { key: string; label: any; }) => {
-                            if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
-                                return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
-                            }
-                            return <TableColumn key={column.key}>{column.label}</TableColumn>
-                        }}
-                    </TableHeader>
+            <div className="text-center">
+                <h1 className="text-default-800 font-bold text-xl">{account && account.name}</h1>
+                <h1 className="text-default-800 font-bold text-3xl">{account && holdings.filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001).reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h1>
+            </div>
+            <Image
+                src='https://via.assets.so/img.jpg?w=800&h=600&tc=blue&bg=#cecece&t=placeholder'
+                alt="logo"
+            />
+            <div className="grid grid-cols-2 py-4">
+                <div className="p-4">
+                    <p className="text-default-600">Antall transaksjoner</p>
+                    <p className="text-default-800 font-bold">{account.transactions.length}</p>
+                </div>
+                <div className="p-4">
+                    <p className="text-default-600">Antall verdipapirer</p>
+                    <p className="text-default-800 font-bold">{holdings.filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001).length}</p>
+                </div>
+                {
+                    account && account.name === 'Firi' ?
+                        <div className="p-4">
+                            <p className="text-default-600">Staking reward</p>
+                            <p className="text-default-800 font-bold">
+                                {
+                                    account.transactions
+                                        .filter((transaction: Transaction) => transaction.type === 'StakingReward')
+                                        .reduce((acc: number, cur: Transaction) => acc + cur.cost, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                }
+                            </p>
+                        </div>
+                        : ''
+                }
+            </div>
+
+            <Tabs classNames={{
+                tabList: "gap-6 w-full relative rounded-lg p-1",
+                tab: "w-24 px-4 h-12",
+            }}>
+                <Tab key="Holdings" title="Holdings" className="w-full">
+                    <Holdings account={account} />
+                </Tab>
+                <Tab key="Transactions" title="Transactions" className="w-full">
                     {
-                        // @ts-ignore
-                        <TableBody classNames="text-left" items={sortedItems}
-                            emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
+                        <Table
+                            isStriped
+                            aria-label={"konto"}
+                            className="text-foreground"
+                            selectionMode="none"
+                            // @ts-ignore
+                            sortDescriptor={sortDescriptor}
+                            // @ts-ignore
+                            onSortChange={setSortDescriptor}
                         >
-                            {(item: Transaction) => (
-                                <TableRow key={item.transactionKey}>
-                                    {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                                </TableRow>
-                            )}
-                        </TableBody>
+                            <TableHeader columns={getColumns(account)}>
+                                {(column: { key: string; label: any; }) => {
+                                    if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount') {
+                                        return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
+                                    }
+                                    return <TableColumn key={column.key}>{column.label}</TableColumn>
+                                }}
+                            </TableHeader>
+                            {
+                                // @ts-ignore
+                                <TableBody classNames="text-left" items={sortedItems}
+                                    emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
+                                >
+                                    {(item: Transaction) => (
+                                        <TableRow key={item.transactionKey}>
+                                            {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            }
+                        </Table>
                     }
-                </Table>
-            }
+                </Tab>
+            </Tabs>
         </div>
     )
 }

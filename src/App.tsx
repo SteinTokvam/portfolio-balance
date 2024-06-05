@@ -11,7 +11,7 @@ import { routes, useDb } from './Util/Global';
 import Footer from './components/Footer';
 import Accounts from './components/Accounts';
 import Auth from './components/Auth';
-import TransactionsTable from './components/TransactionsTable';
+import Account from './components/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
 import { createClient } from '@supabase/supabase-js';
 import { initSupabaseData } from './actions/accounts';
@@ -57,7 +57,7 @@ function App() {
           } />
           <Route path={routes.account} element={
             <Auth supabase={supabase}>
-              <TransactionsTable supabase={supabase} />
+              <Account supabase={supabase} />
             </Auth>
           } />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />

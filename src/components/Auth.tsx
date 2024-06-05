@@ -79,7 +79,7 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
 
     if (!session) {
         return (
-            <div className='w-1/2 mx-auto space-y-2 grid grid-cols-1 mt-10'>
+            <div className='w-2/3 mx-auto space-y-2 grid grid-cols-1 mt-10'>
                 {error && <p className='text-red-500'>Wrong email or password</p>}
                 <Input
                     type='email'
