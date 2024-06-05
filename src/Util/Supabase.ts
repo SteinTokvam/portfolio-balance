@@ -99,7 +99,7 @@ export async function addTransaction(supabase: SupabaseClient, transaction: Tran
                 date: transaction.date,
                 accountKey: accountKey,
                 e24Key: transaction.e24Key,
-                transactionKey: transaction.key
+                transactionKey: transaction.transactionKey
             }
         }))
     if (error) {
@@ -109,12 +109,11 @@ export async function addTransaction(supabase: SupabaseClient, transaction: Tran
 }
 
 export async function addTransactions(supabase: SupabaseClient, transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
-    console.log(transactions)
     const { error } = await supabase
         .from('transactions')
         .insert(transactions.map((transaction: Transaction) => {
             return {
-                transactionKey: transaction.key,
+                transactionKey: transaction.transactionKey,
                 cost: transaction.cost,
                 name: transaction.name,
                 type: transaction.type,

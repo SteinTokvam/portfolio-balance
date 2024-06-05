@@ -9,7 +9,7 @@ export async function fetchFiriTransactions(account: Account, currenciesToExclud
     const transactions: Transaction[] = firiOrders.map((firiOrder: FiriOrder) => {
         const lastPrice = price.find(price => price.cryptocurrency === firiOrder.currency)?.price.last || '0'
         return {
-            key: uuidv4(),
+            transactionKey: uuidv4(),
             cost: parseFloat(firiOrder.amount) * parseFloat(lastPrice),
             name: firiOrder.currency,
             type: firiOrder.type,

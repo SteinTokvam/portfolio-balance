@@ -154,7 +154,7 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
             case 'action':
                 return <DeleteButton handleDelete={() => {
                     dispatch(deleteHoldingsForAccount(account))
-                    dispatch(deleteTransaction(supabase, item.key, account.key))
+                    dispatch(deleteTransaction(supabase, item.transactionKey, account.key))
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={false}
@@ -236,7 +236,7 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
                             emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
                         >
                             {(item: Transaction) => (
-                                <TableRow key={item.key}>
+                                <TableRow key={item.transactionKey}>
                                     {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                                 </TableRow>
                             )}

@@ -54,8 +54,8 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
             }
 
             const transactionsPayload = action.payload.transactions
-            const currentTransactionKeys = currentAccounts[index].transactions.map((transaction: Transaction) => transaction.key)
-            const newTransactions = transactionsPayload.filter((transaction: Transaction) => !currentTransactionKeys.includes(transaction.key))
+            const currentTransactionKeys = currentAccounts[index].transactions.map((transaction: Transaction) => transaction.transactionKey)
+            const newTransactions = transactionsPayload.filter((transaction: Transaction) => !currentTransactionKeys.includes(transaction.transactionKey))
 
             if (newTransactions.length === 0) {
                 console.log("No new transactions")
@@ -106,7 +106,7 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 }
             }
 
-            const remainingTransactions = currentAccounts[index].transactions.filter((transaction: Transaction) => transaction.key !== action.payload.transactionKey)
+            const remainingTransactions = currentAccounts[index].transactions.filter((transaction: Transaction) => transaction.transactionKey !== action.payload.transactionKey)
 
             const newAccounts = [
                 ...currentAccounts.filter(account => account.key !== action.payload.accountKey),

@@ -62,7 +62,7 @@ function handleSubmit() {
     dispatch(deleteHoldingsForAccount(account))
     if (account.type === 'Obligasjon') {
         transactionToAdd.push({
-            key: uuidv4(),
+            transactionKey: uuidv4(),
             cost: parseFloat(cost),
             name: transactionName,
             type: selectedTransactionType,
@@ -74,7 +74,7 @@ function handleSubmit() {
         })
     } else {
         transactionToAdd.push({
-            key: uuidv4(),
+            transactionKey: uuidv4(),
             cost: parseFloat(cost),
             name: transactionName,
             type: selectedTransactionType,

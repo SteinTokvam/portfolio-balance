@@ -42,7 +42,7 @@ export default function ImportTransactionsModalContent({ account, supabase }: { 
                     if (index !== 0) {
                         const data = line.split(',');
                         transactions.push({
-                            key: data[0],
+                            transactionKey: data[0],
                             cost: parseFloat(data[1]),
                             name: data[2],
                             type: data[3],

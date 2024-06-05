@@ -27,7 +27,7 @@ export type Holding = {
 }
 
 export type Transaction = {
-    key: string
+    transactionKey: string
     cost: number
     name: string
     type: string
