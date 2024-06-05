@@ -14,7 +14,7 @@ import { importTransactions } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
+export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
     type FurthestFromGoal = {
         currentPercentage: number,
@@ -60,7 +60,7 @@ export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     useEffect(() => {
-        if(!accounts) {
+        if (!accounts) {
             return
         }
         accounts.forEach((account: Account) => {
@@ -73,6 +73,13 @@ export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
                 })
         })
     }, [accounts, dispatch])
+
+    equityTypes.forEach((equityType: EquityType) => {
+        console.log(equityType.label)
+        console.log(((holdings
+            .filter((holding: Holding) => holding.equityType === equityType.key)
+            .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100))
+    });
 
     return (
         <>
@@ -103,7 +110,7 @@ export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
                     className="w-3/4 sm:w-1/4"
                     onClick={() => {
                         dispatch(deleteAllHoldings())
-                        if(!accounts) {
+                        if (!accounts) {
                             return
                         }
                         accounts.forEach((account: Account) => {
@@ -154,11 +161,18 @@ export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
                                         holdings
                                             .filter((holding: Holding) => holding.equityType === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0}>
-                                        <h4 className="text-large font-bold leading-none text-default-400">{//andel i prosent av total
-                                            ((holdings
+                                        <h4
+                                            className="text-large font-bold leading-none text-default-400"
+                                        ><span className={
+                                            Math.abs(((holdings
                                                 .filter((holding: Holding) => holding.equityType === equityType.key)
-                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                        }% / {equityType.goalPercentage}%</h4>
+                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100) - equityType.goalPercentage) >= 3 ?
+                                                'text-red-500' : 'text-green-500'}>
+                                                {//andel i prosent av total
+                                                    ((holdings
+                                                        .filter((holding: Holding) => holding.equityType === equityType.key)
+                                                        .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
+                                                }%</span> / {equityType.goalPercentage}%</h4>
                                     </Skeleton>
                                 </div>)
                         })
