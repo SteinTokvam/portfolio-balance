@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
-import { Account, Holding, Transaction } from "../types/Types"
+import { Account, Holding } from "../types/Types"
 import { useDispatch, useSelector } from "react-redux";
-import { Button, ButtonGroup, Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import { Skeleton, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import { getHoldings } from "../Util/Global";
 import { addHoldings } from "../actions/holdings";
 
