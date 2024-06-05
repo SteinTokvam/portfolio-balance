@@ -7,8 +7,9 @@ import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
 import { Account, AccountTypes } from "../../types/Types"
+import { SupabaseClient } from "@supabase/supabase-js"
 
-export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, account?: Account }) {
+export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit: boolean, account?: Account, supabase: SupabaseClient }) {
 
     const { t } = useTranslation()
 
@@ -22,9 +23,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
     );
 
     const [selectedRadio, setSelectedRadio] = useState(isEdit && account && !account.isManual ? account.name : "Firi");
-
     const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual && account.apiInfo? account.apiInfo.accessKey : "")
-
     const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.kronAccountId : "")
 
     const dispatch = useDispatch()
@@ -40,6 +39,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
     function handleSubmit() {
         if (accessKeyText === "") {
             dispatch(isEdit ? editAccount(
+                supabase,
                 {
                     name: accountName,
                     key: account ? account.key: uuidv4(),
@@ -50,6 +50,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
                     isManual: true,
                 }
             ) : addNewAccount(
+                supabase,
                 {
                     name: accountName,
                     key: uuidv4(),
@@ -62,6 +63,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
             ))
         } else {
             dispatch(isEdit ? editAccount(
+                supabase,
                 {
                     name: selectedRadio,
                     key: account ? account.key : uuidv4(),
@@ -76,6 +78,7 @@ export function AccountTypeModalContent({ isEdit, account }: { isEdit: boolean, 
                     }
                 }
             ) : addAutomaticAccount(
+                supabase,
                 {
                     name: selectedRadio,
                     key: uuidv4(),

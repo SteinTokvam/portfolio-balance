@@ -12,8 +12,9 @@ import { getHoldings } from "../Util/Global";
 import { fetchFiriTransactions } from "../Util/Firi";
 import { importTransactions } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function Dashboard() {
+export default function Dashboard({supabase}: {supabase: SupabaseClient}) {
 
     type FurthestFromGoal = {
         currentPercentage: number,
@@ -59,6 +60,9 @@ export default function Dashboard() {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     useEffect(() => {
+        if(!accounts) {
+            return
+        }
         accounts.forEach((account: Account) => {
             getHoldings(account)
                 .then(holdings => {
@@ -99,7 +103,9 @@ export default function Dashboard() {
                     className="w-3/4 sm:w-1/4"
                     onClick={() => {
                         dispatch(deleteAllHoldings())
-
+                        if(!accounts) {
+                            return
+                        }
                         accounts.forEach((account: Account) => {
                             getHoldings(account)
                                 .then(holdings => {
@@ -112,12 +118,12 @@ export default function Dashboard() {
                             if (account.name === 'Kron') {
                                 fetchKronTransactions(account)
                                     .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(account.key, transactions))
+                                        dispatch(importTransactions(supabase, account, transactions))
                                     })
                             } else if (account.name === 'Firi') {
                                 fetchFiriTransactions(account, ['NOK'])
                                     .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(account.key, transactions))
+                                        dispatch(importTransactions(supabase, account, transactions))
                                     })
                             }
                         })
@@ -127,7 +133,7 @@ export default function Dashboard() {
             <Spacer y={4} />
             <div className="p-4">
                 <div className="grid grid-cols-2 gap-20 content-evenly">
-                    {accounts.length > 0 ?
+                    {accounts && accounts.length > 0 ?
                         equityTypes.map((equityType: EquityType) => {
                             return (
                                 <div key={equityType.key} className="sm:text-center sm:justify-center">
@@ -180,7 +186,7 @@ export default function Dashboard() {
             }
             <Spacer y={4} />
             {
-                accounts.length > 0 ?
+                accounts && accounts.length > 0 ?
                     <div className="w-full flex flex-col justify-center">
                         <Divider />
 

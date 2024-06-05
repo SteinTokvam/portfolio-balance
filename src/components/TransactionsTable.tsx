@@ -18,8 +18,9 @@ import { fetchKronTransactions } from "../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../Util/Global";
 import Holdings from "./Holdings";
+import { SupabaseClient } from "@supabase/supabase-js";
 
-export default function TransactionsTable() {
+export default function TransactionsTable({ supabase }: { supabase: SupabaseClient }) {
 
     const { t } = useTranslation()
 
@@ -34,11 +35,8 @@ export default function TransactionsTable() {
 
     // @ts-ignore
     const account = useSelector(state => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
-
     const dispatch = useDispatch()
-
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
-
     const [modalContent, setModalContent] = useState(<></>)
 
     const sortedItems = useMemo(() => {
@@ -124,12 +122,12 @@ export default function TransactionsTable() {
         if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account.key, transactions))
+                    dispatch(importTransactions(supabase, account, transactions))
                 })
         } else if (account.name === 'Kron') {
             fetchKronTransactions(account)
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account.key, transactions))
+                    dispatch(importTransactions(supabase, account, transactions))
                 })
         }
 
@@ -139,13 +137,13 @@ export default function TransactionsTable() {
     function handleOpen(type: string, account: Account) {
         switch (type) {
             case 'import':
-                setModalContent(<ImportTransactionsModalContent account={account} />)
+                setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
                 break
             case 'transaction':
-                setModalContent(<NewTransactionModalContent account={account} />)
+                setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)
                 break
             default:
-                setModalContent(<ImportTransactionsModalContent account={account} />)
+                setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
                 break
         }
         onOpen()
@@ -156,7 +154,7 @@ export default function TransactionsTable() {
             case 'action':
                 return <DeleteButton handleDelete={() => {
                     dispatch(deleteHoldingsForAccount(account))
-                    dispatch(deleteTransaction(item.key, account.key))
+                    dispatch(deleteTransaction(supabase, item.key, account.key))
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={false}
@@ -177,10 +175,10 @@ export default function TransactionsTable() {
             {account && !account.isManual ?
                 <div className="flex justify-end">
                     <AccountButton isEdit={true}>
-                        <AccountTypeModalContent isEdit={true} account={account} />
+                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(account.key))
+                        dispatch(deleteAccount(supabase, account.key))
                         console.log("hre")
                         navigate(routes.portfolio)
                     }}
@@ -199,10 +197,10 @@ export default function TransactionsTable() {
                         {t('transactionsTable.newTransaction')}
                     </Button>
                     <AccountButton isEdit={true}>
-                        <AccountTypeModalContent isEdit={true} account={account} />
+                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase}/>
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(account.key))
+                        dispatch(deleteAccount(supabase, account.key))
                         navigate(routes.portfolio)
                     }}
                         buttonText={t('transactionsTable.deleteAccount')}

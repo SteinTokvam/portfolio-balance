@@ -1,27 +1,35 @@
+import { useDb } from "../Util/Global";
 import { Account, Transaction } from "../types/Types"
 
-const initialState = {
-    // @ts-ignore
-    accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
-}
+// @ts-ignore
+const initialState = useDb ? {accounts: []} : {accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : []}
 
-const accountReducer = (state = initialState, action: { type: string; payload: {key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string} }) => {
+const accountReducer = (state = initialState, action: { type: string; payload: { key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string } }) => {
     var currentAccounts = []
     var index = -1
     switch (action.type) {
+        case 'INIT_SUPABASE_DATA':
+            console.log(state.accounts)
+            if (state.accounts && state.accounts.find((account: Account) => account.key === action.payload.accounts[0].key)) {
+                return state
+            }
+            return {
+                ...state,
+                accounts: [...state.accounts, ...action.payload.accounts]
+            }
         case 'ADD_NEW_ACCOUNT':
             window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload.accounts[0]]))
             return {
                 ...state,
                 accounts: [...state.accounts, ...action.payload.accounts]
             }
-            case 'EDIT_ACCOUNT':
-                const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), ...action.payload.accounts]
-                window.localStorage.setItem("accounts", JSON.stringify(edited))
-                return {
-                    ...state,
-                    accounts: edited
-                }
+        case 'EDIT_ACCOUNT':
+            const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), ...action.payload.accounts]
+            window.localStorage.setItem("accounts", JSON.stringify(edited))
+            return {
+                ...state,
+                accounts: edited
+            }
         case 'ADD_AUTOMATIC_ACCOUNT':
             window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
             return {
@@ -101,7 +109,7 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
             const remainingTransactions = currentAccounts[index].transactions.filter((transaction: Transaction) => transaction.key !== action.payload.transactionKey)
 
             const newAccounts = [
-                ...currentAccounts.filter(account => account.key !== action.payload.accountKey), 
+                ...currentAccounts.filter(account => account.key !== action.payload.accountKey),
                 {
                     ...currentAccounts[index],
                     transactions: remainingTransactions
