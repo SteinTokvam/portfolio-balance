@@ -83,29 +83,4 @@ export default function Holdings({ account }: { account: Account }) {
             </Table>
         </div>
     )
-    return (
-        <div className="w-full flex flex-wrap border-t border-default-300">
-            {
-                account && holdings.map((holding: Holding) => {
-                    if (holding.accountKey === account.key) {
-                        if (holding.value < 1) {
-                            return ''
-                        }
-                        return (
-                            <div key={holding.name} className="p-1 ">
-                                <p className="text-default-600">{holding.name}</p>
-                                <Skeleton className="rounded-lg" isLoaded={holding.value > 0}><p className="text-default-800 font-bold">{holding.value && holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</p>
-                                    {renderEquityShare(account, holding)}
-                                    <p>{
-                                        ((holding.value / holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0)) * 100).toFixed(1)}%</p>
-                                </Skeleton>
-                            </div>
-                        )
-                    }
-                    return <></>
-                })
-            }
-
-        </div>
-    )
 }
