@@ -42,47 +42,81 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
         return (<></>)
     }
 
+    function handleButton() {
+        if (isSignUp) {
+            supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    emailRedirectTo: 'https://nrk.no',
+                }
+            })
+        } else {
+            supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            })
+                .then(({ error }) => {
+                    if (error) {
+                        setError(true)
+                    } else {
+                        setError(false)
+                        setEmail('')
+                        setPassword('')
+                        if (useDb) {
+                            getAccounts(supabase)
+                                .then(accounts => {
+                                    accounts.forEach(account => {
+                                        getTransactions(supabase, account.key)
+                                            .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
+                                    });
+                                })
+                        }
+                    }
+                })
+        }
+    }
+
     if (!session) {
         return (
             <div className='w-1/2 mx-auto space-y-2 grid grid-cols-1 mt-10'>
                 {error && <p className='text-red-500'>Wrong email or password</p>}
-                <Input type='email' label='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
-                <Input type='password' label='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <Input
+                    type='email'
+                    label='Email'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    isClearable
+                    isRequired
+                    onClear={() => setEmail('')}
+                />
+                <Input
+                    type='password'
+                    label='Password'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    isRequired
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault()
+                            handleButton()
+                        }
+                    }}
+                    isClearable
+                    onClear={() => setPassword('')}
+                />
                 <Button
                     color='primary'
-                    onClick={() => {
-                        if (isSignUp) {
-                            supabase.auth.signUp({
-                                email,
-                                password,
-                                options: {
-                                    emailRedirectTo: 'https://nrk.no',
-                                }
-                            })
-                        } else {
-                            supabase.auth.signInWithPassword({
-                                email: email,
-                                password: password
-                            })
-                                .then(({ error }) => {
-                                    if (error) {
-                                        setError(true)
-                                    } else {
-                                        setError(false)
-                                        setEmail('')
-                                        setPassword('')
-                                        if (useDb) {
-                                            getAccounts(supabase)
-                                                .then(accounts => {
-                                                    accounts.forEach(account => {
-                                                        getTransactions(supabase, account.key)
-                                                            .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
-                                                    });
-                                                })
-                                        }
-                                    }
-                                })
+                    onKeyDown={(e) => {
+                        console.log(e.key)
+                        if (e.key === 'Enter') {
+                            e.preventDefault()
+                            handleButton()
                         }
+                    }}
+                    onClick={() => {
+                        handleButton()
+
                     }}>
                     {isSignUp ? 'Sign up' : 'Log in'}
                 </Button>
