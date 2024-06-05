@@ -91,17 +91,7 @@ export async function getTransactions(supabase: SupabaseClient, accountKey: stri
 export async function addTransaction(supabase: SupabaseClient, transaction: Transaction, accountKey: string): Promise<Transaction> {
     const { error } = await supabase
         .from('transactions')
-        .insert([transaction].map((transaction: Transaction) => {
-            return {
-                name: transaction.name,
-                cost: transaction.cost,
-                type: transaction.type,
-                date: transaction.date,
-                accountKey: accountKey,
-                e24Key: transaction.e24Key,
-                transactionKey: transaction.transactionKey
-            }
-        }))
+        .insert([transaction].map((transaction: Transaction) => mapTransaction(transaction, accountKey)))
     if (error) {
         console.log(error)
     }
@@ -111,20 +101,7 @@ export async function addTransaction(supabase: SupabaseClient, transaction: Tran
 export async function addTransactions(supabase: SupabaseClient, transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
     const { error } = await supabase
         .from('transactions')
-        .insert(transactions.map((transaction: Transaction) => {
-            return {
-                transactionKey: transaction.transactionKey,
-                cost: transaction.cost,
-                name: transaction.name,
-                type: transaction.type,
-                date: transaction.date,
-                equityPrice: transaction.equityPrice,
-                e24Key: transaction.e24Key,
-                equityShare: transaction.equityShare,
-                equityType: transaction.equityType,
-                accountKey: accountKey,
-            }
-        }))
+        .insert(transactions.map((transaction: Transaction) => mapTransaction(transaction, accountKey)))
     if (error) {
         console.log(error)
     }
@@ -137,4 +114,19 @@ export async function deleteTransactionSupabase(supabase: SupabaseClient, transa
         .delete()
         .eq('transactionKey', transactionKey)
     return response.status === 204
+}
+
+function mapTransaction(transaction: Transaction, accountKey: string) {
+    return {
+        transactionKey: transaction.transactionKey,
+        cost: transaction.cost,
+        name: transaction.name,
+        type: transaction.type,
+        date: transaction.date,
+        equityPrice: transaction.equityPrice,
+        e24Key: transaction.e24Key,
+        equityShare: transaction.equityShare,
+        equityType: transaction.equityType,
+        accountKey: accountKey,
+    }
 }
