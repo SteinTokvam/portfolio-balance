@@ -114,13 +114,16 @@ export async function addTransactions(supabase: SupabaseClient, transactions: Tr
         .from('transactions')
         .insert(transactions.map((transaction: Transaction) => {
             return {
-                name: transaction.name,
+                transactionKey: transaction.key,
                 cost: transaction.cost,
+                name: transaction.name,
                 type: transaction.type,
                 date: transaction.date,
-                accountKey: accountKey,
+                equityPrice: transaction.equityPrice,
                 e24Key: transaction.e24Key,
-                transactionKey: transaction.key
+                equityShare: transaction.equityShare,
+                equityType: transaction.equityType,
+                accountKey: accountKey,
             }
         }))
     if (error) {

@@ -99,7 +99,7 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteAllAccounts(supabase))
+                            dispatch(deleteAllAccounts(supabase, true))
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

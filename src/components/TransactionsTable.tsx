@@ -122,12 +122,12 @@ export default function TransactionsTable({ supabase }: { supabase: SupabaseClie
         if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account.key, transactions))
+                    dispatch(importTransactions(supabase, account, transactions))
                 })
         } else if (account.name === 'Kron') {
             fetchKronTransactions(account)
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account.key, transactions))
+                    dispatch(importTransactions(supabase, account, transactions))
                 })
         }
 

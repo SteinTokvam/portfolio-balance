@@ -16,18 +16,20 @@ import TransactionsTable from './components/TransactionsTable';
 import ConfirmMail from './components/ConfirmMail';
 import { createClient } from '@supabase/supabase-js';
 import { initSupabaseData } from './actions/accounts';
-import { Account } from './types/Types';
-import { addAccount, getAccounts, getTransactions } from './Util/Supabase';
+import { getAccounts, getTransactions } from './Util/Supabase';
 
 function App() {
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
+  // @ts-ignore
+  const accounts = useSelector(state => state.rootReducer.accounts.accounts)
+  
   const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
 
   useEffect(() => {
-    if (useDb) {//TODO: må også sjekke om man er logget inn
+    if (useDb && accounts && accounts.length === 0) {//TODO: må også sjekke om man er logget inn
       getAccounts(supabase)
         .then(accounts => {
           accounts.forEach(account => {

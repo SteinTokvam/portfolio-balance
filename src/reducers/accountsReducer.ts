@@ -1,23 +1,15 @@
 import { useDb } from "../Util/Global";
 import { Account, Transaction } from "../types/Types"
 
-const initialState = () => {
-    if(useDb) {
-        return {
-            accounts : [],
-        }
-    }
-    return {
-        // @ts-ignore
-        accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : [],
-    }
-}
+// @ts-ignore
+const initialState = useDb ? {accounts: []} : {accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : []}
 
-const accountReducer = (state = initialState(), action: { type: string; payload: { key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string } }) => {
+const accountReducer = (state = initialState, action: { type: string; payload: { key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string } }) => {
     var currentAccounts = []
     var index = -1
     switch (action.type) {
         case 'INIT_SUPABASE_DATA':
+            console.log(state.accounts)
             if (state.accounts && state.accounts.find((account: Account) => account.key === action.payload.accounts[0].key)) {
                 return state
             }

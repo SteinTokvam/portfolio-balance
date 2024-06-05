@@ -55,7 +55,7 @@ export default function ImportTransactionsModalContent({ account, supabase }: { 
                     }
                 })
 
-                dispatch(importTransactions(supabase, account.key, transactions))
+                dispatch(importTransactions(supabase, account, transactions))
             };
             reader.readAsText(input);
         }

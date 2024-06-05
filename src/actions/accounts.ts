@@ -1,7 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js"
 import { Account, Transaction } from "../types/Types"
-import { addAccount, addTransaction, addTransactions, deleteAccountSupabase, deleteAllAccountSupabase, deleteTransactionSupabase, getAccounts, getTransactions, importAccountsToSupabase, updateAccount } from "../Util/Supabase"
-import { supabase } from "@supabase/auth-ui-shared"
+import { addAccount, addTransaction, deleteAccountSupabase, deleteAllAccountSupabase, deleteTransactionSupabase, importAccountsToSupabase, updateAccount } from "../Util/Supabase"
 
 export const initSupabaseData = (account: Account) => {
     return {
@@ -43,21 +42,25 @@ export const deleteAccount = (supabaseClient: SupabaseClient, accountKey: string
     }
 }
 
-export const deleteAllAccounts = (supabaseClient: SupabaseClient) => {
-    deleteAllAccountSupabase(supabaseClient)
+export const deleteAllAccounts = (supabaseClient: SupabaseClient, deleteFromSupabase: boolean) => {
+    if(deleteFromSupabase) {
+        deleteAllAccountSupabase(supabaseClient)
+    }
     return {
         type: 'DELETE_ALL_ACCOUNTS'
     }
 }
 
-export const importTransactions = (supabase: SupabaseClient, accountKey: string, transactions: Transaction[]) => {
-    transactions.forEach(transaction => {
-        addTransaction(supabase, transaction, accountKey)    
-    })
+export const importTransactions = (supabase: SupabaseClient, account: Account, transactions: Transaction[]) => {
+    if(account.isManual) {
+        transactions.forEach(transaction => {
+            addTransaction(supabase, transaction, account.key)    
+        })
+    }
     
     return {
         type: 'IMPORT_TRANSACTIONS',
-        payload: { accountKey: accountKey, transactions }
+        payload: { accountKey: account.key, transactions }
     }
 }
 
