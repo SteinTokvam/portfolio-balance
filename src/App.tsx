@@ -1,11 +1,10 @@
 
-import React, { useContext } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import MyNavbar from './components/MyNavbar';
 import './i18n/config';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import { routes, useDb } from './Util/Global';
@@ -21,7 +20,6 @@ import { getAccounts, getTransactions } from './Util/Supabase';
 function App() {
 
   const dispatch = useDispatch()
-  const { t } = useTranslation()
 
   // @ts-ignore
   const accounts = useSelector(state => state.rootReducer.accounts.accounts)
@@ -38,7 +36,7 @@ function App() {
           });
         })
     }
-  }, [])
+  }, [])//eslint-disable-line react-hooks/exhaustive-deps
 
   const isDark = false
   return (

@@ -18,7 +18,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
   const { t } = useTranslation();
 
   // @ts-ignore
-  const session = window.localStorage.getItem('sb-gmfrmyphzawjnzcjuiqx-auth-token')
+  const signedIn = window.localStorage.getItem('sb-gmfrmyphzawjnzcjuiqx-auth-token')
 
   const dispatch = useDispatch()
 
@@ -54,7 +54,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
         <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
           <SettingsModalContent supabase={supabase} />
         </EmptyModal>
-        {menuItems.map((item, index) => (
+        {signedIn &&menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
@@ -65,7 +65,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
             </Button>
           </NavbarMenuItem>
         ))}
-        {session && <NavbarMenuItem>
+        {signedIn && <NavbarMenuItem>
           <Button
             variant="light"
             color='danger'
@@ -82,10 +82,10 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
 
         <NavbarMenu />
 
-        <NavbarMenuToggle
+        {signedIn && <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
-        />
+        />}
       </NavbarContent>
 
       <NavbarMenu>
@@ -101,7 +101,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
             </Link>
           </NavbarMenuItem>
         ))}
-        {session && <NavbarMenuItem>
+        {signedIn && <NavbarMenuItem>
           <Link
             color="danger"
             onPress={() => {

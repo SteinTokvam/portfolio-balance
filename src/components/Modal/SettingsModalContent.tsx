@@ -7,8 +7,6 @@ import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 import i18n from "../../i18n/config"
 import { SupabaseClient } from "@supabase/supabase-js"
-import { addTransaction } from "../../Util/Supabase"
-import { Account, Transaction } from "../../types/Types"
 
 export default function SettingsModalContent({supabase}: {supabase: SupabaseClient}) {
     const dispatch = useDispatch()
