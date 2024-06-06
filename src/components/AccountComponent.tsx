@@ -238,6 +238,20 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                         </div>
                         : ''
                 }
+                {
+                    account && account.transactions.filter((transaction: Transaction) => transaction.type === 'YIELD').length > 0 ?
+                        <div className="p-4">
+                            <p className="text-default-600">Avkastning</p>
+                            <p className="text-default-800 font-bold">
+                                {
+                                    account.transactions
+                                        .filter((transaction: Transaction) => transaction.type === 'YIELD')
+                                        .reduce((acc: number, cur: Transaction) => acc + cur.cost, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                }
+                            </p>
+                        </div>
+                        : ''
+                }
             </div>
 
             <Tabs classNames={{
