@@ -104,6 +104,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 </h2>
                 <Spacer y={2} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">Avkastning</h1>
+                <Spacer y={2} />
                 <h2 className="text-large text-left font-bold leading-none text-default-400">
                     {
                         settings.hideNumbers ? '*** Kr' :
