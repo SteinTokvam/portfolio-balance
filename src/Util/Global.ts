@@ -141,7 +141,7 @@ async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: 
                 e24Key: uniqueE24Keys[i].e24Key,
                 key: uuidv4(),
                 value,
-                yield: value - account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key).reduce((sum, transaction) => sum + transaction.cost, 0),
+                yield: value - account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL").reduce((sum, transaction) => sum + transaction.cost, 0),
             }
         )
     }

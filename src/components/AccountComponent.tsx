@@ -245,7 +245,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                             <p className="text-default-800 font-bold">
                                 {
                                     account.transactions
-                                        .filter((transaction: Transaction) => transaction.type === 'YIELD')
+                                        .filter((transaction: Transaction) => transaction.type === 'YIELD' || transaction.type === 'DIVIDEND')
                                         .reduce((acc: number, cur: Transaction) => acc + cur.cost, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                 }
                             </p>
