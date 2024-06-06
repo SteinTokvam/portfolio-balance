@@ -91,7 +91,7 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                             e24Key: buysAndSells.filter(transaction => transaction.name === name)[0].e24Key,
                             key: uuidv4(),
                             value,
-                            yield: 0,
+                            yield: account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "YIELD").reduce((sum, transaction) => sum + transaction.cost, 0),
                         }
                     )
                 }
