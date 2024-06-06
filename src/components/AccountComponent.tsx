@@ -218,7 +218,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             <div className="grid grid-cols-2 py-4">
                 <div className="p-4">
                     <p className="text-default-600">Antall transaksjoner</p>
-                    <p className="text-default-800 font-bold">{account.transactions.length}</p>
+                    <p className="text-default-800 font-bold">{account && account.transactions.length}</p>
                 </div>
                 <div className="p-4">
                     <p className="text-default-600">Antall verdipapirer</p>
