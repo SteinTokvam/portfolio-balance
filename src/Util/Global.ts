@@ -6,7 +6,7 @@ import { fetchTicker } from "./E24";
 
 export const languages = ["us", "no"];
 
-export const useDb = true
+export const useDb = false
 
 export const textInputStyle = {
     label: "text-black/50 dark:text-white/90",
@@ -75,22 +75,20 @@ export function getHoldings(account: Account): Promise<Holding[]> {
             
         } else {//e24Id mangler. bruk kostpris som verdi
             const uniquieHoldingNames = [...new Set(account.transactions.map(transaction => transaction.name))];
+            
             uniquieHoldingNames.forEach(name => {
-                const equityShare = account.transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + transaction.equityShare, 0)
-                const value = account.transactions.filter(transaction => transaction.name === name).reduce((sum, transaction) => sum + transaction.cost, 0)
-
-                if(account.type === "Obligasjon") {
-                    console.log(name, value)    
-                }
-                
-                if (value > 0) {
+                const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
+                const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
+                const value = buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
+                console.log(buysAndSells)
+                if (value > 0.5) {
                     holdings.push(
                         {
                             name,
                             accountKey: account.key,
                             equityShare,
-                            equityType: account.transactions.filter(transaction => transaction.name === name)[0].equityType,
-                            e24Key: account.transactions.filter(transaction => transaction.name === name)[0].e24Key,
+                            equityType: buysAndSells.filter(transaction => transaction.name === name)[0].equityType,
+                            e24Key: buysAndSells.filter(transaction => transaction.name === name)[0].e24Key,
                             key: uuidv4(),
                             value,
                             yield: 0,
@@ -98,11 +96,6 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                     )
                 }
             })
-            if(account.type === "Obligasjon") {
-                console.log(holdings.map(holding => {
-                    return {name: holding.name, value: holding.value}
-                }))    
-            }
             
             return new Promise((resolve, reject) => {
                 resolve(holdings)
