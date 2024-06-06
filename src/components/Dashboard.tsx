@@ -98,9 +98,18 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 <Spacer y={2} />
                 <h2 className="text-large text-left font-bold leading-none text-default-400">
                     {
-                        settings.hideNumbers ? '*** Kr' : 
-                        holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                    }</h2>
+                        settings.hideNumbers ? '*** Kr' :
+                            holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                    }
+                </h2>
+                <Spacer y={2} />
+                <h1 className="text-medium text-left font-semibold leading-none text-default-600">Avkastning</h1>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">
+                    {
+                        settings.hideNumbers ? '*** Kr' :
+                            holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                    }
+                </h2>
                 <Spacer y={20} />
             </div>
 
@@ -142,8 +151,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                             }
                         })
                     }}>Oppdater</Button>
-                    <Spacer y={2} />
-                    <HideNumbersSwitch />
+                <Spacer y={2} />
+                <HideNumbersSwitch />
             </div>
 
             <Spacer y={4} />
