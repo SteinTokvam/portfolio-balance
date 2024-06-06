@@ -6,7 +6,7 @@ import { fetchTicker } from "./E24";
 
 export const languages = ["us", "no"];
 
-export const useDb = false
+export const useDb = true
 
 export const textInputStyle = {
     label: "text-black/50 dark:text-white/90",
