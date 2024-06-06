@@ -13,6 +13,7 @@ import { fetchFiriTransactions } from "../Util/Firi";
 import { importTransactions } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
 import { SupabaseClient } from "@supabase/supabase-js";
+import HideNumbersSwitch from "./HideNumbersSwitch";
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
@@ -31,6 +32,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
     // @ts-ignore
     const holdings = useSelector(state => state.rootReducer.holdings.holdings)
+    // @ts-ignore
+    const settings = useSelector(state => state.rootReducer.settings)
 
     const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b
@@ -93,7 +96,11 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 <Spacer y={10} />
                 <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">{holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
+                <h2 className="text-large text-left font-bold leading-none text-default-400">
+                    {
+                        settings.hideNumbers ? '*** Kr' : 
+                        holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                    }</h2>
                 <Spacer y={20} />
             </div>
 
@@ -135,6 +142,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                             }
                         })
                     }}>Oppdater</Button>
+                    <Spacer y={2} />
+                    <HideNumbersSwitch />
             </div>
 
             <Spacer y={4} />
@@ -152,7 +161,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0
                                     }>
                                         <h4 className="text-large font-bold leading-none text-default-400">{//verdien
-                                            holdings
+                                            settings.hideNumbers ? '*** Kr' : holdings
                                                 .filter((holding: Holding) => holding.equityType === equityType.key)
                                                 .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                         }</h4>
@@ -189,7 +198,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
                         <Spacer y={2} />
                         <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
-                        <h4 className="text-large font-bold leading-none text-default-400">{biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
+                        <h4 className="text-large font-bold leading-none text-default-400">{settings.hideNumbers ? '*** Kr' : biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
                     </div>
                 </div>
             }

@@ -16,6 +16,8 @@ export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
 
     // @ts-ignore
     const holdings = useSelector(state => state.rootReducer.holdings.holdings);
+    // @ts-ignore
+    const settings = useSelector(state => state.rootReducer.settings);
 
     const navigate = useNavigate()
 
@@ -54,12 +56,12 @@ export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
                                                         <Skeleton
                                                             className="rounded-lg"
                                                             isLoaded={
-                                                                holdings
+                                                                settings.hideNumbers ? true : holdings
                                                                     .filter((totalValue: Holding) => totalValue.accountKey === account.key)
                                                                     .reduce((sum: number, item: Holding) => sum + item.value, 0) > 0
                                                             }>
                                                             {
-                                                                holdings.filter((totalValue: Holding) => totalValue.accountKey === account.key).reduce((sum: number, item: Holding) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                                                settings.hideNumbers ? '*** Kr' : holdings.filter((totalValue: Holding) => totalValue.accountKey === account.key).reduce((sum: number, item: Holding) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                             }
                                                         </Skeleton>
                                                     </p>
