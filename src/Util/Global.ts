@@ -65,7 +65,7 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                         equityShare: account.transactions
                             .filter(transaction => transaction.e24Key === uniqueE24Key)
                             .reduce((sum, transaction) => sum + transaction.equityShare, 0),
-                        equityType: account.transactions.filter(transaction => transaction.e24Key === uniqueE24Key)[0].equityType
+                        equityType: account.transactions.filter(transaction => transaction.e24Key === uniqueE24Key)[0].equityType,
                     }
                 })
                 .filter(equityShare => equityShare.equityShare > 0);
@@ -131,6 +131,7 @@ async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: 
 
     for (let i = 0; i < uniqueE24Keys.length; i++) {
         const transactionName: Transaction | undefined = account.transactions.find(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)
+        const value = uniqueE24Keys[i].equityShare * tickers[i]
         holdings.push(
             {
                 name: transactionName !== undefined ? transactionName.name : '',
@@ -139,8 +140,8 @@ async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: 
                 equityType: account.transactions.filter(transaction_1 => transaction_1.e24Key === uniqueE24Keys[i].e24Key)[0].equityType,
                 e24Key: uniqueE24Keys[i].e24Key,
                 key: uuidv4(),
-                value: uniqueE24Keys[i].equityShare * tickers[i],
-                yield: 0,
+                value,
+                yield: value - account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key).reduce((sum, transaction) => sum + transaction.cost, 0),
             }
         )
     }

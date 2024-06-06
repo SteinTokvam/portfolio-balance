@@ -48,16 +48,19 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
         .filter(equityShare => equityShare.equityShare > 0.00000001)
         .filter(equityShare => !equityShare.price?.message)
         .map(equityShare => {
+            const value = parseFloat(equityShare.price.last) * equityShare.equityShare
+            console.log(transactions.filter(transaction => transaction.name === equityShare.currency))
             return {
                 name: equityShare.currency,
                 key: uuidv4(),
                 accountKey: account.key,
-                value: parseFloat(equityShare.price.last) * equityShare.equityShare,
+                value,
                 equityType: EquityTypes.CRYPTOCURRENCY,
                 equityShare: equityShare.equityShare,
                 e24Key: '',
-                yield: 0
+                yield: 0//value-transactions.filter(transaction => transaction.name === equityShare.currency && (transaction.type === 'Match' || transaction.type === 'StakingReward' || transaction.type === 'AffiliateBonus' || transaction.type === 'Bonus' || transaction.type === 'FeebackBonus' || transaction.type === 'WelcomeBonus')).reduce((sum, transaction) => sum + transaction.cost, 0)
             }
+            
         })
         console.log('Fetched Firi Holdings', holdings)
 
