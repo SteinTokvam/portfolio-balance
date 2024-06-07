@@ -8,12 +8,13 @@ import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 import { Account, EquityType, Holding, Transaction } from "../types/Types";
 import { addHoldings, deleteAllHoldings } from "../actions/holdings";
-import { getHoldings } from "../Util/Global";
+import { getHoldings, useDb } from "../Util/Global";
 import { fetchFiriTransactions } from "../Util/Firi";
-import { importTransactions } from "../actions/accounts";
+import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
 import { SupabaseClient } from "@supabase/supabase-js";
 import HideNumbersSwitch from "./HideNumbersSwitch";
+import { getAccounts, getTransactions } from "../Util/Supabase";
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
@@ -84,6 +85,28 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100))
     });
 
+    function getAccountsAndHoldings(account: Account) {
+        getHoldings(account)
+            .then(holdings => {
+                if (holdings.length === 0) {
+                    return
+                }
+                dispatch(addHoldings(holdings, account.key))
+            })
+
+        if (account.name === 'Kron') {
+            fetchKronTransactions(account)
+                .then((transactions: Transaction[]) => {
+                    dispatch(importTransactions(supabase, account, transactions))
+                })
+        } else if (account.name === 'Firi') {
+            fetchFiriTransactions(account, ['NOK'])
+                .then((transactions: Transaction[]) => {
+                    dispatch(importTransactions(supabase, account, transactions))
+                })
+        }
+    }
+
     return (
         <>
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
@@ -127,30 +150,30 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                     className="w-3/4 sm:w-1/4"
                     onClick={() => {
                         dispatch(deleteAllHoldings())
+                        dispatch(deleteAllAccounts(supabase, false))
                         if (!accounts) {
                             return
                         }
-                        accounts.forEach((account: Account) => {
-                            getHoldings(account)
-                                .then(holdings => {
-                                    if (holdings.length === 0) {
-                                        return
-                                    }
-                                    dispatch(addHoldings(holdings, account.key))
-                                })
+                        if (useDb) {
+                            getAccounts(supabase)
+                                .then(accounts => {
+                                    accounts.forEach(account => {
+                                        getTransactions(supabase, account.key)
+                                            .then(transactions => {
+                                                dispatch(initSupabaseData({ ...account, transactions }))
+                                                getAccountsAndHoldings({ ...account, transactions })
+                                            })
 
-                            if (account.name === 'Kron') {
-                                fetchKronTransactions(account)
-                                    .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(supabase, account, transactions))
-                                    })
-                            } else if (account.name === 'Firi') {
-                                fetchFiriTransactions(account, ['NOK'])
-                                    .then((transactions: Transaction[]) => {
-                                        dispatch(importTransactions(supabase, account, transactions))
-                                    })
-                            }
-                        })
+                                        
+                                    });
+                                })
+                        } else {
+                            accounts.forEach((account: Account) => {
+                                getAccountsAndHoldings(account)
+                            })
+                        }
+
+
                     }}>Oppdater</Button>
                 <Spacer y={2} />
                 <HideNumbersSwitch />
