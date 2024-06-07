@@ -9,7 +9,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
     var index = -1
     switch (action.type) {
         case 'INIT_SUPABASE_DATA':
-            console.log(state.accounts)
             if (state.accounts && state.accounts.find((account: Account) => account.key === action.payload.accounts[0].key)) {
                 return state
             }

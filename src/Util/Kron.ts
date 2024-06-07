@@ -5,27 +5,40 @@ import { emptyHoldingPromise, emptyTransactionPromise } from "./Global"
 const isLocal = false
 const baseUrl = isLocal ? 'http://localhost:3000' : 'https://portfolio-balance-backend.onrender.com'
 
-function getOptions(api_key: string | undefined, account_id: string | undefined, accountKey: string) {
-    if(!api_key || !account_id) {
+function getOptions(api_key: string | undefined, account_id: string | undefined, accountKey: string, haveInterval = false) {
+    if (!api_key || !account_id) {
         return { error: 'No api_key or account_id' }
     }
-    return {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            'account_id': account_id,
-            'accessKey': api_key,
-            'accountKey': accountKey
-        })
-    }    
+    return haveInterval ?
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'account_id': account_id,
+                'accessKey': api_key,
+                'accountKey': accountKey,
+                'interval': 'year-to-date'
+            })
+        } :
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'account_id': account_id,
+                'accessKey': api_key,
+                'accountKey': accountKey,
+            })
+        }
 }
 
 
 export async function fetchKronTransactions(account: Account): Promise<Transaction[]> {
     const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key)
-    if(options.error) {
+    if (options.error) {
         return emptyTransactionPromise()
     }
     try {
@@ -41,7 +54,7 @@ export async function fetchKronTransactions(account: Account): Promise<Transacti
 
 export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
     const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key)
-    if(options.error) {
+    if (options.error) {
         return emptyHoldingPromise()
     }
     try {
@@ -53,4 +66,21 @@ export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
         console.log(error)
         return []
     }
+}
+
+export async function fetchKronDevelopment(account: Account): Promise<any> {
+    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
+    if (options.error) {
+        return emptyHoldingPromise()
+    }
+    try {
+        const response = await fetch(`${baseUrl}/kron/development`, options)
+        const res = await response.json()
+        console.log('Fetched Kron development', res)
+        return res
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+
 }

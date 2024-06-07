@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Image, Tabs, Tab } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
@@ -14,11 +14,12 @@ import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../actions/holdings";
 import { fetchFiriTransactions } from "../Util/Firi";
-import { fetchKronTransactions } from "../Util/Kron";
+import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../Util/Global";
 import Holdings from "./Holdings";
 import { SupabaseClient } from "@supabase/supabase-js";
+import DevelopmentGraph from "./DevelopmentGraph";
 
 export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
 
@@ -40,6 +41,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
+    const [development, setDevelopment] = useState({} as any)
 
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
@@ -131,6 +133,8 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 .then((transactions: Transaction[]) => {
                     dispatch(importTransactions(supabase, account, transactions))
                 })
+            fetchKronDevelopment(account)
+                .then((development: any) => setDevelopment(development))
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -211,10 +215,14 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 <h1 className="text-default-800 font-bold text-xl">{account && account.name}</h1>
                 <h1 className="text-default-800 font-bold text-3xl">{account && holdings.filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001).reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h1>
             </div>
-            <Image
-                src='https://via.assets.so/img.jpg?w=800&h=600&tc=blue&bg=#cecece&t=placeholder'
-                alt="logo"
-            />
+            {
+                development.length > 0 ? <DevelopmentGraph data={development} /> :
+                    <Image
+                        src='https://via.assets.so/img.jpg?w=800&h=600&tc=blue&bg=#cecece&t=placeholder'
+                        alt="logo"
+                    />
+            }
+
             <div className="grid grid-cols-2 py-4">
                 <div className="p-4">
                     <p className="text-default-600">Antall transaksjoner</p>
