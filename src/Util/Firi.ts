@@ -4,7 +4,7 @@ import { Account, EquityTypes, FiriOrder, FiriPrice, FiriPricePoint, Holding, Tr
 export async function fetchFiriTransactions(account: Account, currenciesToExclude: string[]): Promise<Transaction[]> {
     const firiOrders = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey, currenciesToExclude)
     const currencies = [...new Set(firiOrders.map((order: FiriOrder) => order.currency))]
-    const price = await fetchPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
+    const price = await fetchLatestPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
     
     const transactions: Transaction[] = firiOrders.map((firiOrder: FiriOrder) => {
         const lastPrice = price.find(price => price.cryptocurrency === firiOrder.currency)?.price.last || '0'
@@ -31,7 +31,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
     const transactions = await fetchFiriTransactions(account, ['NOK'])
     
     const currencies = [...new Set(transactions.map((transaction: Transaction) => transaction.name))].filter((currency: string) => currency !== 'DOGE')
-    const price = await fetchPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
+    const price = await fetchLatestPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
     const firiPricePoint: FiriPricePoint[] = []
 
     currencies.forEach(currency => {
@@ -90,7 +90,7 @@ async function getTransactionsFromFiri(accessKey: string | undefined, excludedCu
         })
 }
 
-async function fetchPriceInFiat(currencies: string[], accessKey: string | undefined): Promise<{ price: FiriPrice, cryptocurrency: string }[]> {//henter siste pris for alle valutaer
+async function fetchLatestPriceInFiat(currencies: string[], accessKey: string | undefined): Promise<{ price: FiriPrice, cryptocurrency: string }[]> {
     const notSupportedCurrencies = ['DOGE']
 
     if (accessKey === undefined) {
