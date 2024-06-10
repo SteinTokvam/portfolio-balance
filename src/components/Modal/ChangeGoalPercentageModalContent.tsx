@@ -3,7 +3,7 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { textInputStyle } from "../../Util/Global";
+import { styles } from "../../Util/Global";
 import { useSelector } from "react-redux";
 import { changeGoalPercentage } from "../../actions/equityType";
 import { EquityType } from "../../types/Types";
@@ -69,7 +69,7 @@ export default function ChangeGoalPercentageModalContent() {
 
 
                         <Input type="number"
-                            classNames={textInputStyle}
+                            classNames={styles.textInputStyle}
                             label={"Målprosent"}
                             value={goalPercentage}
                             onValueChange={(newValue: string) => {

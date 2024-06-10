@@ -2,10 +2,12 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link } from 'react-router-dom'
-import { useDb } from '../Util/Global'
+import { styles, useDb } from '../Util/Global'
 import { getAccounts, getTransactions } from '../Util/Supabase'
 import { useDispatch } from 'react-redux'
 import { initSupabaseData } from '../actions/accounts'
+import { Logo } from '../icons/Logo'
+import { useTranslation } from 'react-i18next'
 
 export default function Auth({ supabase, children }: { supabase: SupabaseClient, children: ReactNode }) {
 
@@ -16,8 +18,7 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
     const [error, setError] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
     const dispatch = useDispatch()
-    // @ts-ignore
-
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!supabase) {
@@ -79,9 +80,14 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
 
     if (!session) {
         return (
-            <div className='w-2/3 mx-auto space-y-2 grid grid-cols-1 mt-10'>
+            <div className='w-2/3 sm:w-1/3 mx-auto space-y-2 grid grid-cols-1 mt-10'>
+                <div className='flex justify-center'>
+                    <Logo />
+                    <p className="font-bold text-inherit p-3">{t('navbar.brand')}</p>
+                </div>
                 {error && <p className='text-red-500'>Wrong email or password</p>}
                 <Input
+                    classNames={styles.textInputStyle}
                     type='email'
                     label='Email'
                     value={email}
@@ -91,6 +97,7 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
                     onClear={() => setEmail('')}
                 />
                 <Input
+                    classNames={styles.textInputStyle}
                     type='password'
                     label='Password'
                     value={password}

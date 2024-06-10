@@ -2,7 +2,7 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { getHoldings, textInputStyle } from "../../Util/Global";
+import { getHoldings, styles } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
 import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
@@ -96,13 +96,13 @@ return (
                 <ModalBody className="">
 
                     <Input type="text"
-                        classNames={textInputStyle}
+                        classNames={styles.textInputStyle}
                         label={"Navn på investering"}
                         value={transactionName}
                         onValueChange={setTransactionName} />
 
                     <Input type="number"
-                        classNames={textInputStyle}
+                        classNames={styles.textInputStyle}
                         label={"Investeringskostnad"}
                         value={cost}
                         onValueChange={setCost} />
@@ -123,7 +123,7 @@ return (
                     </Select>
 
                     <Input type="date"
-                        classNames={textInputStyle}
+                        classNames={styles.textInputStyle}
                         label={"Transaksjonsdato"}
                         // @ts-ignore
                         value={date}
@@ -134,14 +134,14 @@ return (
                         account.type !== 'Obligasjon' &&
                         <>
                             <Input type="number"
-                                classNames={textInputStyle}
+                                classNames={styles.textInputStyle}
                                 label={"Enhetspris"}
                                 value={equityPrice}
                                 onValueChange={setEquityPrice} />
 
                             <div className="border rounded-xl p-1 grid grid-cols-1 gap-4">
                                 <Input type="text"
-                                    classNames={textInputStyle}
+                                    classNames={styles.textInputStyle}
                                     label={"E24 ID"}
                                     value={e24Key}
                                     onValueChange={setE24Key}
@@ -174,7 +174,7 @@ return (
                                 </Accordion>
                             </div>
                             <Input type="number"
-                                classNames={textInputStyle}
+                                classNames={styles.textInputStyle}
                                 label={"Antall"}
                                 value={equityShare}
                                 onValueChange={setEquityShare} />

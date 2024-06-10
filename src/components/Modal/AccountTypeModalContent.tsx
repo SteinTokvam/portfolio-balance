@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Tab, Tabs, Accordion, AccordionItem, Link, RadioGroup, Radio } from "@nextui-org/react"
 import { useTranslation } from "react-i18next"
-import { textInputStyle } from "../../Util/Global"
+import { styles } from "../../Util/Global"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
@@ -108,7 +108,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                             onSelectionChange={setSelected}>
                             <Tab key="Manual" title={t('accountModal.manualTabTitle')} className="w-full">
                                 <Input type="text"
-                                    classNames={textInputStyle}
+                                    classNames={styles.textInputStyle}
                                     label={"Kontonavn"}
                                     value={accountName}
                                     onValueChange={setAccountName} />
@@ -140,14 +140,14 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                                 </RadioGroup>
 
                                 <Input type="text"
-                                    classNames={textInputStyle}
+                                    classNames={styles.textInputStyle}
                                     className="pt-4"
                                     label={selectedRadio === "Firi" ? "Firi api key" : "Kron access key"}
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
                                 {
                                     selectedRadio === 'Kron' && <Input type="text"
-                                        classNames={textInputStyle}
+                                        classNames={styles.textInputStyle}
                                         className="pt-4"
                                         label={t('accountModal.kronAccountId')}
                                         value={kronAccountId}

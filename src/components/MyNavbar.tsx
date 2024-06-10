@@ -38,7 +38,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
   }
 
   return (
-    <Navbar isMenuOpen={isMenuOpen}
+    signedIn && <Navbar isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       className="text-foreground">
       <NavbarContent>
@@ -54,7 +54,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
         <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
           <SettingsModalContent supabase={supabase} />
         </EmptyModal>
-        {signedIn &&menuItems.map((item, index) => (
+        {signedIn && menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"

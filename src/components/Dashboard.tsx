@@ -1,5 +1,5 @@
 import React from "react";
-import { Spacer, useDisclosure, Button, Divider, Skeleton } from "@nextui-org/react";
+import { Spacer, useDisclosure, Button, Skeleton } from "@nextui-org/react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux"
@@ -8,22 +8,17 @@ import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
 import { Account, EquityType, Holding, Transaction } from "../types/Types";
 import { addHoldings, deleteAllHoldings } from "../actions/holdings";
-import { getHoldings, useDb } from "../Util/Global";
+import { getHoldings, styles, useDb } from "../Util/Global";
 import { fetchFiriTransactions } from "../Util/Firi";
 import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts";
 import { fetchKronTransactions } from "../Util/Kron";
 import { SupabaseClient } from "@supabase/supabase-js";
 import HideNumbersSwitch from "./HideNumbersSwitch";
 import { getAccounts, getTransactions } from "../Util/Supabase";
+import GoalAnalysis from "./GoalAnalysis";
+import EquityTypesView from "./EquityTypesView";
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
-
-    type FurthestFromGoal = {
-        currentPercentage: number,
-        equityType: EquityType,
-        goalPercentage: number,
-        distanceFromGoalPercentage: number
-    }
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -39,27 +34,6 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b
     }, holdings[0])
-
-    const furthestFromGoal = equityTypes.map((equityType: EquityType) => {
-        return {
-            currentPercentage: parseFloat((holdings
-                .filter((holding: Holding) => holding.equityType === equityType.key)
-                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2)),
-            equityType
-        }
-    }).map((furthest: FurthestFromGoal) => {
-        return {
-            ...furthest,
-            distanceFromGoalPercentage: furthest.equityType.goalPercentage - furthest.currentPercentage
-        }
-    }).sort((a: FurthestFromGoal, b: FurthestFromGoal) => {
-        if (a.distanceFromGoalPercentage < b.distanceFromGoalPercentage) {
-            return 1
-        } else if (a.distanceFromGoalPercentage > b.distanceFromGoalPercentage) {
-            return -1
-        }
-        return 0
-    })
 
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -117,18 +91,18 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             }
             <div className="flex flex-col items-center justify-center">
                 <Spacer y={10} />
-                <h1 className="text-medium text-left font-semibold leading-none text-default-600">{t('dashboard.total')}</h1>
+                <h1 className={styles.valueHeaderText}>{t('dashboard.total')}</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">
+                <h2 className={styles.valueText}>
                     {
                         settings.hideNumbers ? '*** Kr' :
                             holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                     }
                 </h2>
                 <Spacer y={2} />
-                <h1 className="text-medium text-left font-semibold leading-none text-default-600">Avkastning</h1>
+                <h1 className={styles.valueHeaderText}>Avkastning</h1>
                 <Spacer y={2} />
-                <h2 className="text-large text-left font-bold leading-none text-default-400">
+                <h2 className={styles.valueText}>
                     {
                         settings.hideNumbers ? '*** Kr' :
                             holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
@@ -180,100 +154,23 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             </div>
 
             <Spacer y={4} />
-            <div className="p-4">
-                <div className="grid grid-cols-2 gap-20 content-evenly">
-                    {accounts && accounts.length > 0 ?
-                        equityTypes.map((equityType: EquityType) => {
-                            return (
-                                <div key={equityType.key} className="sm:text-center sm:justify-center">
-                                    <h2 className="text-medium font-semibold leading-none text-default-600">{t(`equityTypes.${equityType.key.toLowerCase()}`)}</h2>
-                                    <Spacer y={2} />
-                                    <Skeleton className="rounded-lg" isLoaded={
-                                        holdings
-                                            .filter((holding: Holding) => holding.equityType === equityType.key)
-                                            .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0
-                                    }>
-                                        <h4 className="text-large font-bold leading-none text-default-400">{//verdien
-                                            settings.hideNumbers ? '*** Kr' : holdings
-                                                .filter((holding: Holding) => holding.equityType === equityType.key)
-                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                        }</h4>
-                                    </Skeleton>
-                                    <Skeleton className="rounded-lg" isLoaded={
-                                        holdings
-                                            .filter((holding: Holding) => holding.equityType === equityType.key)
-                                            .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0}>
-                                        <h4
-                                            className="text-large font-bold leading-none text-default-400"
-                                        ><span className={
-                                            Math.abs(((holdings
-                                                .filter((holding: Holding) => holding.equityType === equityType.key)
-                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100) - equityType.goalPercentage) >= 3 ?
-                                                'text-red-500' : 'text-green-500'}>
-                                                {//andel i prosent av total
-                                                    ((holdings
-                                                        .filter((holding: Holding) => holding.equityType === equityType.key)
-                                                        .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                                }%</span> / {equityType.goalPercentage}%</h4>
-                                    </Skeleton>
-                                </div>)
-                        })
-                        : <h4 className="text-large font-bold leading-none">Du har ingen kontoer</h4>
-                    }
-                </div>
-            </div>
+            <EquityTypesView />
 
             {
                 biggestInvestment &&
                 <div className="full mx-auto flex justify-center">
                     <div>
                         <Spacer y={20} />
-                        <h1 className="text-medium font-semibold leading-none text-default-600">{t('dashboard.biggestInvestment')}</h1>
+                        <h1 className={styles.valueHeaderText}>{t('dashboard.biggestInvestment')}</h1>
                         <Spacer y={2} />
-                        <h2 className="text-large font-bold leading-none text-default-400">{biggestInvestment.name}</h2>
-                        <h4 className="text-large font-bold leading-none text-default-400">{settings.hideNumbers ? '*** Kr' : biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
+                        <h2 className={styles.valueText}>{biggestInvestment.name}</h2>
+                        <h4 className={styles.valueText}>{settings.hideNumbers ? '*** Kr' : biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
                     </div>
                 </div>
             }
 
-
-            {
-                //Furthest and closest to goal
-            }
             <Spacer y={4} />
-            {
-                accounts && accounts.length > 0 ?
-                    <div className="w-full flex flex-col justify-center">
-                        <Divider />
-
-                        <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between" >
-                            <h4 className="text-large leading-none text-default-600">
-                                {
-                                    t('dashboard.investmentToFocus',
-                                        {
-                                            bullet: '\u{2022}',
-                                            equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
-                                            distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
-                                        }
-                                    )
-                                }
-                            </h4>
-
-                            <h4 className="text-large leading-none text-default-600">
-                                {
-                                    t('dashboard.investmentOverbought',
-                                        {
-                                            bullet: '\u{2022}',
-                                            equityType: t(`equityTypes.${furthestFromGoal[furthestFromGoal.length - 1].equityType.key.toLowerCase()}`),
-                                            distanceFromGoalPercentage: Math.abs(furthestFromGoal[furthestFromGoal.length - 1].distanceFromGoalPercentage).toFixed(2)
-                                        }
-                                    )
-                                }
-                            </h4>
-                        </div>
-                    </div>
-                    : ''
-            }
+            <GoalAnalysis />
         </>
     )
 }
