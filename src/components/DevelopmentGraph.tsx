@@ -34,7 +34,7 @@ export default function DevelopmentGraph({ data }: {
                             />
                             <Line
                                 type="monotone"
-                                dataKey="market_value"
+                                dataKey="yield_percentage"
                                 stroke='#67a1d4'
                                 activeDot={{ r: 8 }}
                                 dot={{ r: 0 }} />
