@@ -66,7 +66,7 @@ export default function Analysis() {
                 onValueChange={setToInvest}
             />
             <Spacer y={4} />
-            <p>Ved å investere {toInvest} kr, blir din nye totalverdi {(totalValue + parseFloat(toInvest)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} og følgende justeringer må gjennomføres:</p>
+            <p>Ved å investere {parseFloat(toInvest).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}, blir din nye totalverdi {(totalValue + parseFloat(toInvest)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} og følgende justeringer må gjennomføres:</p>
             {
                 rebalancedValue.map((rebalancedValue: { current_percentage: number, goal_percentage: number, equityType: EquityType, distanceToGoal: number, current_value: number }) => {
                     return <div key={rebalancedValue.equityType.key} className="grid grid-cols-2 p-4 shadow-md rounded">
