@@ -5,6 +5,7 @@ import { Input, Spacer } from "@nextui-org/react"
 import { getHoldings, styles } from "../Util/Global"
 import { useTranslation } from "react-i18next"
 import { addHoldings } from "../actions/holdings"
+import HoldingsDiagram from "./HoldingsDiagram";
 
 export default function Analysis() {
 
@@ -54,8 +55,9 @@ export default function Analysis() {
         <div className="w-full p-4 mx-auto md:w-1/2 sm:w-3/4">
             <h1>Analyse</h1>
             <h2 className="text-4xl">{totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
-
-            <h1>Rebalansering</h1>
+            <p>Nåværende fordeling:</p>
+            <HoldingsDiagram data={rebalancedValue.map((rebalancedValue: any) => { return { value: rebalancedValue.current_percentage, type: rebalancedValue.equityType.key } })} />
+            <Spacer y={4} />
             <Input type="number"
                 classNames={styles.textInputStyle}
                 label={"Ny investering"}
@@ -64,7 +66,7 @@ export default function Analysis() {
                 onValueChange={setToInvest}
             />
             <Spacer y={4} />
-            <p>Ved å investere {toInvest}kr, blir din nye totalverdi {(totalValue + parseFloat(toInvest)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} og følgende justeringer må gjennomføres:</p>
+            <p>Ved å investere {toInvest} kr, blir din nye totalverdi {(totalValue + parseFloat(toInvest)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} og følgende justeringer må gjennomføres:</p>
             {
                 rebalancedValue.map((rebalancedValue: { current_percentage: number, goal_percentage: number, equityType: EquityType, distanceToGoal: number, current_value: number }) => {
                     return <div key={rebalancedValue.equityType.key} className="grid grid-cols-2 p-4 shadow-md rounded">
