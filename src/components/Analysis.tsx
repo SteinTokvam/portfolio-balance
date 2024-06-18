@@ -56,7 +56,7 @@ export default function Analysis() {
             <h1>Analyse</h1>
             <h2 className="text-4xl">{totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h2>
             <p>Nåværende fordeling:</p>
-            <HoldingsDiagram data={rebalancedValue.map((rebalancedValue: any) => { return { value: rebalancedValue.current_percentage, type: rebalancedValue.equityType.key } })} />
+            <HoldingsDiagram data={rebalancedValue.map((rebalancedValue: any) => { return { value: rebalancedValue.current_percentage, type: t(`equityTypes.${rebalancedValue.equityType.key.toLowerCase()}`) } })} />
             <Spacer y={4} />
             <Input type="number"
                 classNames={styles.textInputStyle}
