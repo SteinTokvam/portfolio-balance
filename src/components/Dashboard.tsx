@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 
 import EmptyModal from "./Modal/EmptyModal";
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
-import { Account, EquityType, Holding, Transaction } from "../types/Types";
+import { Account, Holding, Transaction } from "../types/Types";
 import { addHoldings, deleteAllHoldings } from "../actions/holdings";
 import { getHoldings, styles, useDb } from "../Util/Global";
 import { fetchFiriTransactions } from "../Util/Firi";
@@ -24,8 +24,6 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const dispatch = useDispatch();
     // @ts-ignore
     const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
     // @ts-ignore
     const holdings = useSelector(state => state.rootReducer.holdings.holdings)
     // @ts-ignore
@@ -51,13 +49,6 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 })
         })
     }, [accounts, dispatch])
-
-    equityTypes.forEach((equityType: EquityType) => {
-        console.log(equityType.label)
-        console.log(((holdings
-            .filter((holding: Holding) => holding.equityType === equityType.key)
-            .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100))
-    });
 
     function getAccountsAndHoldings(account: Account) {
         getHoldings(account)

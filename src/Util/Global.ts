@@ -85,7 +85,7 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                 const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
                 const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
                 const value = buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
-                console.log(buysAndSells)
+
                 if (value > 0.5) {
                     holdings.push(
                         {

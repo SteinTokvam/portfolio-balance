@@ -40,7 +40,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
         case 'ADD_HOLDINGS':
             newHoldings = [...action.payload.holdings].filter((holding: Holding) => !state.holdings.some((existingHolding: Holding) => existingHolding.name === holding.name && existingHolding.accountKey === holding.accountKey))
             const allHoldings = [...state.holdings, ...newHoldings]
-            console.log(allHoldings.filter((holding: Holding) => holding.equityType === 'Loan'))
             return {
                 ...state,
                 holdings: allHoldings

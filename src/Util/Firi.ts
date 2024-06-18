@@ -49,7 +49,6 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
         .filter(equityShare => !equityShare.price?.message)
         .map(equityShare => {
             const value = parseFloat(equityShare.price.last) * equityShare.equityShare
-            console.log(transactions.filter(transaction => transaction.name === equityShare.currency))
             return {
                 name: equityShare.currency,
                 key: uuidv4(),

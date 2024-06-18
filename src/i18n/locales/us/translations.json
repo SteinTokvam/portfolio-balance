@@ -15,6 +15,7 @@
         "brand": "Portfolio rebalancer",
         "dashboard": "Dashboard",
         "portfolio": "Portfolio",
+        "rebalancing": "Rebalancing",
         "settings": "Settings"
     },
     "accountModal": {
