@@ -52,8 +52,8 @@ export const accountTypes = [
 ]
 
 
-export function getHoldings(account: Account): Promise<Holding[]> {
-    if(!account) {
+export async function getHoldings(account: Account): Promise<Holding[]> {
+    if (!account) {
         return Promise.resolve([])
     }
     if (account.isManual) {
@@ -62,8 +62,12 @@ export function getHoldings(account: Account): Promise<Holding[]> {
         }
 
         const holdings: Holding[] = []
-        if (account.transactions.length === account.transactions.filter(transaction => transaction.e24Key).length) {//ser om alle transaksjoner har en e24 id
-            const uniqueE24Keys = [...new Set(account.transactions.map(transaction => transaction.e24Key))]
+        const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
+        const transactionsWithoute24 = account.transactions.filter(transaction => !transaction.e24Key)
+
+        if (transactionsWithe24.length + transactionsWithoute24.length === account.transactions.length) {
+
+            const uniqueE24Keys = [...new Set(transactionsWithe24.map(transaction => transaction.e24Key))]
                 .map(uniqueE24Key => {
                     return {
                         e24Key: uniqueE24Key,
@@ -73,14 +77,30 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                         equityType: account.transactions.filter(transaction => transaction.e24Key === uniqueE24Key)[0].equityType,
                     }
                 })
-                .filter(equityShare => equityShare.equityShare > 0);
+                .filter(equityShare => equityShare.equityShare > 0.01);
+
+            const tickers = await fetchTickers(uniqueE24Keys)
+
+            for (let i = 0; i < uniqueE24Keys.length; i++) {
+                const transactionName: Transaction | undefined = account.transactions.find(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)
+                const value = uniqueE24Keys[i].equityShare * tickers[i]
+                holdings.push(
+                    {
+                        name: transactionName !== undefined ? transactionName.name : '',
+                        accountKey: account.key,
+                        equityShare: uniqueE24Keys[i].equityShare,
+                        equityType: account.transactions.filter(transaction_1 => transaction_1.e24Key === uniqueE24Keys[i].e24Key)[0].equityType,
+                        e24Key: uniqueE24Keys[i].e24Key,
+                        key: uuidv4(),
+                        value,
+                        yield: value - account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL").reduce((sum, transaction) => sum + transaction.cost, 0),
+                    }
+                )
+            }
 
 
-            return calculateE24Values(uniqueE24Keys, account)
-            
-        } else {//e24Id mangler. bruk kostpris som verdi
-            const uniquieHoldingNames = [...new Set(account.transactions.map(transaction => transaction.name))];
-            
+            const uniquieHoldingNames = [...new Set(transactionsWithoute24.map(transaction => transaction.name))];
+
             uniquieHoldingNames.forEach(name => {
                 const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
                 const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
@@ -101,10 +121,11 @@ export function getHoldings(account: Account): Promise<Holding[]> {
                     )
                 }
             })
-            
+
             return new Promise((resolve, reject) => {
                 resolve(holdings)
             })
+
         }
     }
 
@@ -134,22 +155,7 @@ async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: 
     const holdings: Holding[] = []
     const tickers = await fetchTickers(uniqueE24Keys)
 
-    for (let i = 0; i < uniqueE24Keys.length; i++) {
-        const transactionName: Transaction | undefined = account.transactions.find(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)
-        const value = uniqueE24Keys[i].equityShare * tickers[i]
-        holdings.push(
-            {
-                name: transactionName !== undefined ? transactionName.name : '',
-                accountKey: account.key,
-                equityShare: uniqueE24Keys[i].equityShare,
-                equityType: account.transactions.filter(transaction_1 => transaction_1.e24Key === uniqueE24Keys[i].e24Key)[0].equityType,
-                e24Key: uniqueE24Keys[i].e24Key,
-                key: uuidv4(),
-                value,
-                yield: value - account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL").reduce((sum, transaction) => sum + transaction.cost, 0),
-            }
-        )
-    }
+
     return new Promise((resolve, reject) => {
         resolve(holdings)
     })
