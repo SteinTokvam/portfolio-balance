@@ -150,17 +150,6 @@ async function fetchTickers(uniqueE24Keys: { e24Key: string, equityShare: number
     return await ret
 }
 
-async function calculateE24Values(uniqueE24Keys: { e24Key: string, equityShare: number, equityType: string }[], account: Account): Promise<Holding[]> {
-
-    const holdings: Holding[] = []
-    const tickers = await fetchTickers(uniqueE24Keys)
-
-
-    return new Promise((resolve, reject) => {
-        resolve(holdings)
-    })
-}
-
 export function setTotalValues(account: Account, holdings: Holding[], transactions?: Transaction[]): Promise<Holding[]> {
     return new Promise((resolve, reject) => {
         resolve(holdings)
