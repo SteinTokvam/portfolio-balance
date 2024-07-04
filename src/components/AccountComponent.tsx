@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor, Accordion, AccordionItem } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
@@ -41,6 +41,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
     const [development, setDevelopment] = useState({} as any)
+    const [newsTitles, setNewsTitles] = useState<any[]>([])
 
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
@@ -112,6 +113,25 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
         if (!account) {
             return
         }
+        if (account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key !== '').length > 0) {
+            console.log('fetching news')
+            console.log(holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key))
+            holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key).forEach((holding: Holding) => {
+                console.log("er her")
+                fetch('https://portfolio-balance-backend.onrender.com/newsweb/news', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ticker: holding.e24Key }),
+                })
+                    .then(res => res.json())
+                    .then((news: any) => {
+                        console.log(news)
+                        setNewsTitles(prevState => [...prevState, { issuer: news[0].issuerSign, news: news }])
+                    })
+            })
+        }
         if (account.isManual) {
             return
         }
@@ -133,7 +153,6 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             fetchKronDevelopment(account)
                 .then((development: any) => setDevelopment(development))
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -221,10 +240,30 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             }
             {
                 account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK).length > 0 &&
-                <div>
+                <div className="sm:w-3/4 sm:mx-auto">
                     <h1 className="text-default-800 font-bold text-xl">Børsmeldinger</h1>
                     {
-                        //TODO: liste ut børsmeldinger som hentes fra backend   
+                        newsTitles &&
+                        <Accordion>
+                            {
+                                newsTitles.map((issuer: any) => {
+                                    return (
+                                        <AccordionItem key={issuer.issuer} className="shadow-lg dark:bg-default/30 rounded-lg p-4" title={issuer.issuer}>
+                                            {
+                                                issuer.news.map((newsTitle: any) => {
+                                                    return (
+                                                        <div className="shadow-lg dark:bg-default/30 rounded-lg p-4">
+                                                            <p className="text-default-800 font-bold">{newsTitle.title}</p>
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                        </AccordionItem>
+                                    )
+                                })
+                            }
+
+                        </Accordion>
                     }
                 </div>
             }
@@ -294,7 +333,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                                 }}
                             </TableHeader>
                             {
-                                
+
                                 <TableBody className="text-left" items={sortedItems}
                                     emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
                                 >
