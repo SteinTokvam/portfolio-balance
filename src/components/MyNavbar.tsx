@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Navbar, NavbarBrand, NavbarContent, useDisclosure, NavbarMenu, NavbarMenuToggle, Link, NavbarMenuItem, Button } from "@nextui-org/react";
 import { Logo } from "../icons/Logo";
 import SettingsModalContent from "./Modal/SettingsModalContent";
@@ -17,7 +17,6 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
   const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
   const { t } = useTranslation();
 
-  // @ts-ignore
   const signedIn = window.localStorage.getItem('sb-gmfrmyphzawjnzcjuiqx-auth-token')
 
   const dispatch = useDispatch()
@@ -59,8 +58,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
-              // @ts-ignore
-              onPress={() => item.name === t('navbar.settings') ? handleClick(false, onOpen) : handleClick(false, () => navigate(item.link))}
+              onPress={() => item.name === t('navbar.settings') ? handleClick(false, onOpen) : handleClick(false, () => navigate(item.link as string))}
             >
               {item.name}
             </Button>
@@ -94,8 +92,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
               className="w-full"
-              // @ts-ignore
-              onPress={() => item.name === t('navbar.settings') ? handleClick(true, onOpen) : handleClick(true, () => navigate(item.link))}
+              onPress={() => item.name === t('navbar.settings') ? handleClick(true, onOpen) : handleClick(true, () => navigate(item.link as string))}
               size="lg"
             >
               {item.name}

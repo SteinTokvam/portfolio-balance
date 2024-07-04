@@ -65,7 +65,6 @@ export const importTransactions = (supabase: SupabaseClient, account: Account, t
 }
 
 export const importAccounts = (supabaseClient: SupabaseClient, accounts: Account[]) => {
-    // @ts-ignore
     importAccountsToSupabase(supabaseClient, accounts)
     return {
         type: 'IMPORT_ACCOUNTS',

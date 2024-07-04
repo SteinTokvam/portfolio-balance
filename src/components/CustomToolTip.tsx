@@ -1,7 +1,9 @@
 import React from "react"
+import { TooltipProps } from "recharts"
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
-// @ts-ignore
-export default function CustomToolTip({ active, payload, label }) {
+
+export default function CustomToolTip({ active, payload, label }: TooltipProps<ValueType, NameType>) {
     if (active && payload && payload.length) {
         return (
             <>
@@ -23,13 +25,12 @@ export default function CustomToolTip({ active, payload, label }) {
                                 <p>
                                     Avkastning i porsent: {payload[0].payload.yield_percentage}%
                                 </p>
-                                </div>
+                            </div>
                         </div >
-
                     ))
-    }
+                }
             </>
         )
-}
-return null
+    }
+    return null
 }

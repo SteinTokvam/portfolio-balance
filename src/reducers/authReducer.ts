@@ -1,6 +1,5 @@
 
 const initialState = {
-    // @ts-ignore
     session: null
 }
 

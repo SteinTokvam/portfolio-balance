@@ -9,12 +9,9 @@ import HoldingsDiagram from "./HoldingsDiagram";
 
 export default function Analysis() {
 
-    // @ts-ignore
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
+    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
 
     const totalValue = holdings.reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0)
     const [toInvest, setToInvest] = useState("0")

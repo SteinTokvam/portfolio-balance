@@ -5,8 +5,7 @@ import { setHideNumbers } from "../actions/settings";
 
 
 export default function HideNumbersSwitch() {
-    // @ts-ignore
-    const hideNumbers = useSelector(state => state.rootReducer.settings.hideNumbers) as boolean;
+    const hideNumbers = useSelector((state: any) => state.rootReducer.settings.hideNumbers) as boolean;
 
     const dispatch = useDispatch();
 

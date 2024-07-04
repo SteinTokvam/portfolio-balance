@@ -28,7 +28,6 @@ export default function DevelopmentGraph({ data }: {
                             <XAxis dataKey="date" />
                             <YAxis />
                             <Tooltip content={
-                                // @ts-ignore
                                 <CustomToolTip />
                             }
                             />

@@ -1,8 +1,7 @@
 import { useDb } from "../Util/Global";
 import { Account, Transaction } from "../types/Types"
 
-// @ts-ignore
-const initialState = useDb ? {accounts: []} : {accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts')) : []}
+const initialState = useDb ? {accounts: []} : {accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts') as string) : []}
 
 const accountReducer = (state = initialState, action: { type: string; payload: { key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string } }) => {
     var currentAccounts = []

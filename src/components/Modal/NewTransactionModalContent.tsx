@@ -23,8 +23,7 @@ export default function NewTransactionModalContent({ supabase, account }: { supa
 
     const dispatch = useDispatch()
 
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
 
     const transactionType = [
         { key: TransactionType.BUY, label: t('transactionType.buy') },
@@ -125,9 +124,7 @@ return (
                     <Input type="date"
                         classNames={styles.textInputStyle}
                         label={"Transaksjonsdato"}
-                        // @ts-ignore
                         value={date}
-                        // @ts-ignore
                         onValueChange={setDate} />
 
                     {

@@ -22,12 +22,9 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    // @ts-ignore
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
-    // @ts-ignore
-    const settings = useSelector(state => state.rootReducer.settings)
+    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
+    const settings = useSelector((state: any) => state.rootReducer.settings)
 
     const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b

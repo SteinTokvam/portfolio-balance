@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect, useMemo, useState } from "react";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
@@ -9,7 +9,7 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../actions/holdings";
@@ -27,17 +27,16 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
 
     const { accountKey } = useParams();
 
-    const [sortDescriptor, setSortDescriptor] = useState({
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
         column: "date",
         direction: "descending",
     });
 
     const navigate = useNavigate()
 
-    // @ts-ignore
-    const account = useSelector(state => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
+
+    const account = useSelector((state: any) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
@@ -45,10 +44,8 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
 
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
-            // @ts-ignore
-            const first = a[sortDescriptor.column];
-            // @ts-ignore
-            const second = b[sortDescriptor.column];
+            const first = a[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
+            const second = b[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
             var cmp = 0
             if (sortDescriptor.column === 'amount') {
                 cmp = parseFloat(first) < parseFloat(second) ? -1 : parseFloat(first) > parseFloat(second) ? 1 : 0;
@@ -213,7 +210,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
 
             <div className="text-center">
                 <h1 className="text-default-800 font-bold text-xl">{account && account.name}</h1>
-                <h1 className="text-default-800 font-bold text-3xl">{account && holdings.filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001).reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h1>
+                <h1 className="text-default-800 font-bold text-3xl">{account && holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}</h1>
             </div>
             {
                 development.length > 0 ? <DevelopmentGraph data={development} /> :
@@ -221,6 +218,15 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                         src='https://via.assets.so/img.jpg?w=800&h=600&tc=blue&bg=#cecece&t=placeholder'
                         alt="logo"
                     />
+            }
+            {
+                account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK).length > 0 &&
+                <div>
+                    <h1 className="text-default-800 font-bold text-xl">Børsmeldinger</h1>
+                    {
+                        //TODO: liste ut børsmeldinger som hentes fra backend   
+                    }
+                </div>
             }
 
             <div className="grid grid-cols-2 py-4">
@@ -230,7 +236,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 </div>
                 <div className="p-4">
                     <p className="text-default-600">Antall verdipapirer</p>
-                    <p className="text-default-800 font-bold">{holdings.filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001).length}</p>
+                    <p className="text-default-800 font-bold">{holdings.length}</p>
                 </div>
                 {
                     account && account.name === 'Firi' ?
@@ -276,9 +282,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                             aria-label={"konto"}
                             className="text-foreground"
                             selectionMode="none"
-                            // @ts-ignore
                             sortDescriptor={sortDescriptor}
-                            // @ts-ignore
                             onSortChange={setSortDescriptor}
                         >
                             <TableHeader columns={getColumns(account)}>
@@ -290,8 +294,8 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                                 }}
                             </TableHeader>
                             {
-                                // @ts-ignore
-                                <TableBody classNames="text-left" items={sortedItems}
+                                
+                                <TableBody className="text-left" items={sortedItems}
                                     emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
                                 >
                                     {(item: Transaction) => (

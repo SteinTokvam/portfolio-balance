@@ -21,8 +21,7 @@ export default function ImportTransactionsModalContent({ account, supabase }: { 
         hiddenFileInput.current.click();
     };
 
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
 
     const [selectedInvestmentKeys, setSelectedInvestmentKeys] = useState([]);
     const selectedInvestmentType = useMemo(

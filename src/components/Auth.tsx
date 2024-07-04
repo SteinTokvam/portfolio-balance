@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactNode } from 'react'
-import { SupabaseClient } from '@supabase/supabase-js'
+import { Session, SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link } from 'react-router-dom'
 import { styles, useDb } from '../Util/Global'
@@ -11,8 +11,7 @@ import { useTranslation } from 'react-i18next'
 
 export default function Auth({ supabase, children }: { supabase: SupabaseClient, children: ReactNode }) {
 
-    // @ts-ignore
-    const [session, setSession] = useState(null)
+    const [session, setSession] = useState<Session | null>(null)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
@@ -25,14 +24,12 @@ export default function Auth({ supabase, children }: { supabase: SupabaseClient,
             return
         }
         supabase.auth.getSession().then(({ data: { session } }) => {
-            // @ts-ignore
             setSession(session)
         })
 
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange((_event, session) => {
-            // @ts-ignore
             setSession(session)
         })
 

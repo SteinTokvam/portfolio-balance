@@ -12,13 +12,9 @@ import { addHoldings } from "../actions/holdings";
 
 export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
 
-    // @ts-ignore
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts);
-
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings);
-    // @ts-ignore
-    const settings = useSelector(state => state.rootReducer.settings);
+    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts);
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
+    const settings = useSelector((state: any) => state.rootReducer.settings);
 
     const dispatch = useDispatch();
 

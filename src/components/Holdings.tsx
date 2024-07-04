@@ -7,8 +7,7 @@ import { addHoldings } from "../actions/holdings";
 
 export default function Holdings({ account }: { account: Account }) {
 
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings);
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
 
     const dispatch = useDispatch();
 

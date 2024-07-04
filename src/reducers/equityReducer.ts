@@ -1,8 +1,7 @@
 import { EquityType, EquityTypes } from "../types/Types";
 
 const initialState = {
-    // @ts-ignore
-    equityTypes: window.localStorage.getItem('equitytypes') ? JSON.parse(window.localStorage.getItem('equitytypes')) :
+    equityTypes: window.localStorage.getItem('equitytypes') ? JSON.parse(window.localStorage.getItem('equitytypes') as string) :
         [
             {
                 key: EquityTypes.FUND,

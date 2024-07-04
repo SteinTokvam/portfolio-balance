@@ -11,8 +11,7 @@ import { EquityType } from "../../types/Types";
 export default function ChangeGoalPercentageModalContent() {
     const { t } = useTranslation()
 
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
 
     const [selectedEquityTypeKey, setSelectedTransactionKeys] = useState(["Fund"]);
     const selectedEquityType = useMemo(

@@ -6,14 +6,10 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 export default function EquityTypesView() {
-    // @ts-ignore
-    const accounts = useSelector(state => state.rootReducer.accounts.accounts)
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
-    // @ts-ignore
-    const holdings = useSelector(state => state.rootReducer.holdings.holdings)
-    // @ts-ignore
-    const settings = useSelector(state => state.rootReducer.settings)
+    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
+    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
+    const settings = useSelector((state: any) => state.rootReducer.settings)
     const { t } = useTranslation();
     
     return (

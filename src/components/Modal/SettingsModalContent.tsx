@@ -12,13 +12,11 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
     const dispatch = useDispatch()
     const { t } = useTranslation();
 
-    // @ts-ignore
-    const accounts = useSelector(state => state.rootReducer.accounts)
-    // @ts-ignore
-    const equityTypes = useSelector(state => state.rootReducer.equity.equityTypes)
+    const accounts = useSelector((state: any) => state.rootReducer.accounts)
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
     const hiddenFileInput = useRef(null);
-    // @ts-ignore
-    const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings')) !== null ? JSON.parse(window.localStorage.getItem('settings')).language : 'us')
+    
+    const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings') as string) !== null ? JSON.parse(window.localStorage.getItem('settings') as string).language : 'us')
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
 
     const selectedLanguage = useMemo(
@@ -48,8 +46,7 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
 
     const processFile = () => {
         return JSON.stringify({
-            // @ts-ignore
-            settings: JSON.parse(window.localStorage.getItem('settings')),
+            settings: JSON.parse(window.localStorage.getItem('settings') as string),
             accounts: accounts,
             equitytypes: equityTypes
         })

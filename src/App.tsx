@@ -22,8 +22,7 @@ function App() {
 
   const dispatch = useDispatch()
 
-  // @ts-ignore
-  const accounts = useSelector(state => state.rootReducer.accounts.accounts)
+  const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
   
   const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
 
