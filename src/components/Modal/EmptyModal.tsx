@@ -10,7 +10,7 @@ type Props = {
     children: React.ReactNode
 }
 
-export default function EmptyModal({ isOpen, onOpenChange, hideCloseButton = true, isDismissable = false, size = "md", children }: Props) {
+export default function EmptyModal({ isOpen, onOpenChange, hideCloseButton = true, isDismissable = false, size = "full", children }: Props) {
 
     return (
         <Modal
