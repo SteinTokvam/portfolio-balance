@@ -20,6 +20,7 @@ import { routes } from "../Util/Global";
 import Holdings from "./Holdings";
 import { SupabaseClient } from "@supabase/supabase-js";
 import DevelopmentGraph from "./DevelopmentGraph";
+import NewsMessageModalContent from "./Modal/NewsMessageModalContent";
 
 export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
 
@@ -117,7 +118,6 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             console.log('fetching news')
             console.log(holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key))
             holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key).forEach((holding: Holding) => {
-                console.log("er her")
                 fetch('https://portfolio-balance-backend.onrender.com/newsweb/news', {
                     method: 'POST',
                     headers: {
@@ -127,7 +127,6 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 })
                     .then(res => res.json())
                     .then((news: any) => {
-                        console.log(news)
                         setNewsTitles(prevState => [...prevState, { issuer: news[0].issuerSign, news: news }])
                     })
             })
@@ -156,16 +155,25 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    function handleOpen(type: string, account: Account) {
+    function handleOpen(type: string, account: Account | undefined, messageId?: string) {
         switch (type) {
             case 'import':
-                setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                if(account) {
+                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)    
+                }
                 break
             case 'transaction':
-                setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)
+                if(account) {
+                    setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)    
+                }
                 break
+            case 'news':
+                setModalContent(<NewsMessageModalContent messageId={messageId} />)
+                break;
             default:
-                setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                if(account) {
+                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)    
+                }
                 break
         }
         onOpen()
@@ -253,7 +261,9 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                                                 issuer.news.map((newsTitle: any) => {
                                                     return (
                                                         <div className="shadow-lg dark:bg-default/30 rounded-lg p-4">
-                                                            <p className="text-default-800 font-bold">{newsTitle.title}</p>
+                                                            <Button variant="light" onPress={() => {
+                                                                handleOpen('news', undefined, newsTitle.messageId)
+                                                            }}>{newsTitle.title}</Button>
                                                         </div>
                                                     )
                                                 })
