@@ -1,4 +1,4 @@
-import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
+import { Button, Chip, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -27,9 +27,10 @@ export default function NewsMessageModalContent({ messageId }: { messageId: stri
 
     function formatMessage(message: string) {
         if(!message) return
-        console.log(message)
-        if(message.includes('\n')) {
-            return message.replaceAll(' ', '\u00A0').split('\n').map((paragraph: string, index: number) => <p key={index}>{paragraph}</p>)
+        if(message.includes('\n') && !message.includes('|')) {
+            return message.split('\n').map((paragraph: string, index: number) => <p key={index}>{paragraph}</p>)
+        } else if(message.includes('|')) {
+            return message.replaceAll('  ', '\u00A0').split('\n').map((paragraph: string, index: number) => <p key={index}>{paragraph}</p>)
         }
     }
 return (
@@ -38,6 +39,8 @@ return (
             <>
                 <ModalHeader>{newsMessage.title}</ModalHeader>
                 <ModalBody>
+                    {newsMessage.publishedTime && <h2 className="text-left text-sm font-bold">{newsMessage.publishedTime}</h2>}
+                    {newsMessage.category && newsMessage.category.map((category: any, index: number) => <Chip variant="flat" key={index} color="primary" className="p-2 mb-2">{category.category_no}</Chip>)}
                     {newsMessage.body && formatMessage(newsMessage.body)}
                 </ModalBody>
                 <ModalFooter>
