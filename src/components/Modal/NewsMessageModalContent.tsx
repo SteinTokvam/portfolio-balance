@@ -23,7 +23,7 @@ export default function NewsMessageModalContent({ messageId }: { messageId: stri
                 console.log(res)
                 setNewsMessage(res)
             })
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     function formatMessage(message: string) {
         if(!message) return
