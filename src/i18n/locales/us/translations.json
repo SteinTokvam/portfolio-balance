@@ -87,5 +87,8 @@
         "stock": "Stock",
         "cryptocurrency": "Cryptocurrency",
         "loan": "Loan"
+    },
+    "holdings": {
+        "seeMore": "Investment info"
     }
 }

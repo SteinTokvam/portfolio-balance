@@ -87,5 +87,8 @@
         "stock": "Aksje",
         "cryptocurrency": "Kryptovaluta",
         "loan": "Obligasjonslån"
+    },
+    "holdings": {
+        "seeMore": "Mer om dette fondet"
     }
 }

@@ -157,21 +157,21 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
     function handleOpen(type: string, account: Account | undefined, messageId?: string) {
         switch (type) {
             case 'import':
-                if(account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)    
+                if (account) {
+                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
                 }
                 break
             case 'transaction':
-                if(account) {
-                    setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)    
+                if (account) {
+                    setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)
                 }
                 break
             case 'news':
                 setModalContent(<NewsMessageModalContent messageId={messageId} />)
                 break;
             default:
-                if(account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)    
+                if (account) {
+                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
                 }
                 break
         }
@@ -188,6 +188,8 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={false}
                     showText={false} />
+            case 'name':
+                return item.type === 'FEE' ? item.name = 'Fee' : item.name
             case 'cost':
                 return item.cost.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
             default:

@@ -24,6 +24,7 @@ export type Holding = {
     equityShare: number
     e24Key: string
     yield: number
+    isin?: string
 }
 
 export type Transaction = {
