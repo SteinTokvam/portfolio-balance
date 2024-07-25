@@ -115,7 +115,6 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             return
         }
         if (account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key !== '').length > 0) {
-            console.log('fetching news')
             console.log(holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key))
             holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key).forEach((holding: Holding) => {
                 fetch('https://portfolio-balance-backend.onrender.com/newsweb/news', {

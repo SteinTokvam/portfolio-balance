@@ -68,7 +68,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                     name: selectedRadio,
                     key: account ? account.key : uuidv4(),
                     type: account ? account.type : "",
-                    transactions: account ? account.transactions : [],
+                    transactions: [],
                     totalValue: 0,
                     yield: 0,
                     isManual: false,

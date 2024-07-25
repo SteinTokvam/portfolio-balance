@@ -54,10 +54,23 @@ export async function addAccount(supabase: SupabaseClient, account: Account): Pr
 }
 
 export async function updateAccount(supabase: SupabaseClient, account: Account): Promise<Boolean> {
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('accounts')
-        .update(account)
+        .update([account].map((account: Account) => {
+            return {
+                name: account.name,
+                key: account.key,
+                type: account.type,
+                totalValue: account.totalValue,
+                isManual: account.isManual,
+                accessKey: account.apiInfo?.accessKey,
+                kronAccountId: account.apiInfo?.kronAccountId
+            }
+        }))
         .eq('key', account.key)
+        .select()
+
+        console.log(data)
 
     if (error) {
         console.log(error)
