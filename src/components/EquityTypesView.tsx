@@ -5,7 +5,7 @@ import { Spacer, Skeleton } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
-export default function EquityTypesView() {
+export default function EquityTypesView({ totalValue }: { totalValue: number }) {
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
     const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
@@ -47,7 +47,7 @@ export default function EquityTypesView() {
                                                     ((holdings
                                                         .filter((holding: Holding) => holding.equityType === equityType.key)
                                                         .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                                }%</span> / {equityType.goalPercentage}%</h4>
+                                                }%</span> / {equityType.goalPercentage}% ({(((totalValue/100)*equityType.goalPercentage)-holdings.filter((holding: Holding) => holding.equityType === equityType.key).reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})</h4>
                                     </Skeleton>
                                 </div>)
                         })

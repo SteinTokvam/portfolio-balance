@@ -25,7 +25,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
     const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
     const settings = useSelector((state: any) => state.rootReducer.settings)
-
+    const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
         return a.value > b.value ? a : b
     }, holdings[0])
@@ -84,7 +84,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 <h2 className={styles.valueText}>
                     {
                         settings.hideNumbers ? '*** Kr' :
-                            holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                            totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                     }
                 </h2>
                 <Spacer y={2} />
@@ -142,7 +142,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             </div>
 
             <Spacer y={4} />
-            <EquityTypesView />
+            <EquityTypesView totalValue={totalValue} />
 
             {
                 biggestInvestment &&
