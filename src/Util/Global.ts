@@ -104,7 +104,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
             uniquieHoldingNames.forEach(name => {
                 const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
                 const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
-                const value = name === "Bare Bitcoin" ? equityShare * 660000 :  buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
+                const value = name === "BTC" ? equityShare * 660000 :  buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
 
                 if (value > 0.5) {
                     holdings.push(
