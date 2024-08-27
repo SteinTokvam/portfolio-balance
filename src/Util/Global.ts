@@ -127,6 +127,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
                             equityType: buysAndSells.filter(transaction => transaction.name === name)[0].equityType,
                             e24Key: buysAndSells.filter(transaction => transaction.name === name)[0].e24Key,
                             key: uuidv4(),
+                            // @ts-ignore
                             value: value.then((value) => value),
                             yield: account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "YIELD").reduce((sum, transaction) => sum + transaction.cost, 0),
                         }
