@@ -82,7 +82,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                 {
                     name: selectedRadio,
                     key: uuidv4(),
-                    type: selectedRadio === "Firi" ? AccountTypes.CRYPTOCURRENCY : AccountTypes.AKSJEFONDSKONTO,
+                    type: selectedRadio === "Firi" || selectedRadio === "Bare Bitcoin" ? AccountTypes.CRYPTOCURRENCY : AccountTypes.AKSJEFONDSKONTO,
                     transactions: [],
                     totalValue: 0,
                     yield: 0,
@@ -136,13 +136,14 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                                     onValueChange={setSelectedRadio}
                                 >
                                     <Radio value="Firi">Firi</Radio>
+                                    <Radio value="Bare Bitcoin">Bare Bitcoin</Radio>
                                     <Radio value="Kron">Kron</Radio>
                                 </RadioGroup>
 
                                 <Input type="text"
                                     classNames={styles.textInputStyle}
                                     className="pt-4"
-                                    label={selectedRadio === "Firi" ? "Firi api key" : "Kron access key"}
+                                    label={selectedRadio === "Firi" ? "Firi api key" : selectedRadio === "Kron" ? "Kron access key" : "Bare Bitcoin api key"}
                                     value={accessKeyText}
                                     onValueChange={setAccessKeyText} />
                                 {
@@ -158,7 +159,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                                         title={<h1 className="border-b">{selectedRadio === "Firi" ? t('accountModal.firiAccordionTitle') : t('accountModal.kronAccordionTitle')}</h1>}
                                     >
                                         <div className="">
-                                            <p>{selectedRadio === "Firi" ? t('accountModal.firiHelpText1') : t('accountModal.kronHelpText1')}
+                                            <p>{selectedRadio === "Firi" ? t('accountModal.firiHelpText1') : selectedRadio === "Kron" ? t('accountModal.kronHelpText1') : "Bare Bitcoin"}
 
                                                 {
                                                     selectedRadio === "Firi" ? <Link

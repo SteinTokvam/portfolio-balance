@@ -21,6 +21,7 @@ import Holdings from "./Holdings";
 import { SupabaseClient } from "@supabase/supabase-js";
 import DevelopmentGraph from "./DevelopmentGraph";
 import NewsMessageModalContent from "./Modal/NewsMessageModalContent";
+import { fetchBBTransactions } from "../Util/BareBitcoin";
 
 export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
 
@@ -150,6 +151,11 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 })
             fetchKronDevelopment(account)
                 .then((development: any) => setDevelopment(development))
+        } else if(account.name === 'Bare Bitcoin') {
+            fetchBBTransactions(account)
+            .then((transactions: Transaction[]) => {
+                dispatch(importTransactions(supabase, account, transactions))
+            })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

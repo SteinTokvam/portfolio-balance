@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings } from "./Kron";
 import { fetchFiriHoldings } from "./Firi";
 import { fetchTicker } from "./E24";
+import { fetchBBHoldings } from "./BareBitcoin";
 
 export const languages = ["us", "no"];
 
@@ -135,6 +136,8 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
     } else if (account.name === "Firi") {
         const firiHoldings = fetchFiriHoldings(account)
         return firiHoldings
+    } else if(account.name === "Bare Bitcoin") {
+        return fetchBBHoldings(account)
     }
 
     return emptyHoldingPromise()
