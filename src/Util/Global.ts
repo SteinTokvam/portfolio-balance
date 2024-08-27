@@ -104,21 +104,9 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
             uniquieHoldingNames.forEach(name => {
                 const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
                 const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
-                const value = name === "BTC" ? fetch('https://barebitcoin.no/connect/bb.v1alpha.BBService/Price', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(response => {
-                    console.log(response)
-                    console.log(equityShare)
-                    console.log((response.buyBtcnok-(response.buyBtcnok-response.sellBtcnok))*equityShare)
-                    return response.buyBtcnok-(response.buyBtcnok-response.sellBtcnok)}) : 
-                buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
+                const value = name === "Bare Bitcoin" ? equityShare * 650000 :  buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
 
-                if (value as number > 0.5) {
+                if (value > 0.5) {
                     holdings.push(
                         {
                             name,
@@ -127,8 +115,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
                             equityType: buysAndSells.filter(transaction => transaction.name === name)[0].equityType,
                             e24Key: buysAndSells.filter(transaction => transaction.name === name)[0].e24Key,
                             key: uuidv4(),
-                            // @ts-ignore
-                            value: value.then((value) => value),
+                            value,
                             yield: account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "YIELD").reduce((sum, transaction) => sum + transaction.cost, 0),
                         }
                     )
