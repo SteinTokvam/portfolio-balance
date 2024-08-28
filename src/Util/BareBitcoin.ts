@@ -1,6 +1,6 @@
 import { Account, Holding, Transaction } from "../types/Types";
 
-const isLocal = true
+const isLocal = false
 const baseUrl = isLocal ? 'http://localhost:3000' : 'https://portfolio-balance-backend.onrender.com'
 
 export async function fetchBBTransactions(account: Account): Promise<Transaction[]> {
