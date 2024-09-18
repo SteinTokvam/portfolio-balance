@@ -125,6 +125,9 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                     <p className="text-lg">
                         {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
                     </p>
+                    <p className={`text-md ${holding.yield >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                        ({settings.hideNumbers ? '*** Kr' : holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})
+                    </p>
                     <Progress
                         value={(holding.value / totalValue) * 100}
                         color="primary"
@@ -137,8 +140,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     return (
         <div className="container mx-auto p-4">
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
-                    <ChangeGoalPercentageModalContent />
-                </EmptyModal>
+                <ChangeGoalPercentageModalContent />
+            </EmptyModal>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                 <Card>
                     <CardHeader>
@@ -214,33 +217,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         }
                     </CardBody>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <h2 className="text-lg font-semibold">{t('dashboard.holdings')}</h2>
-                    </CardHeader>
-                    <CardBody>
-                        <Table aria-label="Holdings">
-                            <TableHeader>
-                                <TableColumn>{t('dashboard.name')}</TableColumn>
-                                <TableColumn>{t('dashboard.total')}</TableColumn>
-                                <TableColumn>{t('dashboard.yield')}</TableColumn>
-                            </TableHeader>
-                            <TableBody>
-                                {holdings.map((holding: Holding) => (
-                                    <TableRow key={holding.key}>
-                                        <TableCell>{holding.name}</TableCell>
-                                        <TableCell>
-                                            {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
-                                        </TableCell>
-                                        <TableCell>
-                                            {settings.hideNumbers ? '*** Kr' : (holding.yield || 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardBody>
-                </Card>
+                
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.analysis')}</h2>

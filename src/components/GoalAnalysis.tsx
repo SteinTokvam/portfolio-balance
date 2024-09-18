@@ -45,7 +45,7 @@ export default function GoalAnalysis() {
                 <div className="w-full flex flex-col justify-center">
                     <Divider />
 
-                    <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-cols-2 sm:gap-8 sm:justify-between" >
+                    <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-rows-2 sm:gap-8 sm:justify-between" >
                         <h4 className={styles.valueHeaderText}>
                             {
                                 t('dashboard.investmentToFocus',
