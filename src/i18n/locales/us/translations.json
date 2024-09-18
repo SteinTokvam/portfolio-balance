@@ -16,7 +16,8 @@
         "update": "Oppdater",
         "hideNumbers": "Hide numbers",
         "name": "Name",
-        "analysis": "What to consider..."
+        "analysis": "What to consider...",
+        "wantedEquityDistribution": "Wanted equity distribution"
     },
     "navbar": {
         "brand": "Portfolio rebalancer",

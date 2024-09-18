@@ -26,11 +26,6 @@ export default function EquityTypesView({ totalValue }: { totalValue: number }) 
                                             .filter((holding: Holding) => holding.equityType === equityType.key)
                                             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) > 0
                                     }>
-                                        <h4 className={styles.valueText}>{//verdien
-                                            settings.hideNumbers ? '*** Kr' : holdings
-                                                .filter((holding: Holding) => holding.equityType === equityType.key)
-                                                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                                        }</h4>
                                     </Skeleton>
                                     <Skeleton className="rounded-lg" isLoaded={
                                         holdings
@@ -47,7 +42,7 @@ export default function EquityTypesView({ totalValue }: { totalValue: number }) 
                                                     ((holdings
                                                         .filter((holding: Holding) => holding.equityType === equityType.key)
                                                         .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)) * 100).toFixed(2)
-                                                }%</span> / {equityType.goalPercentage}% ({(((totalValue/100)*equityType.goalPercentage)-holdings.filter((holding: Holding) => holding.equityType === equityType.key).reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})</h4>
+                                                }%</span> / {equityType.goalPercentage}%</h4>
                                     </Skeleton>
                                 </div>)
                         })

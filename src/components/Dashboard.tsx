@@ -16,6 +16,7 @@ import { toggleHideNumbers } from "../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
 import EmptyModal from "./Modal/EmptyModal"
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent"
+import EquityTypesView from "./EquityTypesView"
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const { t } = useTranslation()
@@ -193,6 +194,14 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 </Card>
                 <Card>
                     <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.wantedEquityDistribution')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <EquityTypesView totalValue={totalValue} />
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.accountPerformance')}</h2>
                     </CardHeader>
                     <CardBody>
@@ -217,7 +226,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         }
                     </CardBody>
                 </Card>
-                
+
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.analysis')}</h2>

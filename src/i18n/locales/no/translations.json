@@ -16,7 +16,8 @@
         "update": "Oppdater",
         "hideNumbers": "Skjul tall",
         "name": "Navn",
-        "analysis": "Ting å vurdere..."
+        "analysis": "Ting å vurdere...",
+        "wantedEquityDistribution": "Ønsket fordeling av investeringer"
     },
     "navbar": {
         "brand": "Portfolio rebalancer",
