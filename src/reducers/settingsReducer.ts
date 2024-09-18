@@ -5,7 +5,7 @@ const initialState = {
 
 const settingsReducer = (state = initialState, action: { type: string; payload: any }) => {
     switch (action.type) {
-        case 'SET_HIDE_NUMBERS':
+        case 'TOGGLE_HIDE_NUMBERS':
             return {
                 ...state,
                 hideNumbers: action.payload.hideNumbers

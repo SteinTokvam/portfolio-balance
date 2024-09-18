@@ -1,47 +1,43 @@
-import React from "react";
-import { Spacer, useDisclosure, Button } from "@nextui-org/react";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
+import { SupabaseClient } from "@supabase/supabase-js"
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
+import { Card, CardBody, CardHeader, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
-import EmptyModal from "./Modal/EmptyModal";
-import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent";
-import { Account, Holding, Transaction } from "../types/Types";
-import { addHoldings, deleteAllHoldings } from "../actions/holdings";
-import { getHoldings, styles, useDb } from "../Util/Global";
-import { fetchFiriTransactions } from "../Util/Firi";
-import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts";
-import { fetchKronTransactions } from "../Util/Kron";
-import { SupabaseClient } from "@supabase/supabase-js";
-import HideNumbersSwitch from "./HideNumbersSwitch";
-import { getAccounts, getTransactions } from "../Util/Supabase";
-import GoalAnalysis from "./GoalAnalysis";
-import EquityTypesView from "./EquityTypesView";
+import { Account, Holding, Transaction, TransactionType } from "../types/Types"
+import { addHoldings, deleteAllHoldings } from "../actions/holdings"
+import { getHoldings, useDb } from "../Util/Global"
+import { fetchFiriTransactions } from "../Util/Firi"
+import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts"
+import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron"
+import { getAccounts, getTransactions } from "../Util/Supabase"
+import { toggleHideNumbers } from "../actions/settings"
+import GoalAnalysis from "./GoalAnalysis"
+import EmptyModal from "./Modal/EmptyModal"
+import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent"
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
-
-    const { t } = useTranslation();
-    const dispatch = useDispatch();
+    const { t } = useTranslation()
+    const dispatch = useDispatch()
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
+    const holdings: Holding[] = useSelector((state: any) => state.rootReducer.holdings.holdings)
     const settings = useSelector((state: any) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
-    const biggestInvestment = holdings.length !== 0 && holdings.reduce((a: Holding, b: Holding) => {
-        return a.value > b.value ? a : b
-    }, holdings[0])
-
+    const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
+    const [development, setDevelopment] = useState({} as any)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     useEffect(() => {
-        if (!accounts) {
-            return
-        }
+        if (!accounts) return
         accounts.forEach((account: Account) => {
+            if (account.name === 'Kron') {
+                fetchKronDevelopment(account)
+                    .then((development: any) => setDevelopment(development))
+            }
             getHoldings(account)
                 .then(holdings => {
-                    if (holdings.length === 0) {
-                        return
-                    }
+                    if (holdings.length === 0) return
                     dispatch(addHoldings(holdings, account.key))
                 })
         })
@@ -50,9 +46,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     function getAccountsAndHoldings(account: Account) {
         getHoldings(account)
             .then(holdings => {
-                if (holdings.length === 0) {
-                    return
-                }
+                if (holdings.length === 0) return
                 dispatch(addHoldings(holdings, account.key))
             })
 
@@ -69,96 +63,211 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
         }
     }
 
-    return (
-        <>
-            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
-                <ChangeGoalPercentageModalContent />
-            </EmptyModal>
-            {
-                //totalverdi
-            }
-            <div className="flex flex-col items-center justify-center">
-                <Spacer y={10} />
-                <h1 className={styles.valueHeaderText}>{t('dashboard.total')}</h1>
-                <Spacer y={2} />
-                <h2 className={styles.valueText}>
-                    {
-                        settings.hideNumbers ? '*** Kr' :
-                            totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                    }
-                </h2>
-                <Spacer y={2} />
-                <h1 className={styles.valueHeaderText}>Avkastning</h1>
-                <Spacer y={2} />
-                <h2 className={styles.valueText}>
-                    {
-                        settings.hideNumbers ? '*** Kr' :
-                            holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
-                    }
-                </h2>
-                <Spacer y={20} />
-            </div>
+    const updateData = () => {
+        dispatch(deleteAllHoldings())
+        dispatch(deleteAllAccounts(supabase, false))
+        if (!accounts) return
+        if (useDb) {
+            getAccounts(supabase)
+                .then(accounts => {
+                    accounts.forEach(account => {
+                        getTransactions(supabase, account.key)
+                            .then(transactions => {
+                                dispatch(initSupabaseData({ ...account, transactions }))
+                                getAccountsAndHoldings({ ...account, transactions })
+                            })
+                    })
+                })
+        } else {
+            accounts.forEach((account: Account) => {
+                getAccountsAndHoldings(account)
+            })
+        }
+    }
 
-            <div className="flex flex-col items-center">
+    const equityTypeData = holdings.reduce((acc: any[], holding: Holding) => {
+        const existingType = acc.find(item => item.name === t(`equityTypes.${holding.equityType.toLowerCase()}`))
+        if (existingType) {
+            existingType.value += holding.value
+        } else {
+            acc.push({ name: t(`equityTypes.${holding.equityType.toLowerCase()}`), value: holding.value })
+        }
+        return acc
+    }, [])
+
+    const accountData = accounts.map((account: Account) => {
+        const accountValue = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.value, 0)
+        var yieldForAccount = "0"
+        if (account.name === "FundingPartner") {
+            yieldForAccount = account.transactions.filter((transaction: Transaction) => transaction.type === TransactionType.YIELD).reduce((a: number, b: Transaction) => a + b.cost, 0).toFixed(0)
+        } else if (account.name === "Kron") {
+            yieldForAccount = development && development.length > 0 ? development[development.length - 1].yield_in_currency.toFixed(0) : "0"
+        } else if (account.name === "Bare Bitcoin") {
+            yieldForAccount = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.yield, 0).toFixed(0)
+        } else {
+            yieldForAccount = (accountValue - account.transactions.reduce((a: number, b: Transaction) => a + b.cost, 0)).toFixed(0)
+        }
+        return {
+            name: account.name,
+            value: accountValue.toFixed(0),
+            yield: yieldForAccount,
+
+        }
+    }).sort((a: any, b: any) => b.name - a.name)
+
+    function getHoldingCard() {
+        const tmpHoldings = [...holdings]
+        return tmpHoldings
+            .sort((a: Holding, b: Holding) => b.name > a.name ? -1 : 1)
+            .map((holding: Holding) => (
+                <>
+                    <h3 className="text-xl font-semibold">{holding.name}</h3>
+                    <p className="text-lg">
+                        {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                    </p>
+                    <Progress
+                        value={(holding.value / totalValue) * 100}
+                        color="primary"
+                        className="mt-2"
+                    />
+                </>
+            ))
+    }
+
+    return (
+        <div className="container mx-auto p-4">
+            <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
+                    <ChangeGoalPercentageModalContent />
+                </EmptyModal>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.total')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <h3 className="text-3xl font-bold">
+                            {settings.hideNumbers ? '*** Kr' : totalValue.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                        </h3>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.yield')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <h3 className="text-3xl font-bold">
+                            {settings.hideNumbers ? '*** Kr' : totalYield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                        </h3>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.equityDistribution')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie
+                                    data={equityTypeData}
+                                    dataKey="value"
+                                    nameKey="name"
+                                    cx="50%"
+                                    cy="50%"
+                                    paddingAngle={3}
+                                    innerRadius={40}
+                                    outerRadius={80}
+                                    fill="#8884d8"
+                                    label={({ _, percent }) => `${(percent * 100).toFixed(1)}%`}
+                                >
+                                    {equityTypeData.map((_: any, index: number) => (
+                                        <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />
+                                    ))}
+                                </Pie>
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.accountPerformance')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={accountData}>
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Bar dataKey="value" fill="#8884d8" name={t('dashboard.total')} />
+                                <Bar dataKey="yield" fill="#82ca9d" name={t('dashboard.yield')} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.biggestInvestment')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        {
+                            getHoldingCard()
+                        }
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.holdings')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <Table aria-label="Holdings">
+                            <TableHeader>
+                                <TableColumn>{t('dashboard.name')}</TableColumn>
+                                <TableColumn>{t('dashboard.total')}</TableColumn>
+                                <TableColumn>{t('dashboard.yield')}</TableColumn>
+                            </TableHeader>
+                            <TableBody>
+                                {holdings.map((holding: Holding) => (
+                                    <TableRow key={holding.key}>
+                                        <TableCell>{holding.name}</TableCell>
+                                        <TableCell>
+                                            {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                                        </TableCell>
+                                        <TableCell>
+                                            {settings.hideNumbers ? '*** Kr' : (holding.yield || 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <h2 className="text-lg font-semibold">{t('dashboard.analysis')}</h2>
+                    </CardHeader>
+                    <CardBody>
+                        <GoalAnalysis />
+                    </CardBody>
+                </Card>
+            </div>
+            <div className="mt-4 flex flex-col items-center">
+                <Button color="primary" onPress={updateData} className="mb-2">
+                    {t('dashboard.update')}
+                </Button>
                 <Button
                     color="primary"
                     onPress={onOpen}
-                    className="w-3/4 sm:w-1/4"
                 >
                     {t('dashboard.updateGoalPercentage')}
                 </Button>
                 <Spacer y={2} />
-                <Button
-                    className="w-3/4 sm:w-1/4"
-                    onClick={() => {
-                        dispatch(deleteAllHoldings())
-                        dispatch(deleteAllAccounts(supabase, false))
-                        if (!accounts) {
-                            return
-                        }
-                        if (useDb) {
-                            getAccounts(supabase)
-                                .then(accounts => {
-                                    accounts.forEach(account => {
-                                        getTransactions(supabase, account.key)
-                                            .then(transactions => {
-                                                dispatch(initSupabaseData({ ...account, transactions }))
-                                                getAccountsAndHoldings({ ...account, transactions })
-                                            })
-
-                                        
-                                    });
-                                })
-                        } else {
-                            accounts.forEach((account: Account) => {
-                                getAccountsAndHoldings(account)
-                            })
-                        }
-
-
-                    }}>Oppdater</Button>
-                <Spacer y={2} />
-                <HideNumbersSwitch />
+                <Switch
+                    checked={settings.hideNumbers}
+                    onChange={() => dispatch(toggleHideNumbers(!settings.hideNumbers))}
+                >
+                    {t('dashboard.hideNumbers')}
+                </Switch>
             </div>
-
-            <Spacer y={4} />
-            <EquityTypesView totalValue={totalValue} />
-
-            {
-                biggestInvestment &&
-                <div className="full mx-auto flex justify-center">
-                    <div>
-                        <Spacer y={20} />
-                        <h1 className={styles.valueHeaderText}>{t('dashboard.biggestInvestment')}</h1>
-                        <Spacer y={2} />
-                        <h2 className={styles.valueText}>{biggestInvestment.name}</h2>
-                        <h4 className={styles.valueText}>{settings.hideNumbers ? '*** Kr' : biggestInvestment.value ? biggestInvestment.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }) : 0}</h4>
-                    </div>
-                </div>
-            }
-
-            <Spacer y={4} />
-            <GoalAnalysis />
-        </>
+        </div>
     )
 }

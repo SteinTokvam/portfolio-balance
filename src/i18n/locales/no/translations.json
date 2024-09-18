@@ -6,10 +6,18 @@
     },
     "dashboard": {
         "biggestInvestment": "Største investering:",
-        "total": "Total verdi",
+        "total": "Samlet verdi",
         "updateGoalPercentage": "Oppdater målprosent",
         "investmentToFocus": "{{bullet}} {{equityType}} er lengst unna målet sitt med {{distanceFromGoalPercentage}}%. Vurder å fokusere på denne investeringen fremover.",
-        "investmentOverbought": "{{bullet}} {{equityType}} er over målet sitt med {{distanceFromGoalPercentage}}%. Vurder å ikke invester mer her til den er kommet tilbake der den skal være."
+        "investmentOverbought": "{{bullet}} {{equityType}} er over målet sitt med {{distanceFromGoalPercentage}}%. Vurder å ikke invester mer her til den er kommet tilbake der den skal være.",
+        "yield": "Avkastning",
+        "equityDistribution": "Fordeling av investeringer",
+        "accountPerformance": "Avkastning for konto",
+        "holdings": "Beholdning",
+        "update": "Oppdater",
+        "hideNumbers": "Skjul tall",
+        "name": "Navn",
+        "analysis": "Ting å vurdere..."
     },
     "navbar": {
         "brand": "Portfolio rebalancer",

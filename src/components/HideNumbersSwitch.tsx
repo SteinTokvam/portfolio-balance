@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { setHideNumbers } from "../actions/settings";
+import { toggleHideNumbers } from "../actions/settings";
 
 
 export default function HideNumbersSwitch() {
@@ -10,7 +10,7 @@ export default function HideNumbersSwitch() {
     const dispatch = useDispatch();
 
     return (
-        <Switch isSelected={hideNumbers} onValueChange={(() => dispatch(setHideNumbers(!hideNumbers)))}>
+        <Switch isSelected={hideNumbers} onValueChange={(() => dispatch(toggleHideNumbers(!hideNumbers)))}>
             Hide numbers
         </Switch>
     )

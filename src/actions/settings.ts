@@ -1,7 +1,7 @@
 
-export const setHideNumbers = (hideNumbers: boolean) => {
+export const toggleHideNumbers = (hideNumbers: boolean) => {
     return {
-        type: 'SET_HIDE_NUMBERS',
+        type: 'TOGGLE_HIDE_NUMBERS',
         payload: { hideNumbers }
     }
 }

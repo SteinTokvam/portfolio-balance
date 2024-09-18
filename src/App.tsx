@@ -23,7 +23,7 @@ function App() {
   const dispatch = useDispatch()
 
   const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-  
+
   const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function App() {
         .then(accounts => {
           accounts.forEach(account => {
             getTransactions(supabase, account.key)
-              .then(transactions => dispatch(initSupabaseData({...account, transactions})))
+              .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
           });
         })
     }
