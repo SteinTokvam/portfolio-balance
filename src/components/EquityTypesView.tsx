@@ -9,7 +9,6 @@ export default function EquityTypesView({ totalValue }: { totalValue: number }) 
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
     const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
-    const settings = useSelector((state: any) => state.rootReducer.settings)
     const { t } = useTranslation();
     
     return (
