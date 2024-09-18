@@ -5,7 +5,6 @@
         "saveEdit": "Save changes"
     },
     "dashboard": {
-        "biggestInvestment": "Largest investment",
         "total": "Total value",
         "updateGoalPercentage": "Update goal percentage",
         "investmentToFocus": "{{bullet}} {{equityType}} are furthest from it's goal percentage with {{distanceFromGoalPercentage}}%. Consider to prioritize this investment for a while.",

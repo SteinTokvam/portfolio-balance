@@ -5,7 +5,6 @@
         "saveEdit": "Lagre endringer"
     },
     "dashboard": {
-        "biggestInvestment": "Største investering:",
         "total": "Samlet verdi",
         "updateGoalPercentage": "Oppdater målprosent",
         "investmentToFocus": "{{bullet}} {{equityType}} er lengst unna målet sitt med {{distanceFromGoalPercentage}}%. Vurder å fokusere på denne investeringen fremover.",

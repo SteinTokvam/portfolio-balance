@@ -206,7 +206,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 </Card>
                 <Card>
                     <CardHeader>
-                        <h2 className="text-lg font-semibold">{t('dashboard.biggestInvestment')}</h2>
+                        <h2 className="text-lg font-semibold">{t('dashboard.holdings')}</h2>
                     </CardHeader>
                     <CardBody>
                         {
