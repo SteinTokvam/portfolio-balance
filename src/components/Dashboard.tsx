@@ -5,7 +5,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
-import { Account, Holding, Transaction, TransactionType } from "../types/Types"
+import { Account, EquityType, Holding, Transaction, TransactionType } from "../types/Types"
 import { addHoldings, deleteAllHoldings } from "../actions/holdings"
 import { getHoldings, useDb } from "../Util/Global"
 import { fetchFiriTransactions } from "../Util/Firi"
@@ -16,7 +16,6 @@ import { toggleHideNumbers } from "../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
 import EmptyModal from "./Modal/EmptyModal"
 import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent"
-import EquityTypesView from "./EquityTypesView"
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const { t } = useTranslation()
@@ -28,6 +27,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
     const [development, setDevelopment] = useState({} as any)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
 
     useEffect(() => {
         if (!accounts) return
@@ -91,7 +91,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
         if (existingType) {
             existingType.value += holding.value
         } else {
-            acc.push({ name: t(`equityTypes.${holding.equityType.toLowerCase()}`), value: holding.value })
+            acc.push({ name: t(`equityTypes.${holding.equityType.toLowerCase()}`), equityType: holding.equityType, value: holding.value })
         }
         return acc
     }, [])
@@ -119,7 +119,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     function getHoldingCard() {
         const tmpHoldings = [...holdings]
         return tmpHoldings
-            .sort((a: Holding, b: Holding) => b.name > a.name ? -1 : 1)
+            .sort((a: Holding, b: Holding) => b.value - a.value)
             .map((holding: Holding) => (
                 <>
                     <h3 className="text-xl font-semibold">{holding.name}</h3>
@@ -181,7 +181,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                                     innerRadius={40}
                                     outerRadius={80}
                                     fill="#8884d8"
-                                    label={({ _, percent }) => `${(percent * 100).toFixed(1)}%`}
+                                    label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0].goalPercentage}%`}
                                 >
                                     {equityTypeData.map((_: any, index: number) => (
                                         <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />
@@ -190,14 +190,6 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                                 <Legend />
                             </PieChart>
                         </ResponsiveContainer>
-                    </CardBody>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <h2 className="text-lg font-semibold">{t('dashboard.wantedEquityDistribution')}</h2>
-                    </CardHeader>
-                    <CardBody>
-                        <EquityTypesView totalValue={totalValue} />
                     </CardBody>
                 </Card>
                 <Card>
