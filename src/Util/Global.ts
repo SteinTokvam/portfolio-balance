@@ -38,7 +38,6 @@ export const styles = {
 export const routes = {
     dashboard: '/',
     portfolio: '/portfolio',
-    analysis: '/analysis',
     account: '/account/:accountKey',
     confirmMail: '/confirm-mail',
 }

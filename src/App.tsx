@@ -16,7 +16,6 @@ import ConfirmMail from './components/ConfirmMail';
 import { createClient } from '@supabase/supabase-js';
 import { initSupabaseData } from './actions/accounts';
 import { getAccounts, getTransactions } from './Util/Supabase';
-import Analysis from './components/Analysis';
 
 function App() {
 
@@ -58,11 +57,6 @@ function App() {
           <Route path={routes.account} element={
             <Auth supabase={supabase}>
               <Account supabase={supabase} />
-            </Auth>
-          } />
-          <Route path={routes.analysis} element={
-            <Auth supabase={supabase}>
-              <Analysis />
             </Auth>
           } />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />

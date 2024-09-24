@@ -24,7 +24,6 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
   const menuItems = [
     { name: t('navbar.dashboard'), link: routes.dashboard },
     { name: t('navbar.portfolio'), link: routes.portfolio },
-    { name: t('navbar.rebalancing'), link: routes.analysis },
     { name: t('navbar.settings'), link: onOpen },
   ];
 
