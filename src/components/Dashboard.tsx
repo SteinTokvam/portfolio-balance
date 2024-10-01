@@ -124,7 +124,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                 <>
                     <h3 className="text-xl font-semibold">{holding.name}</h3>
                     <p className="text-lg">
-                        {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({t(`equityTypes.${holding.equityType.toLowerCase()}`)})
+                        {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({t(`equityTypes.${holding.equityType.toLowerCase()}`)} - {accounts.filter((account: Account) => account.key === holding.accountKey)[0].name})
                     </p>
                     <p className={`text-md ${holding.yield >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                         ({settings.hideNumbers ? '*** Kr' : holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})
