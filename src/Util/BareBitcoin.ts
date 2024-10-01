@@ -45,3 +45,7 @@ export async function fetchBBHoldings(account: Account): Promise<Holding[]> {
         return []
     }
 }
+
+export async function fetchPrice() {
+    return fetch(`${baseUrl}/barebitcoin/price`).then(res => res.json())
+}

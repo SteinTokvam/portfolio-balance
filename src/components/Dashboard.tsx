@@ -21,7 +21,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-    const holdings: Holding[] = useSelector((state: any) => state.rootReducer.holdings.holdings)
+    const holdings: Holding[] = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
     const settings = useSelector((state: any) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)

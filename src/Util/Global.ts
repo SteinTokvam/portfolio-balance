@@ -1,9 +1,9 @@
-import { Account, AccountTypes, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings } from "./Kron";
 import { fetchFiriHoldings } from "./Firi";
 import { fetchTicker } from "./E24";
-import { fetchBBHoldings } from "./BareBitcoin";
+import { fetchBBHoldings, fetchPrice } from "./BareBitcoin";
 
 export const languages = ["us", "no"];
 
@@ -65,6 +65,24 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
         const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
         const transactionsWithoute24 = account.transactions.filter(transaction => !transaction.e24Key)
 
+        if (account.isManual && account.type === AccountTypes.CRYPTOCURRENCY) {
+            const price = await fetchPrice()
+            const equityShare = account.transactions.reduce((sum, transaction) => sum + transaction.equityShare, 0)
+            const value = equityShare * price.midBtcnok
+            return [
+                {
+                    name: account.transactions.length > 0 ? account.transactions[0].name : "BTC",
+                    key: uuidv4(),
+                    accountKey: account.key,
+                    value,
+                    equityType: EquityTypes.CRYPTOCURRENCY,
+                    equityShare,
+                    e24Key: '',
+                    yield: account.transactions.reduce((sum, transaction) => sum + transaction.cost, 0) - value,
+                }
+            ]
+        }
+
         if (transactionsWithe24.length + transactionsWithoute24.length === account.transactions.length) {
 
             const uniqueE24Keys = [...new Set(transactionsWithe24.map(transaction => transaction.e24Key))]
@@ -104,7 +122,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
             uniquieHoldingNames.forEach(name => {
                 const buysAndSells = account.transactions.filter(transaction => transaction.name === name).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
                 const equityShare = buysAndSells.reduce((sum, transaction) => sum + transaction.equityShare, 0)
-                const value = name === "Bare Bitcoin" ? equityShare * 650000 :  buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
+                const value = name === "Bare Bitcoin" ? equityShare * 650000 : buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
 
                 if (value > 0.5) {
                     holdings.push(
@@ -135,7 +153,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
     } else if (account.name === "Firi") {
         const firiHoldings = fetchFiriHoldings(account)
         return firiHoldings
-    } else if(account.name === "Bare Bitcoin") {
+    } else if (account.name === "Bare Bitcoin") {
         return fetchBBHoldings(account)
     }
 
