@@ -118,24 +118,30 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
     function getHoldingCard() {
         const tmpHoldings = [...holdings]
-        return tmpHoldings
-            .sort((a: Holding, b: Holding) => b.value - a.value)
-            .map((holding: Holding) => (
-                <>
-                    <h3 className="text-xl font-semibold">{holding.name}</h3>
-                    <p className="text-lg">
-                        {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({t(`equityTypes.${holding.equityType.toLowerCase()}`)} - {accounts.filter((account: Account) => account.key === holding.accountKey)[0].name})
-                    </p>
-                    <p className={`text-md ${holding.yield >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        ({settings.hideNumbers ? '*** Kr' : holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})
-                    </p>
-                    <Progress
-                        value={(holding.value / totalValue) * 100}
-                        color="primary"
-                        className="mt-2"
-                    />
-                </>
-            ))
+        return (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {
+                    tmpHoldings
+                        .sort((a: Holding, b: Holding) => b.value - a.value)
+                        .map((holding: Holding) => (
+                            <div>
+                                <h3 className="text-xl font-semibold">{holding.name}</h3>
+                                <p className="text-lg">
+                                    {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({t(`equityTypes.${holding.equityType.toLowerCase()}`)} - {accounts.filter((account: Account) => account.key === holding.accountKey)[0].name})
+                                </p>
+                                <p className={`text-md ${holding.yield >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                    ({settings.hideNumbers ? '*** Kr' : holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})
+                                </p>
+                                <Progress
+                                    value={(holding.value / totalValue) * 100}
+                                    color="primary"
+                                    className="mt-2"
+                                />
+                            </div>
+                        ))
+                }
+            </div>
+        )
     }
 
     return (
@@ -208,6 +214,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         </ResponsiveContainer>
                     </CardBody>
                 </Card>
+            </div>
+            <div className="grid grid-cols-1 gap-4 pt-4">
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.holdings')}</h2>
@@ -218,7 +226,6 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         }
                     </CardBody>
                 </Card>
-
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.analysis')}</h2>
