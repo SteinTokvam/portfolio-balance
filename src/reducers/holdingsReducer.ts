@@ -9,25 +9,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
     window.localStorage.removeItem('holdings')
 
     switch (action.type) {
-        case 'ADD_HOLDING':
-            return {
-                ...state,
-                holdings: [...state.holdings, action.payload]
-            }
-        case 'UPDATE_HOLDING':
-            /**
-             * forventer at man sender inn 1 transaksjon på holdingen og oppdaterer verdien tilvarende den transaksjonen
-             */
-            const holdingsWithUpdate = [...state.holdings].map((holding: Holding) => {
-                if (holding.accountKey === action.payload.holdings[0].accountKey && holding.name === action.payload.holdings[0].name) {
-                    return { ...holding, value: holding.value + action.payload.holdings[0].value }
-                }
-                return holding
-            })
-            return {
-                ...state,
-                holdings: holdingsWithUpdate
-            }
         case 'UPDATE_HOLDINGS':
             /**
              * Forventer at alle transaksjoner for en holding sendes inn. beregn holdingen på nytt
@@ -43,12 +24,6 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
             return {
                 ...state,
                 holdings: allHoldings
-            }
-        case 'DELETE_HOLDING':
-            const remainingHoldings = state.holdings.filter((holding: Holding) => holding.accountKey !== action.payload.accountKey)
-            return {
-                ...state,
-                holdings: remainingHoldings
             }
         case 'DELETE_ALL_HOLDINGS':
             return {
