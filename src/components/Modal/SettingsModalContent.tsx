@@ -1,10 +1,11 @@
 import { Avatar, Button, Divider, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import { useDispatch, useSelector } from "react-redux"
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
 import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
+// @ts-ignore
 import i18n from "../../i18n/config"
 import { SupabaseClient } from "@supabase/supabase-js"
 

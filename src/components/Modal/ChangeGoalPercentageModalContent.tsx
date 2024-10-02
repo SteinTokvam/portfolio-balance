@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react";
 import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";

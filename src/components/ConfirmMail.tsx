@@ -1,5 +1,4 @@
 import { Link } from '@nextui-org/react'
-import React from 'react'
 import { routes } from '../Util/Global'
 
 export default function ConfirmMail() {

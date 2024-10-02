@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactNode } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import { Session, SupabaseClient } from '@supabase/supabase-js'
 import { Button, Input } from '@nextui-org/react'
 import { Link } from 'react-router-dom'

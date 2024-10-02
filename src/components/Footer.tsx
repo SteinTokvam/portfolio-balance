@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, Button, useDisclosure } from "@nextui-org/react";
 import { useTranslation } from "react-i18next";
 import SupportModalContent from "./Modal/SupportModalContent";

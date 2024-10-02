@@ -1,5 +1,5 @@
 import { Button, Chip, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react"
-import React, { useEffect, useState } from "react"
+import  { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 export default function NewsMessageModalContent({ messageId }: { messageId: string | undefined }) {

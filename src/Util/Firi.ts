@@ -21,7 +21,7 @@ export async function fetchFiriTransactions(account: Account, currenciesToExclud
         }
     })
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
         resolve(transactions)
     })
 }
@@ -63,7 +63,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
         })
         console.log('Fetched Firi Holdings', holdings)
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
         resolve(holdings)
     })
 }

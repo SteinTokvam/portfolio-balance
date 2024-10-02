@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleHideNumbers } from "../actions/settings";

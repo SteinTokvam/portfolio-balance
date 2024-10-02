@@ -140,7 +140,7 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
                 }
             })
 
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve, _) => {
                 resolve(holdings)
             })
 
@@ -170,20 +170,14 @@ async function fetchTickers(uniqueE24Keys: { e24Key: string, equityShare: number
     return await ret
 }
 
-export function setTotalValues(account: Account, holdings: Holding[], transactions?: Transaction[]): Promise<Holding[]> {
-    return new Promise((resolve, reject) => {
-        resolve(holdings)
-    })
-}
-
 export function emptyHoldingPromise(): Promise<Holding[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
         resolve([])
     })
 }
 
 export function emptyTransactionPromise(): Promise<Transaction[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
         resolve([])
     })
 }

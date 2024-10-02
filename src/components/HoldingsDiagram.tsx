@@ -1,4 +1,3 @@
-import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 export default function HoldingsDiagram({ data }: {
@@ -11,7 +10,7 @@ export default function HoldingsDiagram({ data }: {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
     const RADIAN = Math.PI / 180;
     
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, type, index }: any) => {
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, type }: any) => {
         const radius = innerRadius + (outerRadius - innerRadius+80) * 0.5;
         const x = cx + radius * Math.cos(-midAngle * RADIAN);
         const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -43,7 +42,7 @@ export default function HoldingsDiagram({ data }: {
                                 dataKey="value"
                             >
                                 
-                                {data.map((entry, index) => (
+                                {data.map((_, index) => (
                                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                 ))}
                             </Pie>

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";

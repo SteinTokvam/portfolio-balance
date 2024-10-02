@@ -1,14 +1,13 @@
-import React from "react"
 import { TooltipProps } from "recharts"
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
 
-export default function CustomToolTip({ active, payload, label }: TooltipProps<ValueType, NameType>) {
+export default function CustomToolTip({ active, payload }: TooltipProps<ValueType, NameType>) {
     if (active && payload && payload.length) {
         return (
             <>
                 {
-                    payload.map((pld: any) => (
+                    payload.map((_) => (
                         <div className="bg-slate-800 text-white p-2">
                             <div className="bg-slate-600 text-white p-2 font-bold">{payload[0].payload.date}</div>
                             <div>

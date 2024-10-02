@@ -1,5 +1,5 @@
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
-import React, { useMemo, useRef, useState } from "react";
+import  { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
 import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";

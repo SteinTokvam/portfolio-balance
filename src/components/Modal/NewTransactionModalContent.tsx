@@ -1,5 +1,5 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Accordion, AccordionItem, Link } from "@nextui-org/react";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { getHoldings, styles } from "../../Util/Global";

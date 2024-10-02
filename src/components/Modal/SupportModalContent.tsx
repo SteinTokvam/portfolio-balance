@@ -1,4 +1,3 @@
-import React from "react";
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer } from "@nextui-org/react"
 import { useTranslation } from "react-i18next";
 
