@@ -31,6 +31,13 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
     useEffect(() => {
         if (!accounts) return
+        getAccounts(supabase)
+            .then(accounts => {
+                accounts.forEach(account => {
+                    getTransactions(supabase, account.key)
+                        .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
+                });
+            })
         accounts.forEach((account: Account) => {
             if (account.name === 'Kron') {
                 fetchKronDevelopment(account)

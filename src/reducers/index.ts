@@ -3,6 +3,7 @@ import accountsReducer from './accountsReducer';
 import equityTypeReducer from './equityReducer';
 import holdingsReducer from './holdingsReducer';
 import settingsReducer from './settingsReducer';
+import authReducer from './authReducer';
 
 const rootReducer = combineReducers({
     //userId: userIdReducer,
@@ -10,6 +11,7 @@ const rootReducer = combineReducers({
     equity: equityTypeReducer,
     holdings: holdingsReducer,
     settings: settingsReducer,
+    auth: authReducer
     //yield: yieldReducer,
     //totalValue: totalValueReducer,
 });
