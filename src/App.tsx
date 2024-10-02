@@ -23,7 +23,7 @@ function App() {
 
   const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
 
-  const supabase = createClient(process.env.REACT_APP_SUPABASE_URL as string, process.env.REACT_APP_SUPABASE_KEY as string)
+  const supabase = createClient(import.meta.env.VITE_SUPABASE_URL as string, import.meta.env.VITE_SUPABASE_KEY as string)
 
   useEffect(() => {
     if (useDb && accounts && accounts.length === 0) {//TODO: må også sjekke om man er logget inn
