@@ -111,7 +111,7 @@ export async function addTransaction(supabase: SupabaseClient, transaction: Tran
     return transaction
 }
 
-export async function addTransactions(supabase: SupabaseClient, transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
+async function addTransactions(supabase: SupabaseClient, transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
     const { error } = await supabase
         .from('transactions')
         .insert(transactions.map((transaction: Transaction) => mapTransaction(transaction, accountKey)))

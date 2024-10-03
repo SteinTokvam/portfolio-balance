@@ -43,16 +43,6 @@ export const routes = {
     login: '/login'
 }
 
-export const accountTypes = [
-    AccountTypes.AKSJESPAREKONTO,
-    AccountTypes.INDIVIDUELL_PENSJONSKONTO,
-    AccountTypes.CRYPTOCURRENCY,
-    AccountTypes.AKSJEFONDSKONTO,
-    AccountTypes.EGEN_PENSJONSKONTO,
-    AccountTypes.LOAN,
-]
-
-
 export async function getHoldings(account: Account): Promise<Holding[]> {
     if (!account) {
         return Promise.resolve([])

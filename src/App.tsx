@@ -1,4 +1,3 @@
-
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import './App.css';
 import MyNavbar from './components/MyNavbar';

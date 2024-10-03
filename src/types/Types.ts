@@ -1,4 +1,3 @@
-
 export type Account = {
     name: string
     key: string
@@ -10,7 +9,7 @@ export type Account = {
     apiInfo?: ApiInfo
 }
 
-export type ApiInfo = {
+type ApiInfo = {
     accessKey: string
     kronAccountId: string
 }
@@ -43,12 +42,6 @@ export type EquityType = {
     key: string,
     label: string,
     goalPercentage: number
-}
-
-export type TotalValue = {
-    value: number,
-    accountKey: string,
-    name: string
 }
 
 export type FiriOrder = {
