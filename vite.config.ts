@@ -21,6 +21,6 @@ export default defineConfig({
         'process.env': {},
     },
     build: {
-        target: "ES2021"
+        target: "ES2022"
     }
 })
