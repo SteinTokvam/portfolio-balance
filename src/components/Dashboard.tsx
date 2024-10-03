@@ -156,7 +156,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true} >
                 <ChangeGoalPercentageModalContent />
             </EmptyModal>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.total')}</h2>
@@ -177,6 +177,8 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                         </h3>
                     </CardBody>
                 </Card>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-4">
                 <Card>
                     <CardHeader>
                         <h2 className="text-lg font-semibold">{t('dashboard.equityDistribution')}</h2>
