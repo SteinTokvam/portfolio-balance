@@ -24,7 +24,6 @@ export default function Dashboard() {
     const settings = useSelector((state: any) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
-    const kron = accounts.filter((account: Account) => account.name === 'Kron')[0]
     
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)

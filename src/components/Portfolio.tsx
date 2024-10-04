@@ -1,39 +1,24 @@
-import { useEffect } from "react";
 import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../icons/CompanyIcon";
-import { getHoldings, routes } from "../Util/Global";
+import { routes } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { addHoldings } from "../actions/holdings";
+import { useAccounts } from "../hooks/useAccounts";
+import { useTransactions } from "../hooks/useTransactions";
+import { useholdings } from "../hooks/useHoldings";
 
-export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
+export default function Portfolio({ supabase }: { supabase: SupabaseClient }) {
 
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts);
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
+    const { accounts, loading: loadingAccounts } = useAccounts()
+    const { transactions, transactionsByAccount, loading: loadingTransactions } = useTransactions()
+    const { holdings, loading: loadingHoldings } = useholdings(accounts, transactions)
     const settings = useSelector((state: any) => state.rootReducer.settings);
 
-    const dispatch = useDispatch();
-
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (!accounts) {
-            return
-        }
-        accounts.forEach((account: Account) => {
-            getHoldings(account)
-                .then(holdings => {
-                    if (holdings.length === 0) {
-                        return
-                    }
-                    dispatch(addHoldings(holdings, account.key))
-                })
-        })
-    }, [accounts, dispatch])
 
     return (
         <div>
@@ -44,7 +29,7 @@ export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
                     {accounts && accounts.length > 0 ?
 
-                        accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
+                        accounts.sort((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (
                                 <Card 
                                     aria-label="Card"
