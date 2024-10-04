@@ -28,6 +28,7 @@ export type Holding = {
 
 export type Transaction = {
     transactionKey: string
+    accountKey: string
     cost: number
     name: string
     type: string

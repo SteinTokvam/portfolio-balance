@@ -70,7 +70,7 @@ export async function updateAccount(supabase: SupabaseClient, account: Account):
         .eq('key', account.key)
         .select()
 
-        console.log(data)
+    console.log(data)
 
     if (error) {
         console.log(error)
@@ -84,7 +84,7 @@ export async function deleteAccountSupabase(supabase: SupabaseClient, accountKey
         .delete()
         .eq('key', accountKey)
 
-        console.log(response)
+    console.log(response)
     return response.status === 204
 }
 
@@ -97,8 +97,9 @@ export async function deleteAllAccountSupabase(supabase: SupabaseClient): Promis
     return response.status === 204
 }
 
-export async function getTransactions(supabase: SupabaseClient, accountKey: string): Promise<Transaction[]> {
-    return supabase.from('transactions').select().eq('accountKey', accountKey).then(res => res.data as Transaction[])
+export async function getTransactions(supabase: SupabaseClient, accountKey: string = ""): Promise<Transaction[]> {
+    return accountKey === "" ? supabase.from('transactions').select().then(res => res.data as Transaction[]) :
+        supabase.from('transactions').select().eq('accountKey', accountKey).then(res => res.data as Transaction[])
 }
 
 export async function addTransaction(supabase: SupabaseClient, transaction: Transaction, accountKey: string): Promise<Transaction> {
@@ -123,7 +124,7 @@ async function addTransactions(supabase: SupabaseClient, transactions: Transacti
 
 export async function deleteTransactionSupabase(supabase: SupabaseClient, transactionKey: string): Promise<Boolean> {
     const response = await supabase
-    .from('transactions')
+        .from('transactions')
         .delete()
         .eq('transactionKey', transactionKey)
     return response.status === 204

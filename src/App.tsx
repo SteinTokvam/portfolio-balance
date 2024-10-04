@@ -30,7 +30,7 @@ function App() {
       <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
         <MyNavbar supabase={supabase} />
         <Routes>
-          <Route path={routes.dashboard} element={<Dashboard supabase={supabase} />} />
+          <Route path={routes.dashboard} element={<Dashboard />} />
           <Route path={routes.portfolio} element={<Accounts supabase={supabase} />} />
           <Route path={routes.account} element={<Account supabase={supabase} />} />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />
