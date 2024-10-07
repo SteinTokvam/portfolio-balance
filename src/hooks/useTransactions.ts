@@ -1,3 +1,4 @@
+import { getAutomaticTransactions } from "../Util/Global";
 import { supabase } from "../supabaseClient";
 import { Transaction } from "../types/Types";
 import { getTransactions } from "../Util/Supabase";
@@ -14,6 +15,9 @@ export const useTransactions = () => {
             setLoading(true);
             try {
                 const response: Transaction[] = await getTransactions(supabase);
+                const results = await getAutomaticTransactions()
+                        
+                response.push(...results)
                 setTransactions(response);
                 const map = new Map<string, Transaction[]>();
                 response.forEach(transaction => {
@@ -23,7 +27,7 @@ export const useTransactions = () => {
                         map.set(transaction.accountKey, [transaction]);
                     }
                 })
-
+                console.log(map)
                 setTransactionsByAccount(map);
             } catch (error) {
                 setError(error as string)
@@ -33,7 +37,6 @@ export const useTransactions = () => {
         };
 
         fetchData()
-
     }, []);
 
     return { transactions, transactionsByAccount, loading, error }

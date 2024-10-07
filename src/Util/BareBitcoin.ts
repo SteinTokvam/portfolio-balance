@@ -12,6 +12,7 @@ export async function fetchBBTransactions(account: Account): Promise<Transaction
             },
             body: JSON.stringify({
                 'accessKey': account.apiInfo ? account.apiInfo.accessKey : '',
+                'accountKey': account.key
             })
         })
     

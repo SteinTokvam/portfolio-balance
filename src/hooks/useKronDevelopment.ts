@@ -8,7 +8,10 @@ export const useKronDevelopment = (account: Account) => {
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
-        if(!account) return;
+        if(!account || account.name !== 'Kron') {
+            setLoading(true);
+            return;
+        }
         const fetchData = async () => {
           setLoading(true);
           try {

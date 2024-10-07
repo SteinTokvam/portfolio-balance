@@ -8,10 +8,10 @@ import { routes } from './Util/Global';
 import Footer from './components/Footer';
 import Portfolio from './components/Portfolio';
 import Auth from './components/Auth';
-import Account from './components/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
 import { supabase } from './supabaseClient';
 import { useSelector } from 'react-redux';
+import AccountView from './components/Account';
 
 function App() {
 
@@ -32,7 +32,7 @@ function App() {
         <Routes>
           <Route path={routes.dashboard} element={<Dashboard />} />
           <Route path={routes.portfolio} element={<Portfolio supabase={supabase} />} />
-          <Route path={routes.account} element={<Account supabase={supabase} />} />
+          <Route path={routes.account} element={<AccountView supabase={supabase} />} />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />
           <Route path={routes.login} element={<Auth />} />
         </Routes>

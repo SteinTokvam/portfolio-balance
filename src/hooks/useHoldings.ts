@@ -12,12 +12,10 @@ export const useholdings = (accounts: Account[], transactions: Transaction[]) =>
             setLoading(true);
             try {
                 const results = await Promise.all(
-                    accounts.map(async (account) => {
-                        const response = await getHoldings(account, transactions.filter(transaction => transaction.accountKey === account.key));
-                        return response;
-                    })
+                    accounts.map(async (account) => 
+                        await getHoldings(account, transactions.filter(transaction => transaction.accountKey === account.key))
+                    )
                 );
-
                 setholdings(results.flat());
             } catch (error) {
                 setError(error as string)
@@ -27,8 +25,7 @@ export const useholdings = (accounts: Account[], transactions: Transaction[]) =>
         };
 
         fetchData()
-
-    }, [accounts, transactions]);
+    }, [transactions]);
 
     return { holdings, loading, error }
 }

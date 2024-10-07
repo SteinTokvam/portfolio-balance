@@ -1,9 +1,11 @@
 import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
-import { fetchKronHoldings } from "./Kron";
-import { fetchFiriHoldings } from "./Firi";
+import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
+import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
 import { fetchTicker } from "./E24";
-import { fetchBBHoldings, fetchPrice } from "./BareBitcoin";
+import { fetchBBHoldings, fetchBBTransactions, fetchPrice } from "./BareBitcoin";
+import { getAccounts } from "./Supabase";
+import { supabase } from "../supabaseClient";
 
 export const languages = ["us", "no"];
 
@@ -63,6 +65,22 @@ export async function getHoldings(account: Account, transactions: Transaction[])
     }
 
     return emptyHoldingPromise()
+}
+
+export async function getAutomaticTransactions(): Promise<Transaction[]> {
+    const accounts = (await getAccounts(supabase)).filter(account => !account.isManual)
+    const transactions: Promise<Transaction[]>[] = []
+    accounts.forEach(account => {
+        if (account.name === "Kron") {
+            transactions.push(fetchKronTransactions(account))
+        } else if (account.name === "Firi") {
+            transactions.push(fetchFiriTransactions(account, ["NOK"]))
+        } else if (account.name === "Bare Bitcoin") {
+            transactions.push(fetchBBTransactions(account))
+        }
+    })
+    const ret = await Promise.all(transactions)
+    return ret.flat()
 }
 
 async function getManualHoldings(account: Account, transactions: Transaction[]): Promise<Holding[]> {
