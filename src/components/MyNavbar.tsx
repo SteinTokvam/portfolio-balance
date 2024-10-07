@@ -6,6 +6,7 @@ import { useReducer } from "react";
 import { routes } from "../Util/Global";
 import { useNavigate } from "react-router-dom";
 import EmptyModal from "./Modal/EmptyModal";
+import { supabase } from "../supabaseClient";
 
 export default function MyNavbar() {
 

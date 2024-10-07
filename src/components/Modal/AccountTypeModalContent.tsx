@@ -3,7 +3,6 @@ import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import { useTranslation } from "react-i18next"
 import { styles } from "../../Util/Global"
 import { useMemo, useState } from "react"
-import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { Account, AccountTypes } from "../../types/Types"
 import { SupabaseClient } from "@supabase/supabase-js"
@@ -25,8 +24,6 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
     const [selectedRadio, setSelectedRadio] = useState(isEdit && account && !account.isManual ? account.name : "Firi");
     const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.accessKey : "")
     const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.kronAccountId : "")
-
-    const dispatch = useDispatch()
 
     useEffect(() => {
         if (isEdit) {

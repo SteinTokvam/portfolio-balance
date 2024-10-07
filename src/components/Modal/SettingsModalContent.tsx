@@ -10,7 +10,7 @@ import { supabase } from "../../supabaseClient"
 export default function SettingsModalContent() {
     const { t } = useTranslation();
     
-    const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings') as string) !== null ? JSON.parse(window.localStorage.getItem('settings') as string).language : 'us')
+    const [lang, _] = useState(JSON.parse(window.localStorage.getItem('settings') as string) !== null ? JSON.parse(window.localStorage.getItem('settings') as string).language : 'us')
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
 
     const selectedLanguage = useMemo(
