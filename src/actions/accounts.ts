@@ -34,23 +34,6 @@ export const addAutomaticAccount = (supabaseClient: SupabaseClient, account: Acc
     }
 }
 
-export const deleteAccount = (supabaseClient: SupabaseClient, accountKey: string) => {
-    deleteAccountSupabase(supabaseClient, accountKey)
-    return {
-        type: 'DELETE_ACCOUNT',
-        payload: { accountKey: accountKey }
-    }
-}
-
-export const deleteAllAccounts = (supabaseClient: SupabaseClient, deleteFromSupabase: boolean) => {
-    if(deleteFromSupabase) {
-        deleteAllAccountSupabase(supabaseClient)
-    }
-    return {
-        type: 'DELETE_ALL_ACCOUNTS'
-    }
-}
-
 export const importTransactions = (supabase: SupabaseClient, account: Account, transactions: Transaction[]) => {
     if(account.isManual) {
         transactions.forEach(transaction => {

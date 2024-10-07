@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
-import { deleteAccount, deleteTransaction } from "../actions/accounts";
 import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
@@ -11,7 +10,6 @@ import DeleteButton from "./DeleteButton";
 import { Account, Holding, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
-import { deleteHoldingsForAccount } from "../actions/holdings";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../Util/Global";
 import Holdings from "./Holdings";
@@ -22,6 +20,7 @@ import { useTransactions } from "../hooks/useTransactions";
 import { useholdings } from "../hooks/useHoldings";
 import { useKronDevelopment } from "../hooks/useKronDevelopment";
 import { supabase } from "../supabaseClient";
+import { deleteAccountSupabase, deleteTransactionSupabase } from "../Util/Supabase";
 
 export default function AccountView() {
 
@@ -35,8 +34,6 @@ export default function AccountView() {
     const { holdings, loading: loadingHoldings } = useholdings([account], transactions)
     const { kronDevelopment, loading: loadingKron } = useKronDevelopment(account)
 
-    console.log(transactionsByAccount)
-    const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
 
@@ -118,8 +115,7 @@ export default function AccountView() {
         switch (columnKey) {
             case 'action':
                 return <DeleteButton handleDelete={() => {
-                    dispatch(deleteHoldingsForAccount(account))
-                    dispatch(deleteTransaction(supabase, item.transactionKey, account.key))
+                    deleteTransactionSupabase(supabase, item.transactionKey)
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={false}
@@ -158,7 +154,7 @@ export default function AccountView() {
                         <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(supabase, account.key))
+                        deleteAccountSupabase(supabase, account.key)
                         navigate(routes.portfolio)
                     }}
                         buttonText={t('transactionsTable.deleteAccount')}
@@ -179,7 +175,7 @@ export default function AccountView() {
                         <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(supabase, account.key))
+                        deleteAccountSupabase(supabase, account.key)
                         navigate(routes.portfolio)
                     }}
                         buttonText={t('transactionsTable.deleteAccount')}
@@ -239,30 +235,28 @@ export default function AccountView() {
                             <Holdings holdings={holdings} isKron={account && account.name === 'Kron'} />
                         </Tab>
                         <Tab key="Transactions" title="Transactions" className="w-full">
-                            {
-                                <Table
-                                    isStriped
-                                    aria-label={"konto"}
-                                    className="text-foreground"
-                                    selectionMode="none"
-                                >
-                                    <TableHeader columns={getColumns(account)}>
-                                        {(column: { key: string; label: any; }) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-                                    </TableHeader>
-                                    {
+                            <Table
+                                isStriped
+                                aria-label={"konto"}
+                                className="text-foreground"
+                                selectionMode="none"
+                            >
+                                <TableHeader columns={getColumns(account)}>
+                                    {(column: { key: string; label: any; }) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+                                </TableHeader>
+                                {
 
-                                        <TableBody className="text-left" items={transactionsByAccount.get(account?.key)?.sort((a: Transaction, b: Transaction) => new Date(b.date).getTime() - new Date(a.date).getTime())}
-                                            emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
-                                        >
-                                            {(item: Transaction) => (
-                                                <TableRow key={item.transactionKey}>
-                                                    {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                                                </TableRow>
-                                            )}
-                                        </TableBody>
-                                    }
-                                </Table>
-                            }
+                                    <TableBody className="text-left" items={transactionsByAccount.get(account?.key)?.sort((a: Transaction, b: Transaction) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+                                        emptyContent={account && !account.isManual ? <Spinner /> : <p>Ingen transaksjoner enda</p>}
+                                    >
+                                        {(item: Transaction) => (
+                                            <TableRow key={item.transactionKey}>
+                                                {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                }
+                            </Table>
                         </Tab>
                     </Tabs>
                 </>

@@ -6,12 +6,12 @@ import { routes } from "../Util/Global";
 import { Account, Holding } from "../types/Types";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useAccounts } from "../hooks/useAccounts";
 import { useTransactions } from "../hooks/useTransactions";
 import { useholdings } from "../hooks/useHoldings";
+import { supabase } from "../supabaseClient";
 
-export default function Portfolio({ supabase }: { supabase: SupabaseClient }) {
+export default function Portfolio() {
 
     const { accounts, loading: loadingAccounts } = useAccounts()
     const { transactions, transactionsByAccount, loading: loadingTransactions } = useTransactions()

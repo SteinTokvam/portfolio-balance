@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
-import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
+import { importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
-import { SupabaseClient } from "@supabase/supabase-js"
+import { deleteAllAccountSupabase } from "../../Util/Supabase"
 
-export default function SettingsModalContent({supabase}: {supabase: SupabaseClient}) {
+export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t } = useTranslation();
 
@@ -95,7 +95,7 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteAllAccounts(supabase, true))
+                            deleteAllAccountSupabase(supabase)
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

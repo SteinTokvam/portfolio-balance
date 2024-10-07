@@ -9,7 +9,6 @@ import Footer from './components/Footer';
 import Portfolio from './components/Portfolio';
 import Auth from './components/Auth';
 import ConfirmMail from './components/ConfirmMail';
-import { supabase } from './supabaseClient';
 import { useSelector } from 'react-redux';
 import AccountView from './components/Account';
 
@@ -28,11 +27,11 @@ function App() {
   return (
     <div>
       <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
-        <MyNavbar supabase={supabase} />
+        <MyNavbar />
         <Routes>
           <Route path={routes.dashboard} element={<Dashboard />} />
-          <Route path={routes.portfolio} element={<Portfolio supabase={supabase} />} />
-          <Route path={routes.account} element={<AccountView supabase={supabase} />} />
+          <Route path={routes.portfolio} element={<Portfolio />} />
+          <Route path={routes.account} element={<AccountView />} />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />
           <Route path={routes.login} element={<Auth />} />
         </Routes>
