@@ -1,18 +1,15 @@
 import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
 import  { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux";
 import { UploadIcon } from "../../icons/UploadIcon";
-import { importTransactions } from "../../actions/accounts";
 import { useSelector } from "react-redux";
 import { Account, EquityType, Transaction } from "../../types/Types";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { addTransaction } from "@/Util/Supabase";
 
 export default function ImportTransactionsModalContent({ account, supabase }: { account: Account, supabase: SupabaseClient }) {
 
     const { t } = useTranslation()
-
-    const dispatch = useDispatch();
 
     const hiddenFileInput = useRef(null);
 
@@ -42,6 +39,7 @@ export default function ImportTransactionsModalContent({ account, supabase }: { 
                         const data = line.split(',');
                         transactions.push({
                             transactionKey: data[0],
+                            accountKey: account.key,
                             cost: parseFloat(data[1]),
                             name: data[2],
                             type: data[3],
@@ -54,7 +52,9 @@ export default function ImportTransactionsModalContent({ account, supabase }: { 
                     }
                 })
 
-                dispatch(importTransactions(supabase, account, transactions))
+                transactions.forEach((transaction: Transaction) => {
+                    addTransaction(supabase, transaction, account.key)
+                })
             };
             reader.readAsText(input);
         }

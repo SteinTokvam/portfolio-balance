@@ -1,21 +1,14 @@
-import { Avatar, Button, Divider, Link, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { Avatar, Button, Divider, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem } from "@nextui-org/react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
-import { importAccounts } from "../../actions/accounts"
-import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
 import { deleteAllAccountSupabase } from "../../Util/Supabase"
+import { supabase } from "../../supabaseClient"
 
 export default function SettingsModalContent() {
-    const dispatch = useDispatch()
     const { t } = useTranslation();
-
-    const accounts = useSelector((state: any) => state.rootReducer.accounts)
-    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
-    const hiddenFileInput = useRef(null);
     
     const [lang, setLang] = useState(JSON.parse(window.localStorage.getItem('settings') as string) !== null ? JSON.parse(window.localStorage.getItem('settings') as string).language : 'us')
     const [selectedKeys, setSelectedKeys] = useState(new Set([lang]));
@@ -24,34 +17,6 @@ export default function SettingsModalContent() {
         () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
         [selectedKeys]
     );
-
-    const handleClick = () => {
-        // @ts-ignore
-        hiddenFileInput.current.click();
-    };
-
-    const importInvestmentsFile = (e: any) => {
-        const fileReader = new FileReader();
-        fileReader.readAsText(e.currentTarget.files[0], "UTF-8");
-        fileReader.onload = e => {
-            // @ts-ignore
-            const json = JSON.parse(e.target.result)
-            setLang(json.settings.language)
-            setSelectedKeys(new Set([json.settings.language]))
-            dispatch(importAccounts(supabase, json.accounts.accounts))        
-            dispatch(setAllPercentages(json.equitytypes))
-            window.localStorage.setItem('settings', JSON.stringify(json.settings))
-            i18n.changeLanguage(json.settings.language)
-        };
-    };
-
-    const processFile = () => {
-        return JSON.stringify({
-            settings: JSON.parse(window.localStorage.getItem('settings') as string),
-            accounts: accounts,
-            equitytypes: equityTypes
-        })
-    }
 
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage)
@@ -79,17 +44,6 @@ export default function SettingsModalContent() {
                                 </SelectItem>
                             ))}
                         </Select>
-                        <Divider />
-
-                        <Button color="primary" variant="flat" onPress={handleClick}>
-                            <input type="file" className="hidden" onChange={importInvestmentsFile} ref={hiddenFileInput} />
-                            {t('settings.importButton')}
-                        </Button>
-                        <Button color="primary" variant="flat" href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                            processFile()
-                        )}`} as={Link} download="investments-export.json">
-                            {t('settings.exportButton')}
-                        </Button>
 
                         <Divider />
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
