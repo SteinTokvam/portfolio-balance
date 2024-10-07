@@ -4,10 +4,10 @@ import { useTranslation } from "react-i18next"
 import { UploadIcon } from "../../icons/UploadIcon";
 import { useSelector } from "react-redux";
 import { Account, EquityType, Transaction } from "../../types/Types";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { addTransaction } from "@/Util/Supabase";
+import { addTransaction } from "../../Util/Supabase";
+import { supabase } from "../../supabaseClient";
 
-export default function ImportTransactionsModalContent({ account, supabase }: { account: Account, supabase: SupabaseClient }) {
+export default function ImportTransactionsModalContent({ account }: { account: Account }) {
 
     const { t } = useTranslation()
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image } from "@nextui-org/react";
-import { useDispatch } from "react-redux";
 import { UploadIcon } from "../icons/UploadIcon";
 import EmptyModal from "./Modal/EmptyModal";
 import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
@@ -91,7 +90,7 @@ export default function AccountView() {
         switch (type) {
             case 'import':
                 if (account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                    setModalContent(<ImportTransactionsModalContent account={account} />)
                 }
                 break
             case 'transaction':
@@ -104,7 +103,7 @@ export default function AccountView() {
                 break;
             default:
                 if (account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                    setModalContent(<ImportTransactionsModalContent account={account} />)
                 }
                 break
         }
