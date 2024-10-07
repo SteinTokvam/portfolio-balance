@@ -16,9 +16,9 @@ export default function Dashboard() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
 
-    const { accounts, loading: loadingAccounts } = useAccounts()
-    const { transactions, transactionsByAccount, loading: loadingTransactions } = useTransactions()
-    const { holdings, loading: loadingHoldings } = useholdings(accounts, transactions)
+    const { accounts } = useAccounts()
+    const { transactions, transactionsByAccount } = useTransactions()
+    const { holdings } = useholdings(accounts, transactions)
     const { kronDevelopment, loading: loadingKron } = useKronDevelopment(accounts.filter((account: Account) => account.name === 'Kron')[0])
 
     const settings = useSelector((state: any) => state.rootReducer.settings)

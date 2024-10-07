@@ -13,9 +13,9 @@ import { supabase } from "../supabaseClient";
 
 export default function Portfolio() {
 
-    const { accounts, loading: loadingAccounts } = useAccounts()
-    const { transactions, transactionsByAccount, loading: loadingTransactions } = useTransactions()
-    const { holdings, loading: loadingHoldings } = useholdings(accounts, transactions)
+    const { accounts } = useAccounts()
+    const { transactions } = useTransactions()
+    const { holdings } = useholdings(accounts, transactions)
     const settings = useSelector((state: any) => state.rootReducer.settings);
 
     const navigate = useNavigate()
