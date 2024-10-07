@@ -1,10 +1,10 @@
 import { styles } from "../Util/Global";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { EquityType, Holding } from "../types/Types";
+import { Account, EquityType, Holding } from "../types/Types";
 import { Divider } from "@nextui-org/react";
 
-export default function GoalAnalysis() {
+export default function GoalAnalysis({ accounts, holdings }: { accounts: Account[], holdings: Holding[] }) {
 
     type FurthestFromGoal = {
         currentPercentage: number,
@@ -14,9 +14,7 @@ export default function GoalAnalysis() {
     }
 
     const { t } = useTranslation();
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
     const furthestFromGoal = equityTypes.map((equityType: EquityType) => {
         return {
             currentPercentage: parseFloat((holdings

@@ -5,9 +5,9 @@ import { styles } from "../../Util/Global"
 import { useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
-import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
 import { Account, AccountTypes } from "../../types/Types"
 import { SupabaseClient } from "@supabase/supabase-js"
+import { addAccount, updateAccount } from "../../Util/Supabase"
 
 export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit: boolean, account?: Account, supabase: SupabaseClient }) {
 
@@ -23,7 +23,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
     );
 
     const [selectedRadio, setSelectedRadio] = useState(isEdit && account && !account.isManual ? account.name : "Firi");
-    const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual && account.apiInfo? account.apiInfo.accessKey : "")
+    const [accessKeyText, setAccessKeyText] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.accessKey : "")
     const [kronAccountId, setKronAccountId] = useState(isEdit && account && !account.isManual && account.apiInfo ? account.apiInfo.kronAccountId : "")
 
     const dispatch = useDispatch()
@@ -38,18 +38,18 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
 
     function handleSubmit() {
         if (accessKeyText === "") {
-            dispatch(isEdit ? editAccount(
+            isEdit ? updateAccount(
                 supabase,
                 {
                     name: accountName,
-                    key: account ? account.key: uuidv4(),
+                    key: account ? account.key : uuidv4(),
                     type: selectedAccountType,
                     transactions: account ? account.transactions : [],
                     totalValue: 0,
                     yield: 0,
                     isManual: true,
                 }
-            ) : addNewAccount(
+            ) : addAccount(
                 supabase,
                 {
                     name: accountName,
@@ -60,9 +60,9 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                     yield: 0,
                     isManual: true,
                 }
-            ))
+            )
         } else {
-            dispatch(isEdit ? editAccount(
+            isEdit ? updateAccount(
                 supabase,
                 {
                     name: selectedRadio,
@@ -77,7 +77,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                         kronAccountId
                     }
                 }
-            ) : addAutomaticAccount(
+            ) : addAccount(
                 supabase,
                 {
                     name: selectedRadio,
@@ -92,7 +92,7 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                         kronAccountId
                     }
                 }
-            ))
+            )
         }
     }
 
