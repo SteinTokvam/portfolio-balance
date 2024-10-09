@@ -1,20 +1,11 @@
-import { useEffect } from "react"
-import { Account, Holding } from "../types/Types"
-import { useDispatch, useSelector } from "react-redux";
+import { Holding } from "../types/Types"
 import { Link, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
-import { getHoldings } from "../Util/Global";
-import { addHoldings } from "../actions/holdings";
 import { useTranslation } from "react-i18next";
 
-export default function Holdings({ account }: { account: Account }) {
-
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
-
-    const dispatch = useDispatch();
-
+export default function Holdings({holdings, isKron = false}: {holdings: Holding[], isKron?: boolean}) {
     const { t } = useTranslation();
 
-    const columnNames = account.name === 'Kron' ? [
+    const columnNames = holdings.length > 0 && isKron ? [
         {
             key: "name",
             label: "Name"
@@ -62,24 +53,14 @@ export default function Holdings({ account }: { account: Account }) {
         }
     ]
 
-    function renderEquityShare(account: Account, holding: Holding): JSX.Element {
-        if (account.name !== 'Firi' && holding.equityType === 'Fund') {
+    function renderEquityShare(holding: Holding): JSX.Element {
+        if (holding.equityType === 'Fund') {
             return <p>{holding.equityShare.toFixed(2)}</p>
         } else if (holding.equityType === 'Loan') {
             return <p></p>
         }
         return <p>{holding.equityShare}</p>
     }
-
-    useEffect(() => {
-        getHoldings(account)
-            .then((holdings: Holding[]) => {
-                if (holdings.length === 0) {
-                    return
-                }
-                dispatch(addHoldings(holdings, account.key))
-            })
-    }, [account, dispatch])
 
     function renderCell(item: any, columnKey: string | number) {
         switch (columnKey) {
@@ -89,50 +70,52 @@ export default function Holdings({ account }: { account: Account }) {
                     isExternal
                 >
                     {t('holdings.seeMore')}
-                    </Link>
+                </Link>
             default:
                 return getKeyValue(item, columnKey)
         }
     }
+    console.log(holdings)
 
     return (
         <div>
-            <Table
-                isStriped
-                selectionMode='none'
-            >
-                <TableHeader columns={columnNames}>
-                    {(column: { key: string; label: any; }) => {
-                        if (column.key === 'date' || column.key === 'type' || column.key === 'fund_name' || column.key === 'amount' || column.key === 'yield') {
-                            return <TableColumn allowsSorting key={column.key}>{column.label}</TableColumn>
-                        }
-                        return <TableColumn key={column.key}>{column.label}</TableColumn>
-                    }}
-                </TableHeader>
-                <TableBody
-                    items={
-                        holdings
-                            .filter((holding: Holding) => holding.accountKey === account.key && holding.value > 0.001)
-                            .map((holding: Holding) => {
-                                return {
-                                    name: holding.name,
-                                    value: holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }),
-                                    amount: renderEquityShare(account, holding),
-                                    allocation: ((holding.value / holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0)) * 100).toFixed(1) + '%',
-                                    yield: holding.yield && holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }),
-                                    isin: holding.isin
-                                }
-                            })
-                    }
+            {
+                holdings &&
+                <Table
+                    isStriped
+                    selectionMode='none'
                 >
-                    {(item: any) => (
-                        <TableRow key={item.name}>
-                            {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                        </TableRow>
-                    )}
+                    <TableHeader columns={columnNames}>
+                        {(column: { key: string; label: any; }) => {
+                            return <TableColumn key={column.key}>{column.label}</TableColumn>
+                        }}
+                    </TableHeader>
+                
+                    <TableBody
+                        items={
+                            holdings
+                                .filter((holding: Holding) => holding.value > 0.001)
+                                .map((holding: Holding) => {
+                                    return {
+                                        name: holding.name,
+                                        value: holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }),
+                                        amount: renderEquityShare(holding),
+                                        allocation: ((holding.value / holdings.reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0)) * 100).toFixed(1) + '%',
+                                        yield: holding.yield && holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' }),
+                                        isin: holding.isin
+                                    }
+                                })
+                        }
+                    >
+                        {(item: any) => (
+                            <TableRow key={item.name}>
+                                {(columnKey: string | number) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                            </TableRow>
+                        )}
 
-                </TableBody>
-            </Table>
+                    </TableBody>
+                </Table>
+            }
         </div>
     )
 }

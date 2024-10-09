@@ -1,5 +1,5 @@
-import { Account, Holding, Transaction } from "../types/Types"
-import { emptyHoldingPromise, emptyTransactionPromise } from "./Global"
+import { Account, Holding, KronDevelopment, Transaction } from "../types/Types"
+import { emptyHoldingPromise, emptyKronDevelopmentPromise, emptyTransactionPromise } from "./Global"
 
 
 const isLocal = false
@@ -68,10 +68,10 @@ export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
     }
 }
 
-export async function fetchKronDevelopment(account: Account): Promise<any> {
+export async function fetchKronDevelopment(account: Account): Promise<KronDevelopment[]> {
     const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
     if (options.error) {
-        return emptyHoldingPromise()
+        return emptyKronDevelopmentPromise()
     }
     try {
         const response = await fetch(`${baseUrl}/kron/development`, options)

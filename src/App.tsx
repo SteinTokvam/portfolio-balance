@@ -6,12 +6,11 @@ import { useEffect } from 'react';
 import Dashboard from './components/Dashboard';
 import { routes } from './Util/Global';
 import Footer from './components/Footer';
-import Accounts from './components/Accounts';
+import Portfolio from './components/Portfolio';
 import Auth from './components/Auth';
-import Account from './components/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
-import { supabase } from './supabaseClient';
 import { useSelector } from 'react-redux';
+import AccountView from './components/Account';
 
 function App() {
 
@@ -28,11 +27,11 @@ function App() {
   return (
     <div>
       <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
-        <MyNavbar supabase={supabase} />
+        <MyNavbar />
         <Routes>
-          <Route path={routes.dashboard} element={<Dashboard supabase={supabase} />} />
-          <Route path={routes.portfolio} element={<Accounts supabase={supabase} />} />
-          <Route path={routes.account} element={<Account supabase={supabase} />} />
+          <Route path={routes.dashboard} element={<Dashboard />} />
+          <Route path={routes.portfolio} element={<Portfolio />} />
+          <Route path={routes.account} element={<AccountView />} />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />
           <Route path={routes.login} element={<Auth />} />
         </Routes>

@@ -1,14 +1,12 @@
 import { Button, Input, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Accordion, AccordionItem, Link } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { getHoldings, styles } from "../../Util/Global";
+import { styles } from "../../Util/Global";
 import { v4 as uuidv4 } from 'uuid';
-import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
-import { Account, EquityType, Holding, Transaction, TransactionType } from "../../types/Types";
-import { deleteHoldingsForAccount, updateHoldings } from "../../actions/holdings";
+import { Account, EquityType, Transaction, TransactionType } from "../../types/Types";
 import { SupabaseClient } from "@supabase/supabase-js";
+import { addTransaction } from "../../Util/Supabase";
 
 
 export default function NewTransactionModalContent({ supabase, account }: { supabase: SupabaseClient, account: Account }) {
@@ -20,8 +18,6 @@ export default function NewTransactionModalContent({ supabase, account }: { supa
     const [equityPrice, setEquityPrice] = useState("0")
     const [e24Key, setE24Key] = useState("")
     const [equityShare, setEquityShare] = useState("0")
-
-    const dispatch = useDispatch()
 
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
 
@@ -46,22 +42,12 @@ export default function NewTransactionModalContent({ supabase, account }: { supa
         [selectedInvestmentKeys]
     );
 
-    useEffect(() => {
-        getHoldings(account)
-            .then((holdings: Holding[]) => {
-                if (holdings.length === 0) {
-                    return
-                }
-                dispatch(updateHoldings(holdings, account.key))
-            })
-    }, [account, dispatch]);
-
 function handleSubmit() {
     var transactionToAdd: Transaction[] = []
-    dispatch(deleteHoldingsForAccount(account))
     if (account.type === 'Obligasjon') {
         transactionToAdd.push({
             transactionKey: uuidv4(),
+            accountKey: account.key,
             cost: parseFloat(cost),
             name: transactionName,
             type: selectedTransactionType,
@@ -74,6 +60,7 @@ function handleSubmit() {
     } else {
         transactionToAdd.push({
             transactionKey: uuidv4(),
+            accountKey: account.key,
             cost: parseFloat(cost),
             name: transactionName,
             type: selectedTransactionType,
@@ -85,7 +72,7 @@ function handleSubmit() {
         })
     }
 
-    dispatch(newTransaction(supabase,account.key, transactionToAdd[0]))
+    addTransaction(supabase, transactionToAdd[0], account.key)
 }
 return (
     <ModalContent>
