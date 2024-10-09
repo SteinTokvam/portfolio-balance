@@ -11,15 +11,10 @@ export type Account = {
 
 export type KronDevelopment = {
     date: string,
-    market_value: {
-        value: number
-    },
-    yield: {
-        value: number
-    },
-    return: {
-        value: number
-    }
+    market_value: number,
+    yield_in_currency: number,
+    yield_percentage: number
+
 }
 
 type ApiInfo = {

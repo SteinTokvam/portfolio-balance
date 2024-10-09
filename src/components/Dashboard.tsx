@@ -13,7 +13,7 @@ export default function Dashboard() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
 
-    const { data, loading, error } = useData(["accounts", "holdings", "transactions", "kronDevelopment"])
+    const { data, loading } = useData(["accounts", "holdings", "transactions", "kronDevelopment"])
     const settings = useSelector((state: any) => state.rootReducer.settings)
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)

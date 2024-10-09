@@ -1,13 +1,9 @@
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import CustomToolTip from "./CustomToolTip";
+import { KronDevelopment } from "../types/Types";
 
 export default function DevelopmentGraph({ data }: {
-    data: {
-        date: string,
-        market_value: number,
-        yield_in_currency: number,
-        yield_percentage: number
-    }[]
+    data: KronDevelopment[]
 
 }) {
     return (

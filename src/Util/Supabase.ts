@@ -2,10 +2,14 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { Account, Transaction } from "../types/Types"
 
 
-export async function getAccounts(supabase: SupabaseClient): Promise<Account[]> {
-    const { data, error } = await supabase
+export async function getAccounts(supabase: SupabaseClient, fetchOnlyAutomaticAccounts = false): Promise<Account[]> {
+    const { data, error } = fetchOnlyAutomaticAccounts ? await supabase
         .from('accounts')
         .select()
+        .eq('isManual', false) :
+        await supabase
+            .from('accounts')
+            .select()
     if (error) {
         console.log(error)
     }
