@@ -1,4 +1,4 @@
-import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
 import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
@@ -179,6 +179,12 @@ async function fetchTickers(uniqueE24Keys: { e24Key: string, equityShare: number
 }
 
 export function emptyHoldingPromise(): Promise<Holding[]> {
+    return new Promise((resolve, _) => {
+        resolve([])
+    })
+}
+
+export function emptyKronDevelopmentPromise(): Promise<KronDevelopment[]> {
     return new Promise((resolve, _) => {
         resolve([])
     })

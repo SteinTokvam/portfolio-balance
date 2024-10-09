@@ -9,6 +9,19 @@ export type Account = {
     apiInfo?: ApiInfo
 }
 
+export type KronDevelopment = {
+    date: string,
+    market_value: {
+        value: number
+    },
+    yield: {
+        value: number
+    },
+    return: {
+        value: number
+    }
+}
+
 type ApiInfo = {
     accessKey: string
     kronAccountId: string
