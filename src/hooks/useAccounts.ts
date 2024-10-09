@@ -25,9 +25,10 @@ export const useAccounts = (accountKey: string = "") => {
           }
         };
     
-        fetchData()
-    
-      }, [accountKey]);
+        if(accountKey !== "" || accounts.length === 0) {
+            fetchData()    
+        }
+      }, []);
 
       return { accounts, loading, error }
 }

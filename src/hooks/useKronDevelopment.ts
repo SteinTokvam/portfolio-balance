@@ -26,7 +26,7 @@ export const useKronDevelopment = (account: Account) => {
     
         fetchData()
     
-      }, [account]);
+      }, []);
 
       return { kronDevelopment, loading, error }
 }

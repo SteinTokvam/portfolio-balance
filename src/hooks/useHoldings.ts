@@ -3,7 +3,7 @@ import { Account, Holding, Transaction } from "../types/Types";
 import { useEffect, useState } from "react";
 
 export const useholdings = (accounts: Account[], transactions: Transaction[]) => {
-    const [holdings, setholdings] = useState<Holding[]>([]);
+    const [holdings, setHoldings] = useState<Holding[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>("");
 
@@ -16,7 +16,7 @@ export const useholdings = (accounts: Account[], transactions: Transaction[]) =>
                         await getHoldings(account, transactions.filter(transaction => transaction.accountKey === account.key))
                     )
                 );
-                setholdings(results.flat());
+                setHoldings(results.flat());
             } catch (error) {
                 setError(error as string)
             } finally {
