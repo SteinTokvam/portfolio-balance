@@ -17,12 +17,11 @@ import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
 import { routes } from "../../Util/Global";
 import Holdings from "./Holdings";
-import { SupabaseClient } from "@supabase/supabase-js";
 import DevelopmentGraph from "./DevelopmentGraph";
 import NewsMessageModalContent from "./NewsMessageModalContent";
 import { fetchBBTransactions } from "../../Util/BareBitcoin";
 
-export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
+export default function AccountComponent() {
 
     const { t } = useTranslation()
 

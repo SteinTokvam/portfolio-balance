@@ -31,8 +31,8 @@ function App() {
         <MyNavbar supabase={supabase} />
         <Routes>
           <Route path={routes.dashboard} element={<Dashboard />} />
-          <Route path={routes.portfolio} element={<Accounts supabase={supabase} />} />
-          <Route path={routes.account} element={<Account supabase={supabase} />} />
+          <Route path={routes.portfolio} element={<Accounts />} />
+          <Route path={routes.account} element={<Account />} />
           <Route path={routes.confirmMail} element={<ConfirmMail />} />
           <Route path={routes.login} element={<Auth />} />
         </Routes>
