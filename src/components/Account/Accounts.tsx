@@ -39,7 +39,7 @@ export default function Accounts() {
         <div>
             <div className="space-y-4">
                 <AccountButton isEdit={false}>
-                    <AccountTypeModalContent isEdit={false} supabase={supabase} />
+                    <AccountTypeModalContent isEdit={false} />
                 </AccountButton>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
                     {accounts && accounts.length > 0 ?

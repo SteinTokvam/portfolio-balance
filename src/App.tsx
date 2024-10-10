@@ -12,10 +12,11 @@ import Account from './components/Account/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
 import { supabase } from './supabaseClient';
 import { useSelector } from 'react-redux';
+import { State } from './types/Types';
 
 function App() {
 
-  const session = useSelector((state: any) => state.rootReducer.auth.session)
+  const session = useSelector((state: State) => state.rootReducer.auth.session)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -28,7 +29,7 @@ function App() {
   return (
     <div>
       <div className={isDark ? "App dark bg-background min-h-screen" : "App min-h-screen"}>
-        <MyNavbar supabase={supabase} />
+        <MyNavbar />
         <Routes>
           <Route path={routes.dashboard} element={<Dashboard />} />
           <Route path={routes.portfolio} element={<Accounts />} />
