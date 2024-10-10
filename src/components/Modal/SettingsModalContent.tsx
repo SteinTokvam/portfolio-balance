@@ -7,9 +7,8 @@ import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
-import { SupabaseClient } from "@supabase/supabase-js"
 
-export default function SettingsModalContent({supabase}: {supabase: SupabaseClient}) {
+export default function SettingsModalContent() {
     const dispatch = useDispatch()
     const { t } = useTranslation();
 
@@ -38,7 +37,7 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
             const json = JSON.parse(e.target.result)
             setLang(json.settings.language)
             setSelectedKeys(new Set([json.settings.language]))
-            dispatch(importAccounts(supabase, json.accounts.accounts))        
+            dispatch(importAccounts(json.accounts.accounts))        
             dispatch(setAllPercentages(json.equitytypes))
             window.localStorage.setItem('settings', JSON.stringify(json.settings))
             i18n.changeLanguage(json.settings.language)
@@ -95,7 +94,7 @@ export default function SettingsModalContent({supabase}: {supabase: SupabaseClie
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteAllAccounts(supabase, true))
+                            dispatch(deleteAllAccounts(true))
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>

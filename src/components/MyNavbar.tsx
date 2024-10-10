@@ -6,11 +6,11 @@ import { useReducer } from "react";
 import { routes } from "../Util/Global";
 import { useNavigate } from "react-router-dom";
 import EmptyModal from "./Modal/EmptyModal";
-import { SupabaseClient } from "@supabase/supabase-js";
 import { useDispatch } from "react-redux";
 import { deleteAllAccounts } from "../actions/accounts";
+import { supabase } from "../supabaseClient";
 
-export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
+export default function MyNavbar() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
@@ -50,7 +50,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
 
       <NavbarContent justify="end" className="hidden sm:flex lg:flex">
         <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
-          <SettingsModalContent supabase={supabase} />
+          <SettingsModalContent />
         </EmptyModal>
         {signedIn && menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
@@ -68,7 +68,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
             color='danger'
             onClick={() => {
               supabase.auth.signOut().then(() => {
-                dispatch(deleteAllAccounts(supabase, false))
+                dispatch(deleteAllAccounts(false))
                 navigate('/')
               })
             }} >Logg ut</Button>
@@ -102,7 +102,7 @@ export default function MyNavbar({ supabase }: { supabase: SupabaseClient }) {
             color="danger"
             onPress={() => {
               supabase.auth.signOut().then(() => {
-                dispatch(deleteAllAccounts(supabase, false))
+                dispatch(deleteAllAccounts(false))
                 navigate('/')
               })
             }}

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
-import { SupabaseClient } from "@supabase/supabase-js"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
@@ -17,7 +16,7 @@ import GoalAnalysis from "./GoalAnalysis"
 import EmptyModal from "../Modal/EmptyModal"
 import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent"
 
-export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
+export default function Dashboard() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const accounts = useSelector((state: State) => state.rootReducer.accounts.accounts)
@@ -31,10 +30,10 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
 
     useEffect(() => {
         if (!accounts) return
-        getAccounts(supabase)
+        getAccounts()
             .then(accounts => {
                 accounts.forEach(account => {
-                    getTransactions(supabase, account.key)
+                    getTransactions(account.key)
                         .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
                 });
             })
@@ -61,25 +60,25 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
         if (account.name === 'Kron') {
             fetchKronTransactions(account)
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
+                    dispatch(importTransactions(account, transactions))
                 })
         } else if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
+                    dispatch(importTransactions(account, transactions))
                 })
         }
     }
 
     const updateData = () => {
         dispatch(deleteAllHoldings())
-        dispatch(deleteAllAccounts(supabase, false))
+        dispatch(deleteAllAccounts(false))
         if (!accounts) return
         if (useDb) {
-            getAccounts(supabase)
+            getAccounts()
                 .then(accounts => {
                     accounts.forEach(account => {
-                        getTransactions(supabase, account.key)
+                        getTransactions(account.key)
                             .then(transactions => {
                                 dispatch(initSupabaseData({ ...account, transactions }))
                                 getAccountsAndHoldings({ ...account, transactions })
