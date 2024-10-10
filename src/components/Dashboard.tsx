@@ -5,7 +5,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
-import { Account, EquityType, Holding, Transaction, TransactionType } from "../types/Types"
+import { Account, EquityType, Holding, KronDevelopment, State, Transaction, TransactionType } from "../types/Types"
 import { addHoldings, deleteAllHoldings } from "../actions/holdings"
 import { getHoldings, useDb } from "../Util/Global"
 import { fetchFiriTransactions } from "../Util/Firi"
@@ -20,14 +20,14 @@ import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalC
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-    const holdings: Holding[] = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
-    const settings = useSelector((state: any) => state.rootReducer.settings)
+    const accounts = useSelector((state: State) => state.rootReducer.accounts.accounts)
+    const holdings: Holding[] = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
+    const settings = useSelector((state: State) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
-    const [development, setDevelopment] = useState({} as any)
+    const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
+    const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
 
     useEffect(() => {
         if (!accounts) return
@@ -41,7 +41,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
         accounts.forEach((account: Account) => {
             if (account.name === 'Kron') {
                 fetchKronDevelopment(account)
-                    .then((development: any) => setDevelopment(development))
+                    .then((development: KronDevelopment[]) => setDevelopment(development))
             }
             getHoldings(account)
                 .then(holdings => {

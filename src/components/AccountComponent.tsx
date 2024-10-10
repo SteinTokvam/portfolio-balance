@@ -8,7 +8,7 @@ import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalConte
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, Transaction } from "../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../actions/holdings";
@@ -41,7 +41,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
-    const [development, setDevelopment] = useState({} as any)
+    const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const [newsTitles, setNewsTitles] = useState<any[]>([])
 
     const sortedItems = useMemo(() => {
@@ -149,7 +149,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                     dispatch(importTransactions(supabase, account, transactions))
                 })
             fetchKronDevelopment(account)
-                .then((development: any) => setDevelopment(development))
+                .then((development: KronDevelopment[]) => setDevelopment(development))
         } else if(account.name === 'Bare Bitcoin') {
             fetchBBTransactions(account)
             .then((transactions: Transaction[]) => {
