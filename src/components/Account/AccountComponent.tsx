@@ -1,26 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor, Accordion, AccordionItem } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
-import { UploadIcon } from "../icons/UploadIcon";
-import EmptyModal from "./Modal/EmptyModal";
-import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
+import { deleteAccount, deleteTransaction, importTransactions } from "../../actions/accounts";
+import { UploadIcon } from "../../icons/UploadIcon";
+import EmptyModal from "../Modal/EmptyModal";
+import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
-import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
+import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, Transaction } from "../../types/Types";
 import AccountButton from "./AccountButton";
-import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
-import { deleteHoldingsForAccount } from "../actions/holdings";
-import { fetchFiriTransactions } from "../Util/Firi";
-import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron";
+import { AccountTypeModalContent } from "./AccountTypeModalContent";
+import { deleteHoldingsForAccount } from "../../actions/holdings";
+import { fetchFiriTransactions } from "../../Util/Firi";
+import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../Util/Global";
+import { routes } from "../../Util/Global";
 import Holdings from "./Holdings";
 import { SupabaseClient } from "@supabase/supabase-js";
 import DevelopmentGraph from "./DevelopmentGraph";
-import NewsMessageModalContent from "./Modal/NewsMessageModalContent";
-import { fetchBBTransactions } from "../Util/BareBitcoin";
+import NewsMessageModalContent from "./NewsMessageModalContent";
+import { fetchBBTransactions } from "../../Util/BareBitcoin";
 
 export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
 

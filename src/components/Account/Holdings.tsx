@@ -1,9 +1,9 @@
 import { useEffect } from "react"
-import { Account, Holding } from "../types/Types"
+import { Account, Holding } from "../../types/Types"
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
-import { getHoldings } from "../Util/Global";
-import { addHoldings } from "../actions/holdings";
+import { getHoldings } from "../../Util/Global";
+import { addHoldings } from "../../actions/holdings";
 import { useTranslation } from "react-i18next";
 
 export default function Holdings({ account }: { account: Account }) {

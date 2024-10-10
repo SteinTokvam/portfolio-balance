@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
-import CompanyIcon from "../icons/CompanyIcon";
-import { getHoldings, routes } from "../Util/Global";
-import { Account, Holding } from "../types/Types";
-import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
+import CompanyIcon from "../../icons/CompanyIcon";
+import { getHoldings, routes } from "../../Util/Global";
+import { Account, Holding } from "../../types/Types";
+import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { addHoldings } from "../actions/holdings";
+import { addHoldings } from "../../actions/holdings";
 
 export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
 

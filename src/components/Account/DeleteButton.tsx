@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import DeleteIcon from "../icons/DeleteIcon";
+import DeleteIcon from "../../icons/DeleteIcon";
 
 type Props = {
     handleDelete: () => void

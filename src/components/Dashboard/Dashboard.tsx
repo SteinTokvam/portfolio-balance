@@ -5,17 +5,17 @@ import { SupabaseClient } from "@supabase/supabase-js"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
-import { Account, EquityType, Holding, KronDevelopment, State, Transaction, TransactionType } from "../types/Types"
-import { addHoldings, deleteAllHoldings } from "../actions/holdings"
-import { getHoldings, useDb } from "../Util/Global"
-import { fetchFiriTransactions } from "../Util/Firi"
-import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts"
-import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron"
-import { getAccounts, getTransactions } from "../Util/Supabase"
-import { toggleHideNumbers } from "../actions/settings"
+import { Account, EquityType, Holding, KronDevelopment, State, Transaction, TransactionType } from "../../types/Types"
+import { addHoldings, deleteAllHoldings } from "../../actions/holdings"
+import { getHoldings, useDb } from "../../Util/Global"
+import { fetchFiriTransactions } from "../../Util/Firi"
+import { deleteAllAccounts, importTransactions, initSupabaseData } from "../../actions/accounts"
+import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron"
+import { getAccounts, getTransactions } from "../../Util/Supabase"
+import { toggleHideNumbers } from "../../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
-import EmptyModal from "./Modal/EmptyModal"
-import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent"
+import EmptyModal from "../Modal/EmptyModal"
+import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent"
 
 export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
     const { t } = useTranslation()
