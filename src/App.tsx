@@ -10,7 +10,6 @@ import Accounts from './components/Account/Accounts';
 import Auth from './components/Auth';
 import Account from './components/Account/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
-import { supabase } from './supabaseClient';
 import { useSelector } from 'react-redux';
 import { State } from './types/Types';
 

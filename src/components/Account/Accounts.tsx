@@ -4,17 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../../icons/CompanyIcon";
 import { getHoldings, routes } from "../../Util/Global";
-import { Account, Holding } from "../../types/Types";
+import { Account, Holding, State } from "../../types/Types";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
 import { addHoldings } from "../../actions/holdings";
-import { supabase } from "../../supabaseClient";
 
 export default function Accounts() {
 
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts);
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
-    const settings = useSelector((state: any) => state.rootReducer.settings);
+    const accounts = useSelector((state: State) => state.rootReducer.accounts.accounts);
+    const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings);
+    const settings = useSelector((state: State) => state.rootReducer.settings);
 
     const dispatch = useDispatch();
 

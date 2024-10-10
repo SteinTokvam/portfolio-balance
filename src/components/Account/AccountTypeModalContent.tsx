@@ -75,7 +75,6 @@ export function AccountTypeModalContent({ isEdit, account}: { isEdit: boolean, a
                     }
                 }
             ) : addAutomaticAccount(
-                supabase,
                 {
                     name: selectedRadio,
                     key: uuidv4(),
