@@ -14,12 +14,6 @@ export const addHoldings = (holdings: Holding[], accountKey: string) => {
     }
 }
 
-export const deleteAllHoldings = () => {
-    return {
-        type: "DELETE_ALL_HOLDINGS"
-    }
-}
-
 export const deleteHoldingsForAccount = (account: Account) => {
     return {
         type: "DELETE_HOLDINGS_FOR_ACCOUNT",

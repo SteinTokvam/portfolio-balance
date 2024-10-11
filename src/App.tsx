@@ -10,19 +10,21 @@ import Accounts from './components/Account/Accounts';
 import Auth from './components/Auth';
 import Account from './components/Account/AccountComponent';
 import ConfirmMail from './components/ConfirmMail';
-import { useSelector } from 'react-redux';
-import { State } from './types/Types';
+import { supabase } from './supabaseClient';
 
 function App() {
-
-  const session = useSelector((state: State) => state.rootReducer.auth.session)
   const navigate = useNavigate()
 
   useEffect(() => {
-      if(!session) {
+    const checkSession = async () => {
+      const session = await (await supabase.auth.getSession()).data.session
+      console.log(session)
+      if (!session) {
         navigate(routes.login)
       }
-    }, [])//eslint-disable-line react-hooks/exhaustive-deps
+    }
+    checkSession()
+  }, [])//eslint-disable-line react-hooks/exhaustive-deps
 
   const isDark = false
   return (

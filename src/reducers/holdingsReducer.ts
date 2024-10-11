@@ -1,7 +1,7 @@
 import { Holding } from "../types/Types";
 
 const initialState = {
-    holdings: window.localStorage.getItem('holdings') ? JSON.parse(window.localStorage.getItem('holdings') + '') : [],
+    holdings: [],
 }
 
 const holdingsReducer = (state = initialState, action: { type: string; payload: {holdings: Holding[]; accountKey: string} }) => {
@@ -25,7 +25,7 @@ const holdingsReducer = (state = initialState, action: { type: string; payload: 
                 ...state,
                 holdings: allHoldings
             }
-        case 'DELETE_ALL_HOLDINGS':
+        case 'RESET_STATE':
             return {
                 ...state,
                 holdings: []

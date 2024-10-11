@@ -7,7 +7,7 @@ import { routes } from "../Util/Global";
 import { useNavigate } from "react-router-dom";
 import EmptyModal from "./Modal/EmptyModal";
 import { useDispatch } from "react-redux";
-import { deleteAllAccounts } from "../actions/accounts";
+import { resetState } from "../actions/accounts";
 import { supabase } from "../supabaseClient";
 
 export default function MyNavbar() {
@@ -68,8 +68,8 @@ export default function MyNavbar() {
             color='danger'
             onClick={() => {
               supabase.auth.signOut().then(() => {
-                dispatch(deleteAllAccounts(false))
-                navigate('/')
+                dispatch(resetState())
+                navigate(routes.login)
               })
             }} >Logg ut</Button>
         </NavbarMenuItem>}
@@ -102,7 +102,7 @@ export default function MyNavbar() {
             color="danger"
             onPress={() => {
               supabase.auth.signOut().then(() => {
-                dispatch(deleteAllAccounts(false))
+                dispatch(resetState(false))
                 navigate('/')
               })
             }}

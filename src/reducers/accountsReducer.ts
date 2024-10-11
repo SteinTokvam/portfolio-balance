@@ -128,8 +128,11 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 ...state,
                 accounts: remainingAccounts
             }
-        case 'DELETE_ALL_ACCOUNTS':
-            return initialState
+        case 'RESET_STATE':
+            return {
+                ...state,
+                accounts: []
+            }
         default:
             return state
     }

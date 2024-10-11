@@ -41,12 +41,9 @@ export const deleteAccount = (accountKey: string) => {
     }
 }
 
-export const deleteAllAccounts = (deleteFromSupabase: boolean) => {
-    if(deleteFromSupabase) {
-        deleteAllAccountSupabase()
-    }
+export const resetState = () => {
     return {
-        type: 'DELETE_ALL_ACCOUNTS'
+        type: 'RESET_STATE',
     }
 }
 

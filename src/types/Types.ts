@@ -1,4 +1,3 @@
-import { Session } from "@supabase/supabase-js"
 
 export type State = {
     rootReducer: {
@@ -16,9 +15,6 @@ export type State = {
         },
         settings: {
             hideNumbers: boolean
-        },
-        auth: {
-            session: Session | null
         }
     }
 }

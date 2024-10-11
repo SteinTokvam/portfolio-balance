@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { languages } from "../../Util/Global"
-import { deleteAllAccounts, importAccounts } from "../../actions/accounts"
+import { resetState, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
@@ -94,7 +94,7 @@ export default function SettingsModalContent() {
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(deleteAllAccounts(true))
+                            dispatch(resetState(true))
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>
