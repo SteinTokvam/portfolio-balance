@@ -88,7 +88,7 @@ export async function deleteAccountSupabase(accountKey: string): Promise<Boolean
     return response.status === 204
 }
 
-export async function deleteAllAccountSupabase(): Promise<Boolean> {
+export async function deleteAllAccountsSupabase(): Promise<Boolean> {
     const response = await supabase
         .from('accounts')
         .delete()

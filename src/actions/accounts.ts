@@ -1,5 +1,5 @@
 import { Account, Transaction } from "../types/Types"
-import { addAccount, addTransaction, deleteAccountSupabase, deleteAllAccountSupabase, deleteTransactionSupabase, importAccountsToSupabase, updateAccount } from "../Util/Supabase"
+import { addAccount, addTransaction, deleteAccountSupabase, deleteTransactionSupabase, importAccountsToSupabase, updateAccount } from "../Util/Supabase"
 
 export const initSupabaseData = (account: Account) => {
     return {

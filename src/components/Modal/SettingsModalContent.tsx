@@ -7,6 +7,7 @@ import { resetState, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
+import { deleteAllAccountsSupabase } from "@/Util/Supabase"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
@@ -94,7 +95,8 @@ export default function SettingsModalContent() {
                         <h4 className="text-medium font-semibold leading-none text-danger-600">{t('settings.deleteTitle')}</h4>
                         <Button color="danger" variant="light" onPress={() => {
                             window.localStorage.clear()
-                            dispatch(resetState(true))
+                            dispatch(resetState())
+                            deleteAllAccountsSupabase()
                             alert(t('settings.deleteAlert'))
                             onClose()
                         }}>
