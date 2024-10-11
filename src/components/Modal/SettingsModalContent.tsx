@@ -7,7 +7,7 @@ import { resetState, importAccounts } from "../../actions/accounts"
 import { setAllPercentages } from "../../actions/equityType"
 // @ts-ignore
 import i18n from "../../i18n/config"
-import { deleteAllAccountsSupabase } from "@/Util/Supabase"
+import { deleteAllAccountsSupabase } from "../../Util/Supabase"
 
 export default function SettingsModalContent() {
     const dispatch = useDispatch()
