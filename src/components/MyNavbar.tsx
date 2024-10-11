@@ -102,7 +102,7 @@ export default function MyNavbar() {
             color="danger"
             onPress={() => {
               supabase.auth.signOut().then(() => {
-                dispatch(resetState(false))
+                dispatch(resetState())
                 navigate('/')
               })
             }}
