@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
 import { Account, AccountTypes } from "../../types/Types"
-import { supabase } from "../../supabaseClient"
 
 export function AccountTypeModalContent({ isEdit, account}: { isEdit: boolean, account?: Account }) {
 

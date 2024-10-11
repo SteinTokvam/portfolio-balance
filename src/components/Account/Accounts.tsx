@@ -43,7 +43,7 @@ export default function Accounts() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
                     {accounts && accounts.length > 0 ?
 
-                        accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
+                        accounts.sort((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (
                                 <Card 
                                     aria-label="Card"
