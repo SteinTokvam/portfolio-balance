@@ -17,8 +17,7 @@ function App() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const session = await (await supabase.auth.getSession()).data.session
-      console.log(session)
+      const session = (await supabase.auth.getSession()).data.session
       if (!session) {
         navigate(routes.login)
       }
