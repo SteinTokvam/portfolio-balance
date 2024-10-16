@@ -27,6 +27,7 @@ export default function Dashboard() {
     const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
+    console.log("eq", equityTypes)
 
     useEffect(() => {
         if (!accounts) return
@@ -192,7 +193,7 @@ export default function Dashboard() {
                                     innerRadius={40}
                                     outerRadius={80}
                                     fill="#8884d8"
-                                    label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0].goalPercentage}%`}
+                                    label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0]?.goalPercentage}%`}
                                 >
                                     {equityTypeData.map((_: any, index: number) => (
                                         <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />
