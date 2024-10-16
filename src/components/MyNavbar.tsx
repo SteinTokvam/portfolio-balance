@@ -16,8 +16,6 @@ export default function MyNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useReducer((current) => !current, false);;
   const { t } = useTranslation();
 
-  const signedIn = window.localStorage.getItem('sb-gmfrmyphzawjnzcjuiqx-auth-token')
-
   const dispatch = useDispatch()
 
   const menuItems = [
@@ -36,7 +34,7 @@ export default function MyNavbar() {
   }
 
   return (
-    signedIn && <Navbar isMenuOpen={isMenuOpen}
+    <Navbar isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
       className="text-foreground">
       <NavbarContent>
@@ -52,7 +50,7 @@ export default function MyNavbar() {
         <EmptyModal isOpen={isOpen} onOpenChange={onOpenChange} hideCloseButton={false} isDismissable={true}>
           <SettingsModalContent />
         </EmptyModal>
-        {signedIn && menuItems.map((item, index) => (
+        {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Button variant="light"
               className="w-full"
@@ -62,7 +60,7 @@ export default function MyNavbar() {
             </Button>
           </NavbarMenuItem>
         ))}
-        {signedIn && <NavbarMenuItem>
+        {<NavbarMenuItem>
           <Button
             variant="light"
             color='danger'
@@ -79,10 +77,10 @@ export default function MyNavbar() {
 
         <NavbarMenu />
 
-        {signedIn && <NavbarMenuToggle
+        <NavbarMenuToggle
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="sm:hidden"
-        />}
+        />
       </NavbarContent>
 
       <NavbarMenu>
@@ -97,7 +95,7 @@ export default function MyNavbar() {
             </Link>
           </NavbarMenuItem>
         ))}
-        {signedIn && <NavbarMenuItem>
+        <NavbarMenuItem>
           <Link
             color="danger"
             onPress={() => {
@@ -107,7 +105,7 @@ export default function MyNavbar() {
               })
             }}
             size="lg">Logg ut</Link>
-        </NavbarMenuItem>}
+        </NavbarMenuItem>
       </NavbarMenu>
     </Navbar>
   )

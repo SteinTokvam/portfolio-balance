@@ -1,7 +1,6 @@
-import { useDb } from "../Util/Global";
 import { Account, Transaction } from "../types/Types"
 
-const initialState = useDb ? {accounts: []} : {accounts: window.localStorage.getItem('accounts') ? JSON.parse(window.localStorage.getItem('accounts') as string) : []}
+const initialState = {accounts: [] as Account[]}
 
 const accountReducer = (state = initialState, action: { type: string; payload: { key: string, transactions: Transaction[], transactionKey: string, accounts: Account[], accountKey: string } }) => {
     var currentAccounts = []
@@ -16,20 +15,17 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 accounts: [...state.accounts, ...action.payload.accounts]
             }
         case 'ADD_NEW_ACCOUNT':
-            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload.accounts[0]]))
             return {
                 ...state,
                 accounts: [...state.accounts, ...action.payload.accounts]
             }
         case 'EDIT_ACCOUNT':
             const edited = [...state.accounts.filter((account: Account) => account.key !== action.payload.key), ...action.payload.accounts]
-            window.localStorage.setItem("accounts", JSON.stringify(edited))
             return {
                 ...state,
                 accounts: edited
             }
         case 'ADD_AUTOMATIC_ACCOUNT':
-            window.localStorage.setItem("accounts", JSON.stringify([...state.accounts, action.payload]))
             return {
                 ...state,
                 accounts: [...state.accounts, action.payload]
@@ -44,7 +40,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                     ...currentAccounts[index],
                     transactions: action.payload.transactions,
                 }
-                window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
                 return {
                     ...state,
                     accounts: currentAccounts
@@ -63,7 +58,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 ...currentAccounts[index],
                 transactions: [...currentAccounts[index].transactions, ...newTransactions],
             }
-            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
                 ...state,
                 accounts: currentAccounts
@@ -83,13 +77,11 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 transactions: [...currentAccounts[index].transactions, action.payload.transactions[0]]
             }
 
-            window.localStorage.setItem("accounts", JSON.stringify(currentAccounts))
             return {
                 ...state,
                 accounts: currentAccounts
             }
         case 'IMPORT_ACCOUNTS':
-            window.localStorage.setItem("accounts", JSON.stringify(action.payload.accounts))
             return {
                 ...state,
                 accounts: action.payload.accounts
@@ -113,7 +105,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                     transactions: remainingTransactions
                 }
             ]
-            window.localStorage.setItem("accounts", JSON.stringify(newAccounts))
             return {
                 ...state,
                 accounts: newAccounts
@@ -123,7 +114,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
             currentAccounts = [...state.accounts]
             const remainingAccounts = currentAccounts.filter(account => account.key !== action.payload.accountKey)
 
-            window.localStorage.setItem("accounts", JSON.stringify(remainingAccounts))
             return {
                 ...state,
                 accounts: remainingAccounts
