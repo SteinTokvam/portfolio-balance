@@ -20,6 +20,8 @@ function App() {
       const session = (await supabase.auth.getSession()).data.session
       if (!session) {
         navigate(routes.login)
+      } else {
+        navigate(routes.dashboard)
       }
     }
     checkSession()

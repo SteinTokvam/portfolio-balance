@@ -20,7 +20,7 @@ export default function Accounts() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!accounts) {
+        if (!accounts || holdings.length !== 0) {
             return
         }
         accounts.forEach((account: Account) => {

@@ -72,8 +72,6 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
     }
 
     const holdings: Holding[] = []
-    const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
-    const transactionsWithoute24 = account.transactions.filter(transaction => !transaction.e24Key)
 
     if (account.type === AccountTypes.CRYPTOCURRENCY) {
         const price = await fetchPrice()
@@ -81,7 +79,7 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
         const value = equityShare * price.midBtcnok
         return [
             {
-                name: account.transactions.length > 0 ? account.transactions[0].name : "BTC",
+                name: account.transactions[0].name,
                 key: uuidv4(),
                 accountKey: account.key,
                 value,
@@ -93,53 +91,53 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
         ]
     }
 
-    if (transactionsWithe24.length + transactionsWithoute24.length === account.transactions.length) {
+    const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
 
-        const uniqueE24Keys = [...new Set(transactionsWithe24.map(transaction => transaction.e24Key))]
-            .map(uniqueE24Key => {
-                return {
-                    e24Key: uniqueE24Key,
-                    equityShare: account.transactions
-                        .filter(transaction => transaction.e24Key === uniqueE24Key)
-                        .reduce((sum, transaction) => sum + transaction.equityShare, 0),
-                    equityType: account.transactions.filter(transaction => transaction.e24Key === uniqueE24Key)[0].equityType,
-                }
-            })
-            .filter(equityShare => equityShare.equityShare > 0.01);
-
-        const tickers = await fetchTickers(uniqueE24Keys)
-
-        for (let i = 0; i < uniqueE24Keys.length; i++) {
-            const transactionName: Transaction | undefined = account.transactions.find(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)
-            const value = uniqueE24Keys[i].equityShare * tickers[i]
-            const transactions = account.transactions.filter(transaction => transaction.e24Key === uniqueE24Keys[i].e24Key)
-            holdings.push(
-                {
-                    name: transactionName !== undefined ? transactionName.name : '',
-                    accountKey: account.key,
-                    equityShare: uniqueE24Keys[i].equityShare,
-                    equityType: transactions[0].equityType,
-                    e24Key: uniqueE24Keys[i].e24Key,
-                    key: uuidv4(),
-                    value,
-                    yield: value - transactions
-                        .filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
-                        .reduce((sum, transaction) => sum + transaction.cost, 0),
-                }
-            )
-        }
-
-        holdings.push(...getHoldingsWithoutE24Ticker(account, transactionsWithoute24))
-
-        return new Promise((resolve, _) => {
-            resolve(holdings)
+    const uniqueE24Keys = [...new Set(transactionsWithe24.map(transaction => transaction.e24Key))]
+        .map(uniqueE24Key => {
+            const transactions = account.transactions
+                .filter(transaction => transaction.e24Key === uniqueE24Key)
+            return {
+                e24Key: uniqueE24Key,
+                equityShare: transactions
+                    .reduce((sum, transaction) => sum + transaction.equityShare, 0),
+                equityType: transactions[0].equityType,
+            }
         })
-    }
-    return emptyHoldingPromise()
+        .filter(equityShare => equityShare.equityShare > 0.01);
+
+    const tickers = await fetchTickers(uniqueE24Keys)
+
+    uniqueE24Keys.forEach((uniqueE24Key, i) => {
+        const name: string = account.transactions.find(transaction => transaction.e24Key === uniqueE24Key.e24Key)?.name as string
+        const value = uniqueE24Key.equityShare * tickers[i]
+        const transactions = account.transactions.filter(transaction => transaction.e24Key === uniqueE24Key.e24Key)
+        holdings.push(
+            {
+                name,
+                accountKey: account.key,
+                equityShare: uniqueE24Key.equityShare,
+                equityType: transactions[0].equityType,
+                e24Key: uniqueE24Key.e24Key,
+                key: uuidv4(),
+                value,
+                yield: value - transactions
+                    .filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
+                    .reduce((sum, transaction) => sum + transaction.cost, 0),
+            }
+        )
+    })
+
+    holdings.push(...getHoldingsWithoutE24Ticker(account))
+
+    return new Promise((resolve, _) => {
+        resolve(holdings)
+    })
 }
 
-function getHoldingsWithoutE24Ticker(account: Account, transactions: Transaction[] = []): Holding[] {
+function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
     const holdings: Holding[] = []
+    const transactions = account.transactions.filter(transaction => !transaction.e24Key)
     const uniquieHoldingNames = [...new Set(transactions.map(transaction => transaction.name))];
 
     uniquieHoldingNames.forEach(uniqueHoldingName => {
@@ -148,9 +146,7 @@ function getHoldingsWithoutE24Ticker(account: Account, transactions: Transaction
             .filter(transaction => transaction.type === "BUY" || transaction.type === "SELL")
         const equityShare = buysAndSells
             .reduce((sum, transaction) => sum + transaction.equityShare, 0)
-        const value = uniqueHoldingName === "Bare Bitcoin" ?
-            equityShare * 650000 :
-            buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)//TODO: fiks dummy btc pris
+        const value = buysAndSells.reduce((sum, transaction) => sum + transaction.cost, 0)
 
         if (value > 0.5) {
             const transaction = buysAndSells.filter(transaction => transaction.name === uniqueHoldingName)[0]

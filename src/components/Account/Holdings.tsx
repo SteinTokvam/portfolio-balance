@@ -72,6 +72,9 @@ export default function Holdings({ account }: { account: Account }) {
     }
 
     useEffect(() => {
+        if(!account || holdings.length !== 0) {
+            return
+        }
         getHoldings(account)
             .then((holdings: Holding[]) => {
                 if (holdings.length === 0) {

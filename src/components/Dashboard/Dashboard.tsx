@@ -48,7 +48,7 @@ export default function Dashboard() {
                     dispatch(addHoldings(holdings, account.key))
                 })
         })
-    }, [accounts, dispatch])
+    }, [])
 
     function getAccountsAndHoldings(account: Account) {
         getHoldings(account)
@@ -58,10 +58,8 @@ export default function Dashboard() {
             })
 
         if (account.name === 'Kron') {
-            fetchKronTransactions(account)
-                .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account, transactions))
-                })
+            fetchKronDevelopment(account)
+                .then((development: KronDevelopment[]) => setDevelopment(development))
         } else if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {

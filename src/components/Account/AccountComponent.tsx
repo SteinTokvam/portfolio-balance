@@ -8,14 +8,14 @@ import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, Transaction } from "../../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { deleteHoldingsForAccount } from "../../actions/holdings";
 import { fetchFiriTransactions } from "../../Util/Firi";
 import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../../Util/Global";
+import { getHoldings, routes } from "../../Util/Global";
 import Holdings from "./Holdings";
 import DevelopmentGraph from "./DevelopmentGraph";
 import NewsMessageModalContent from "./NewsMessageModalContent";
@@ -34,18 +34,25 @@ export default function AccountComponent() {
 
     const navigate = useNavigate()
 
-
-    const account = useSelector((state: any) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
+    const account = useSelector((state: State) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
+    
+    const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
     const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const [newsTitles, setNewsTitles] = useState<any[]>([])
 
+    useEffect(() => {
+        if(account === undefined) {
+            navigate(routes.dashboard)
+        }
+    })
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
+            // @ts-ignore
             const first = a[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
+            // @ts-ignore
             const second = b[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
             var cmp = 0
             if (sortDescriptor.column === 'amount') {
