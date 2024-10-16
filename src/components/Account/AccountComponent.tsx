@@ -15,7 +15,7 @@ import { deleteHoldingsForAccount } from "../../actions/holdings";
 import { fetchFiriTransactions } from "../../Util/Firi";
 import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
-import { getHoldings, routes } from "../../Util/Global";
+import { routes } from "../../Util/Global";
 import Holdings from "./Holdings";
 import DevelopmentGraph from "./DevelopmentGraph";
 import NewsMessageModalContent from "./NewsMessageModalContent";
@@ -34,7 +34,7 @@ export default function AccountComponent() {
 
     const navigate = useNavigate()
 
-    const account = useSelector((state: State) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
+    const account = useSelector((state: State) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey) as Account
     
     const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
     const dispatch = useDispatch()
