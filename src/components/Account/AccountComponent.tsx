@@ -1,28 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor, Accordion, AccordionItem } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAccount, deleteTransaction, importTransactions } from "../actions/accounts";
-import { UploadIcon } from "../icons/UploadIcon";
-import EmptyModal from "./Modal/EmptyModal";
-import ImportTransactionsModalContent from "./Modal/ImportTransactionsModalContent";
+import { deleteAccount, deleteTransaction, importTransactions } from "../../actions/accounts";
+import { UploadIcon } from "../../icons/UploadIcon";
+import EmptyModal from "../Modal/EmptyModal";
+import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
-import NewTransactionModalContent from "./Modal/NewTransactionModalContent";
+import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
 import AccountButton from "./AccountButton";
-import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
-import { deleteHoldingsForAccount } from "../actions/holdings";
-import { fetchFiriTransactions } from "../Util/Firi";
-import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron";
+import { AccountTypeModalContent } from "./AccountTypeModalContent";
+import { deleteHoldingsForAccount } from "../../actions/holdings";
+import { fetchFiriTransactions } from "../../Util/Firi";
+import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../Util/Global";
+import { routes } from "../../Util/Global";
 import Holdings from "./Holdings";
-import { SupabaseClient } from "@supabase/supabase-js";
 import DevelopmentGraph from "./DevelopmentGraph";
-import NewsMessageModalContent from "./Modal/NewsMessageModalContent";
-import { fetchBBTransactions } from "../Util/BareBitcoin";
+import NewsMessageModalContent from "./NewsMessageModalContent";
+import { fetchBBTransactions } from "../../Util/BareBitcoin";
 
-export default function AccountComponent({ supabase }: { supabase: SupabaseClient }) {
+export default function AccountComponent() {
 
     const { t } = useTranslation()
 
@@ -35,18 +34,25 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
 
     const navigate = useNavigate()
 
-
-    const account = useSelector((state: any) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey)
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
+    const account = useSelector((state: State) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey) as Account
+    
+    const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
-    const [development, setDevelopment] = useState({} as any)
+    const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const [newsTitles, setNewsTitles] = useState<any[]>([])
 
+    useEffect(() => {
+        if(account === undefined) {
+            navigate(routes.dashboard)
+        }
+    })
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
+            // @ts-ignore
             const first = a[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
+            // @ts-ignore
             const second = b[sortDescriptor.column !== undefined ? sortDescriptor.column : 'date'];
             var cmp = 0
             if (sortDescriptor.column === 'amount') {
@@ -141,19 +147,19 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
         if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
+                    dispatch(importTransactions(account, transactions))
                 })
         } else if (account.name === 'Kron') {
             fetchKronTransactions(account)
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
+                    dispatch(importTransactions(account, transactions))
                 })
             fetchKronDevelopment(account)
-                .then((development: any) => setDevelopment(development))
+                .then((development: KronDevelopment[]) => setDevelopment(development))
         } else if(account.name === 'Bare Bitcoin') {
             fetchBBTransactions(account)
             .then((transactions: Transaction[]) => {
-                dispatch(importTransactions(supabase, account, transactions))
+                dispatch(importTransactions(account, transactions))
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,12 +169,12 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
         switch (type) {
             case 'import':
                 if (account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                    setModalContent(<ImportTransactionsModalContent account={account} />)
                 }
                 break
             case 'transaction':
                 if (account) {
-                    setModalContent(<NewTransactionModalContent account={account} supabase={supabase} />)
+                    setModalContent(<NewTransactionModalContent account={account} />)
                 }
                 break
             case 'news':
@@ -176,7 +182,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                 break;
             default:
                 if (account) {
-                    setModalContent(<ImportTransactionsModalContent account={account} supabase={supabase} />)
+                    setModalContent(<ImportTransactionsModalContent account={account} />)
                 }
                 break
         }
@@ -188,7 +194,7 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             case 'action':
                 return <DeleteButton handleDelete={() => {
                     dispatch(deleteHoldingsForAccount(account))
-                    dispatch(deleteTransaction(supabase, item.transactionKey, account.key))
+                    dispatch(deleteTransaction(item.transactionKey, account.key))
                 }}
                     buttonText={t('transactionsTable.deleteTransaction')}
                     isDark={false}
@@ -207,10 +213,10 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
             {account && !account.isManual ?
                 <div className="flex justify-end">
                     <AccountButton isEdit={true}>
-                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
+                        <AccountTypeModalContent isEdit={true} account={account} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(supabase, account.key))
+                        dispatch(deleteAccount(account.key))
                         console.log("hre")
                         navigate(routes.portfolio)
                     }}
@@ -229,10 +235,10 @@ export default function AccountComponent({ supabase }: { supabase: SupabaseClien
                         {t('transactionsTable.newTransaction')}
                     </Button>
                     <AccountButton isEdit={true}>
-                        <AccountTypeModalContent isEdit={true} account={account} supabase={supabase} />
+                        <AccountTypeModalContent isEdit={true} account={account} />
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
-                        dispatch(deleteAccount(supabase, account.key))
+                        dispatch(deleteAccount(account.key))
                         navigate(routes.portfolio)
                     }}
                         buttonText={t('transactionsTable.deleteAccount')}

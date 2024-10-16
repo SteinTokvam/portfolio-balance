@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, useDisclosure } from "@nextui-org/react";
-import EmptyModal from "./Modal/EmptyModal";
+import EmptyModal from "../Modal/EmptyModal";
 import { useTranslation } from "react-i18next";
-import EditIcon from "../icons/EditIcon";
+import EditIcon from "../../icons/EditIcon";
 
 
 export default function AccountButton({ isEdit, children }: { isEdit: boolean, children?: React.ReactNode }) {

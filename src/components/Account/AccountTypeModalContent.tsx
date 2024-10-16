@@ -7,9 +7,8 @@ import { useDispatch } from "react-redux"
 import { v4 as uuidv4 } from 'uuid';
 import { addAutomaticAccount, addNewAccount, editAccount } from "../../actions/accounts"
 import { Account, AccountTypes } from "../../types/Types"
-import { SupabaseClient } from "@supabase/supabase-js"
 
-export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit: boolean, account?: Account, supabase: SupabaseClient }) {
+export function AccountTypeModalContent({ isEdit, account}: { isEdit: boolean, account?: Account }) {
 
     const { t } = useTranslation()
 
@@ -39,7 +38,6 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
     function handleSubmit() {
         if (accessKeyText === "") {
             dispatch(isEdit ? editAccount(
-                supabase,
                 {
                     name: accountName,
                     key: account ? account.key: uuidv4(),
@@ -50,7 +48,6 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                     isManual: true,
                 }
             ) : addNewAccount(
-                supabase,
                 {
                     name: accountName,
                     key: uuidv4(),
@@ -63,7 +60,6 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
             ))
         } else {
             dispatch(isEdit ? editAccount(
-                supabase,
                 {
                     name: selectedRadio,
                     key: account ? account.key : uuidv4(),
@@ -78,7 +74,6 @@ export function AccountTypeModalContent({ isEdit, account, supabase }: { isEdit:
                     }
                 }
             ) : addAutomaticAccount(
-                supabase,
                 {
                     name: selectedRadio,
                     key: uuidv4(),

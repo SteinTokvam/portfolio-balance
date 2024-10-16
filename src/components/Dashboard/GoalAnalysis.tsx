@@ -1,7 +1,7 @@
-import { styles } from "../Util/Global";
+import { styles } from "../../Util/Global";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { EquityType, Holding } from "../types/Types";
+import { EquityType, Holding } from "../../types/Types";
 import { Divider } from "@nextui-org/react";
 
 export default function GoalAnalysis() {

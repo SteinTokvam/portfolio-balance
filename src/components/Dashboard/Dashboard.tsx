@@ -1,47 +1,47 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
-import { SupabaseClient } from "@supabase/supabase-js"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer } from "@nextui-org/react"
 
-import { Account, EquityType, Holding, Transaction, TransactionType } from "../types/Types"
-import { addHoldings, deleteAllHoldings } from "../actions/holdings"
-import { getHoldings, useDb } from "../Util/Global"
-import { fetchFiriTransactions } from "../Util/Firi"
-import { deleteAllAccounts, importTransactions, initSupabaseData } from "../actions/accounts"
-import { fetchKronDevelopment, fetchKronTransactions } from "../Util/Kron"
-import { getAccounts, getTransactions } from "../Util/Supabase"
-import { toggleHideNumbers } from "../actions/settings"
+import { Account, EquityType, Holding, KronDevelopment, State, Transaction, TransactionType } from "../../types/Types"
+import { addHoldings } from "../../actions/holdings"
+import { getHoldings, useDb } from "../../Util/Global"
+import { fetchFiriTransactions } from "../../Util/Firi"
+import { resetState, importTransactions, initSupabaseData } from "../../actions/accounts"
+import { fetchKronDevelopment } from "../../Util/Kron"
+import { getAccounts, getTransactions } from "../../Util/Supabase"
+import { toggleHideNumbers } from "../../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
-import EmptyModal from "./Modal/EmptyModal"
-import ChangeGoalPercentageModalContent from "./Modal/ChangeGoalPercentageModalContent"
+import EmptyModal from "../Modal/EmptyModal"
+import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent"
 
-export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
+export default function Dashboard() {
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-    const holdings: Holding[] = useSelector((state: any) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
-    const settings = useSelector((state: any) => state.rootReducer.settings)
+    const accounts = useSelector((state: State) => state.rootReducer.accounts.accounts)
+    const holdings: Holding[] = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
+    const settings = useSelector((state: State) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
-    const [development, setDevelopment] = useState({} as any)
+    const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
+    const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
+    console.log("eq", equityTypes)
 
     useEffect(() => {
         if (!accounts) return
-        getAccounts(supabase)
+        getAccounts()
             .then(accounts => {
                 accounts.forEach(account => {
-                    getTransactions(supabase, account.key)
+                    getTransactions(account.key)
                         .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
                 });
             })
         accounts.forEach((account: Account) => {
             if (account.name === 'Kron') {
                 fetchKronDevelopment(account)
-                    .then((development: any) => setDevelopment(development))
+                    .then((development: KronDevelopment[]) => setDevelopment(development))
             }
             getHoldings(account)
                 .then(holdings => {
@@ -49,7 +49,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                     dispatch(addHoldings(holdings, account.key))
                 })
         })
-    }, [accounts, dispatch])
+    }, [accounts])
 
     function getAccountsAndHoldings(account: Account) {
         getHoldings(account)
@@ -59,27 +59,24 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
             })
 
         if (account.name === 'Kron') {
-            fetchKronTransactions(account)
-                .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
-                })
+            fetchKronDevelopment(account)
+                .then((development: KronDevelopment[]) => setDevelopment(development))
         } else if (account.name === 'Firi') {
             fetchFiriTransactions(account, ['NOK'])
                 .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(supabase, account, transactions))
+                    dispatch(importTransactions(account, transactions))
                 })
         }
     }
 
     const updateData = () => {
-        dispatch(deleteAllHoldings())
-        dispatch(deleteAllAccounts(supabase, false))
+        dispatch(resetState())
         if (!accounts) return
         if (useDb) {
-            getAccounts(supabase)
+            getAccounts()
                 .then(accounts => {
                     accounts.forEach(account => {
-                        getTransactions(supabase, account.key)
+                        getTransactions(account.key)
                             .then(transactions => {
                                 dispatch(initSupabaseData({ ...account, transactions }))
                                 getAccountsAndHoldings({ ...account, transactions })
@@ -196,7 +193,7 @@ export default function Dashboard({ supabase }: { supabase: SupabaseClient }) {
                                     innerRadius={40}
                                     outerRadius={80}
                                     fill="#8884d8"
-                                    label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0].goalPercentage}%`}
+                                    label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0]?.goalPercentage}%`}
                                 >
                                     {equityTypeData.map((_: any, index: number) => (
                                         <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />

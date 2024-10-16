@@ -5,8 +5,6 @@ import { routes, styles } from '../Util/Global'
 import { Logo } from '../icons/Logo'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '../supabaseClient'
-import { useDispatch } from 'react-redux'
-import { setSession } from '../actions/auth'
 
 export default function Auth() {
 
@@ -16,24 +14,11 @@ export default function Auth() {
     const [isSignUp, setIsSignUp] = useState(false);
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
 
     useEffect(() => {
         if (!supabase) {
             return
         }
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            dispatch(setSession(session))
-        })
-
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-            dispatch(setSession(session))
-        })
-
-        return () => subscription.unsubscribe()
     }, [])//eslint-disable-line react-hooks/exhaustive-deps
 
     if (!supabase) {
@@ -46,7 +31,7 @@ export default function Auth() {
                 email,
                 password,
                 options: {
-                    emailRedirectTo: 'https://nrk.no',
+                    emailRedirectTo: 'https://portfolio-balance.vercel.app/',
                 }
             })
         } else {

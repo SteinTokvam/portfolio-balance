@@ -1,8 +1,8 @@
-import { SupabaseClient } from "@supabase/supabase-js"
 import { Account, Transaction } from "../types/Types"
+import { supabase } from "../supabaseClient"
 
 
-export async function getAccounts(supabase: SupabaseClient): Promise<Account[]> {
+export async function getAccounts(): Promise<Account[]> {
     const { data, error } = await supabase
         .from('accounts')
         .select()
@@ -25,15 +25,15 @@ export async function getAccounts(supabase: SupabaseClient): Promise<Account[]> 
     }) as Account[]
 }
 
-export const importAccountsToSupabase = (supabaseClient: SupabaseClient, accounts: Account[]) => {
+export const importAccountsToSupabase = (accounts: Account[]) => {
     accounts.forEach(account => {
-        addAccount(supabaseClient, account).then(() => {
-            addTransactions(supabaseClient, account.transactions, account.key)
+        addAccount(account).then(() => {
+            addTransactions(account.transactions, account.key)
         })
     })
 }
 
-export async function addAccount(supabase: SupabaseClient, account: Account): Promise<Account> {
+export async function addAccount(account: Account): Promise<Account> {
     const { error } = await supabase
         .from('accounts')
         .insert([account].map((account: Account) => {
@@ -53,7 +53,7 @@ export async function addAccount(supabase: SupabaseClient, account: Account): Pr
     return account
 }
 
-export async function updateAccount(supabase: SupabaseClient, account: Account): Promise<Boolean> {
+export async function updateAccount(account: Account): Promise<Boolean> {
     const { data, error } = await supabase
         .from('accounts')
         .update([account].map((account: Account) => {
@@ -78,7 +78,7 @@ export async function updateAccount(supabase: SupabaseClient, account: Account):
     return error ? false : true
 }
 
-export async function deleteAccountSupabase(supabase: SupabaseClient, accountKey: string): Promise<Boolean> {
+export async function deleteAccountSupabase(accountKey: string): Promise<Boolean> {
     const response = await supabase
         .from('accounts')
         .delete()
@@ -88,7 +88,7 @@ export async function deleteAccountSupabase(supabase: SupabaseClient, accountKey
     return response.status === 204
 }
 
-export async function deleteAllAccountSupabase(supabase: SupabaseClient): Promise<Boolean> {
+export async function deleteAllAccountsSupabase(): Promise<Boolean> {
     const response = await supabase
         .from('accounts')
         .delete()
@@ -97,11 +97,11 @@ export async function deleteAllAccountSupabase(supabase: SupabaseClient): Promis
     return response.status === 204
 }
 
-export async function getTransactions(supabase: SupabaseClient, accountKey: string): Promise<Transaction[]> {
+export async function getTransactions(accountKey: string): Promise<Transaction[]> {
     return supabase.from('transactions').select().eq('accountKey', accountKey).then(res => res.data as Transaction[])
 }
 
-export async function addTransaction(supabase: SupabaseClient, transaction: Transaction, accountKey: string): Promise<Transaction> {
+export async function addTransaction(transaction: Transaction, accountKey: string): Promise<Transaction> {
     const { error } = await supabase
         .from('transactions')
         .insert([transaction].map((transaction: Transaction) => mapTransaction(transaction, accountKey)))
@@ -111,7 +111,7 @@ export async function addTransaction(supabase: SupabaseClient, transaction: Tran
     return transaction
 }
 
-async function addTransactions(supabase: SupabaseClient, transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
+async function addTransactions(transactions: Transaction[], accountKey: string): Promise<Transaction[]> {
     const { error } = await supabase
         .from('transactions')
         .insert(transactions.map((transaction: Transaction) => mapTransaction(transaction, accountKey)))
@@ -121,7 +121,7 @@ async function addTransactions(supabase: SupabaseClient, transactions: Transacti
     return transactions
 }
 
-export async function deleteTransactionSupabase(supabase: SupabaseClient, transactionKey: string): Promise<Boolean> {
+export async function deleteTransactionSupabase(transactionKey: string): Promise<Boolean> {
     const response = await supabase
     .from('transactions')
         .delete()

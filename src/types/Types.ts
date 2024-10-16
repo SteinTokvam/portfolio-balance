@@ -1,3 +1,24 @@
+
+export type State = {
+    rootReducer: {
+        accounts: {
+            accounts: Account[]
+        },
+        equity: {
+            equityTypes: EquityType[]
+        },
+        holdings: {
+            holdings: Holding[]
+        },
+        transactions: {
+            transactions: Transaction[]
+        },
+        settings: {
+            hideNumbers: boolean
+        }
+    }
+}
+
 export type Account = {
     name: string
     key: string
@@ -7,6 +28,13 @@ export type Account = {
     yield: number
     isManual: boolean
     apiInfo?: ApiInfo
+}
+
+export type KronDevelopment = {
+    yield_percentage: number,
+    date: string,
+    yield_in_currency: number,
+    market_value: number
 }
 
 type ApiInfo = {

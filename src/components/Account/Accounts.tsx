@@ -2,26 +2,25 @@ import { useEffect } from "react";
 import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
-import CompanyIcon from "../icons/CompanyIcon";
-import { getHoldings, routes } from "../Util/Global";
-import { Account, Holding } from "../types/Types";
-import { AccountTypeModalContent } from "./Modal/AccountTypeModalContent";
+import CompanyIcon from "../../icons/CompanyIcon";
+import { getHoldings, routes } from "../../Util/Global";
+import { Account, Holding, State } from "../../types/Types";
+import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
-import { SupabaseClient } from "@supabase/supabase-js";
-import { addHoldings } from "../actions/holdings";
+import { addHoldings } from "../../actions/holdings";
 
-export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
+export default function Accounts() {
 
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts);
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings);
-    const settings = useSelector((state: any) => state.rootReducer.settings);
+    const accounts = useSelector((state: State) => state.rootReducer.accounts.accounts);
+    const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings);
+    const settings = useSelector((state: State) => state.rootReducer.settings);
 
     const dispatch = useDispatch();
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!accounts) {
+        if (!accounts || holdings.length !== 0) {
             return
         }
         accounts.forEach((account: Account) => {
@@ -39,12 +38,12 @@ export default function Accounts({ supabase }: { supabase: SupabaseClient }) {
         <div>
             <div className="space-y-4">
                 <AccountButton isEdit={false}>
-                    <AccountTypeModalContent isEdit={false} supabase={supabase} />
+                    <AccountTypeModalContent isEdit={false} />
                 </AccountButton>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:w-2/3 sm:mx-auto">
                     {accounts && accounts.length > 0 ?
 
-                        accounts.toSorted((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
+                        accounts.sort((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (
                                 <Card 
                                     aria-label="Card"

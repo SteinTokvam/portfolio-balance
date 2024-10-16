@@ -8,10 +8,9 @@ import { newTransaction } from "../../actions/accounts";
 import { useSelector } from "react-redux";
 import { Account, EquityType, Holding, Transaction, TransactionType } from "../../types/Types";
 import { deleteHoldingsForAccount, updateHoldings } from "../../actions/holdings";
-import { SupabaseClient } from "@supabase/supabase-js";
 
 
-export default function NewTransactionModalContent({ supabase, account }: { supabase: SupabaseClient, account: Account }) {
+export default function NewTransactionModalContent({ account }: { account: Account }) {
     const { t } = useTranslation()
 
     const [transactionName, setTransactionName] = useState("")
@@ -85,7 +84,7 @@ function handleSubmit() {
         })
     }
 
-    dispatch(newTransaction(supabase,account.key, transactionToAdd[0]))
+    dispatch(newTransaction(account.key, transactionToAdd[0]))
 }
 return (
     <ModalContent>
