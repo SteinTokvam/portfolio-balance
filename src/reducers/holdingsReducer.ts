@@ -6,7 +6,6 @@ const initialState = {
 
 const holdingsReducer = (state = initialState, action: { type: string; payload: {holdings: Holding[]; accountKey: string} }) => {
     var newHoldings = []
-    window.localStorage.removeItem('holdings')
 
     switch (action.type) {
         case 'UPDATE_HOLDINGS':
