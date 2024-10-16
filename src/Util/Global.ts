@@ -4,7 +4,6 @@ import { fetchKronHoldings } from "./Kron";
 import { fetchFiriHoldings } from "./Firi";
 import { fetchTicker } from "./E24";
 import { fetchBBHoldings, fetchPrice } from "./BareBitcoin";
-import { get } from "http";
 
 export const languages = ["us", "no"];
 
