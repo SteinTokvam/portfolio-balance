@@ -48,7 +48,7 @@ export default function Dashboard() {
                     dispatch(addHoldings(holdings, account.key))
                 })
         })
-    }, [])
+    }, [accounts])
 
     function getAccountsAndHoldings(account: Account) {
         getHoldings(account)
