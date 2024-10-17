@@ -80,7 +80,7 @@ export default function Holdings({ account }: { account: Account }) {
                 if (holdings.length === 0) {
                     return
                 }
-                dispatch(addHoldings(holdings, account.key))
+                dispatch(addHoldings(holdings))
             })
     }, [account, dispatch])
 

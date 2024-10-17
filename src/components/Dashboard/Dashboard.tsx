@@ -6,11 +6,8 @@ import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Sp
 
 import { Account, EquityType, Holding, KronDevelopment, State, Transaction, TransactionType } from "../../types/Types"
 import { addHoldings } from "../../actions/holdings"
-import { getHoldings, useDb } from "../../Util/Global"
-import { fetchFiriTransactions } from "../../Util/Firi"
-import { resetState, importTransactions, initSupabaseData } from "../../actions/accounts"
-import { fetchKronDevelopment } from "../../Util/Kron"
-import { getAccounts, getTransactions } from "../../Util/Supabase"
+import { getAccountsAndHoldings } from "../../Util/Global"
+import { resetState, initSupabaseData } from "../../actions/accounts"
 import { toggleHideNumbers } from "../../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
 import EmptyModal from "../Modal/EmptyModal"
@@ -24,70 +21,27 @@ export default function Dashboard() {
     const settings = useSelector((state: State) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
+    // @ts-ignore
     const [development, setDevelopment] = useState<KronDevelopment[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
-    console.log("eq", equityTypes)
 
     useEffect(() => {
         if (!accounts) return
-        getAccounts()
-            .then(accounts => {
-                accounts.forEach(account => {
-                    getTransactions(account.key)
-                        .then(transactions => dispatch(initSupabaseData({ ...account, transactions })))
-                });
+        getAccountsAndHoldings()
+            .then(accountsAndHoldings => {
+                dispatch(initSupabaseData(accountsAndHoldings.accounts))
+                dispatch(addHoldings(accountsAndHoldings.holdings))
             })
-        accounts.forEach((account: Account) => {
-            if (account.name === 'Kron') {
-                fetchKronDevelopment(account)
-                    .then((development: KronDevelopment[]) => setDevelopment(development))
-            }
-            getHoldings(account)
-                .then(holdings => {
-                    if (holdings.length === 0) return
-                    dispatch(addHoldings(holdings, account.key))
-                })
-        })
-    }, [accounts])
-
-    function getAccountsAndHoldings(account: Account) {
-        getHoldings(account)
-            .then(holdings => {
-                if (holdings.length === 0) return
-                dispatch(addHoldings(holdings, account.key))
-            })
-
-        if (account.name === 'Kron') {
-            fetchKronDevelopment(account)
-                .then((development: KronDevelopment[]) => setDevelopment(development))
-        } else if (account.name === 'Firi') {
-            fetchFiriTransactions(account, ['NOK'])
-                .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account, transactions))
-                })
-        }
-    }
+    }, [])
 
     const updateData = () => {
         dispatch(resetState())
-        if (!accounts) return
-        if (useDb) {
-            getAccounts()
-                .then(accounts => {
-                    accounts.forEach(account => {
-                        getTransactions(account.key)
-                            .then(transactions => {
-                                dispatch(initSupabaseData({ ...account, transactions }))
-                                getAccountsAndHoldings({ ...account, transactions })
-                            })
-                    })
-                })
-        } else {
-            accounts.forEach((account: Account) => {
-                getAccountsAndHoldings(account)
+        getAccountsAndHoldings()
+            .then(accountsAndHoldings => {
+                dispatch(initSupabaseData(accountsAndHoldings.accounts))
+                dispatch(addHoldings(accountsAndHoldings.holdings))
             })
-        }
     }
 
     const equityTypeData = holdings.reduce((acc: any[], holding: Holding) => {

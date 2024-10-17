@@ -7,10 +7,10 @@ export const updateHoldings = (holdings: Holding[], accountKey: string) => {
     }
 }
 
-export const addHoldings = (holdings: Holding[], accountKey: string) => {
+export const addHoldings = (holdings: Holding[]) => {
     return {
         type: "ADD_HOLDINGS",
-        payload: {holdings, accountKey}
+        payload: {holdings}
     }
 }
 

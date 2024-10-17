@@ -1,9 +1,10 @@
 import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
-import { fetchKronHoldings } from "./Kron";
-import { fetchFiriHoldings } from "./Firi";
+import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
+import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
 import { fetchTicker } from "./E24";
-import { fetchBBHoldings, fetchPrice } from "./BareBitcoin";
+import { fetchBBHoldings, fetchBBTransactions, fetchPrice } from "./BareBitcoin";
+import { getAccounts, getTransactions } from "./Supabase";
 
 export const languages = ["us", "no"];
 
@@ -41,6 +42,50 @@ export const routes = {
     account: '/account/:accountKey',
     confirmMail: '/confirm-mail',
     login: '/login'
+}
+
+type AccountsAndHoldings = {
+    accounts: Account[],
+    holdings: Holding[]
+}
+
+export async function getAccountsAndHoldings(): Promise<AccountsAndHoldings> {
+    const accounts = await getAccounts()
+        .then(async accounts => {
+            const accountsWithTransactions = accounts.map(async account => {
+                return (
+                    {
+                        ...account,
+                        transactions: await getAllTransactions(account)
+                    }
+                )
+            })
+            return await Promise.all(accountsWithTransactions)
+        })
+
+        return {accounts, holdings: await getAllHoldings(accounts)}
+        
+}
+
+export async function getAllTransactions(account: Account): Promise<Transaction[]> {
+    if(account.isManual) {
+        return getTransactions(account.key)
+    } 
+    if(account.name === 'Kron') {
+        return fetchKronTransactions(account)
+    } else if(account.name === 'Firi') {
+        return fetchFiriTransactions(account, ['NOK'])
+    } else if(account.name === 'Bare Bitcoin') {
+        return fetchBBTransactions(account)
+    }
+    return emptyTransactionPromise()
+}
+
+export async function getAllHoldings(accounts: Account[]): Promise<Holding[]> {
+    const holdings = accounts.map(async (account: Account) => {
+        return getHoldings(account)
+    })
+    return (await Promise.all(holdings)).flat()
 }
 
 export async function getHoldings(account: Account): Promise<Holding[]> {
@@ -90,8 +135,18 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
         ]
     }
 
-    const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
+    holdings.push(...(await getHoldingsWithE24Ticker(account)))
 
+    holdings.push(...getHoldingsWithoutE24Ticker(account))
+
+    return new Promise((resolve, _) => {
+        resolve(holdings)
+    })
+}
+
+async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
+    const holdings: Holding[] = []
+    const transactionsWithe24 = account.transactions.filter(transaction => transaction.e24Key)
     const uniqueE24Keys = [...new Set(transactionsWithe24.map(transaction => transaction.e24Key))]
         .map(uniqueE24Key => {
             const transactions = account.transactions
@@ -126,12 +181,7 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
             }
         )
     })
-
-    holdings.push(...getHoldingsWithoutE24Ticker(account))
-
-    return new Promise((resolve, _) => {
-        resolve(holdings)
-    })
+    return holdings
 }
 
 function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
@@ -175,7 +225,7 @@ async function fetchTickers(uniqueE24Keys: { e24Key: string, equityShare: number
     const tickers = uniqueE24Keys.map(async uniqueE24Key => {
         const period = uniqueE24Key.equityType === 'Stock' ? '1opendays' : '1weeks'
         return await fetchTicker(uniqueE24Key.e24Key, "OSE", uniqueE24Key.equityType, period)
-            .then(res => res[res.length - 1].value)
+            .then(res => res && res.length > 0 ? res[res.length - 1].value : 0)
     })
     const ret = Promise.all(tickers)
     return await ret

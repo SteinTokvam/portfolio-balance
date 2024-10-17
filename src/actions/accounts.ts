@@ -1,10 +1,11 @@
 import { Account, Transaction } from "../types/Types"
 import { addAccount, addTransaction, deleteAccountSupabase, deleteTransactionSupabase, importAccountsToSupabase, updateAccount } from "../Util/Supabase"
 
-export const initSupabaseData = (account: Account) => {
+export const initSupabaseData = (accounts: Account[]) => {
+    
     return {
         type: 'INIT_SUPABASE_DATA',
-        payload: {accounts: [account]}
+        payload: { accounts }
     }
 
 }
@@ -48,12 +49,12 @@ export const resetState = () => {
 }
 
 export const importTransactions = (account: Account, transactions: Transaction[]) => {
-    if(account.isManual) {
+    if (account.isManual) {
         transactions.forEach(transaction => {
-            addTransaction(transaction, account.key)    
+            addTransaction(transaction, account.key)
         })
     }
-    
+
     return {
         type: 'IMPORT_TRANSACTIONS',
         payload: { accountKey: account.key, transactions }

@@ -29,7 +29,7 @@ export default function Accounts() {
                     if (holdings.length === 0) {
                         return
                     }
-                    dispatch(addHoldings(holdings, account.key))
+                    dispatch(addHoldings(holdings))
                 })
         })
     }, [accounts, dispatch])
