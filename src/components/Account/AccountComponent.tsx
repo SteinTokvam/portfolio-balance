@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAccount, deleteTransaction, importTransactions, initSupabaseData } from "../../actions/accounts";
+import { deleteAccount, deleteTransaction, initSupabaseData } from "../../actions/accounts";
 import { UploadIcon } from "../../icons/UploadIcon";
 import EmptyModal from "../Modal/EmptyModal";
 import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
