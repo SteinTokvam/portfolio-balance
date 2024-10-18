@@ -13,6 +13,7 @@ import GoalAnalysis from "./GoalAnalysis"
 import EmptyModal from "../Modal/EmptyModal"
 import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent"
 import { fetchKronBalance } from "../../Util/Kron"
+import CustomTooltip from "./CustomTooltip"
 
 export default function Dashboard() {
     const { t } = useTranslation()
@@ -70,8 +71,9 @@ export default function Dashboard() {
         }
         return {
             name: account.name,
-            value: accountValue.toFixed(0),
+            value: parseInt(yieldForAccount) >= 0 ? parseInt(accountValue.toFixed(0)) - parseInt(yieldForAccount) : accountValue.toFixed(0),
             yield: yieldForAccount,
+            totalValue: accountValue.toFixed(0),
 
         }
     }).sort((a: any, b: any) => b.name - a.name)
@@ -176,18 +178,16 @@ export default function Dashboard() {
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="name" />
                                     <YAxis domain={[-1500, Math.ceil(parseInt(development.value.toFixed(0)) / 100) * 100]} />
-                                    <Tooltip />
+                                    <Tooltip content={<CustomTooltip />}/>
 
                                     <Bar dataKey="yield" stackId="a" name={t('dashboard.yield')}>
                                         {
-                                            //TODO: grafen blir ikke helt rett. den legger på avkastning i tillegg til totalverdien.
                                             accountData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={parseInt(entry.yield) >= 0 ? "#82ca9d" : "#ff3341"} strokeWidth={index === 2 ? 4 : 1} />
+                                                <Cell key={`cell-${index}`} fill={parseInt(entry.yield) >= 0 ? "#82ca9d" : "#ff3341"} />
                                             ))
                                         }
                                     </Bar>
                                     <Bar dataKey="value" fill="#8884d8" stackId="a" name={t('dashboard.total')} />
-
                                 </BarChart>
                             </ResponsiveContainer>
                         </CardBody>
