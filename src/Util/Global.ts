@@ -1,10 +1,10 @@
-import { Account, AccountTypes, EquityTypes, Holding, Transaction } from "../types/Types";
+import { Account, AccountTypes, EquityType, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
 import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
 import { fetchTicker } from "./E24";
 import { fetchBBHoldings, fetchBBTransactions, fetchPrice } from "./BareBitcoin";
-import { getAccounts, getTransactions } from "./Supabase";
+import { getAccounts, getEquityTypes, getTransactions } from "./Supabase";
 
 export const languages = ["us", "no"];
 
@@ -46,11 +46,12 @@ export const routes = {
 
 type AccountsAndHoldings = {
     accounts: Account[],
-    holdings: Holding[]
+    holdings: Holding[],
+    equityTypes: EquityType[]
 }
 
-export async function getAccountsAndHoldings(): Promise<AccountsAndHoldings> {
-    const accounts = await getAccounts()
+export async function getAccountsAndHoldings(key: string = ""): Promise<AccountsAndHoldings> {
+    const accounts = await getAccounts(key)
         .then(async accounts => {
             const accountsWithTransactions = accounts.map(async account => {
                 return (
@@ -63,7 +64,7 @@ export async function getAccountsAndHoldings(): Promise<AccountsAndHoldings> {
             return await Promise.all(accountsWithTransactions)
         })
 
-        return {accounts, holdings: await getAllHoldings(accounts)}
+        return {accounts, holdings: await getAllHoldings(accounts), equityTypes: await getEquityTypes()}
         
 }
 
@@ -127,7 +128,7 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
                 key: uuidv4(),
                 accountKey: account.key,
                 value,
-                equityType: EquityTypes.CRYPTOCURRENCY,
+                equityType: "CRYPTOCURRENCY",
                 equityShare,
                 e24Key: '',
                 yield: account.transactions.reduce((sum, transaction) => sum + transaction.cost, 0) - value,

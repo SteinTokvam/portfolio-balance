@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Account, EquityTypes, FiriOrder, FiriPrice, FiriPricePoint, Holding, Transaction } from '../types/Types';
+import { Account, FiriOrder, FiriPrice, FiriPricePoint, Holding, Transaction } from '../types/Types';
 
 export async function fetchFiriTransactions(account: Account, currenciesToExclude: string[]): Promise<Transaction[]> {
     const firiOrders = await getTransactionsFromFiri(account.apiInfo && account.apiInfo.accessKey, currenciesToExclude)
     const currencies = [...new Set(firiOrders.map((order: FiriOrder) => order.currency))]
     const price = await fetchLatestPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
-    
+
     const transactions: Transaction[] = firiOrders.map((firiOrder: FiriOrder) => {
         const lastPrice = price.find(price => price.cryptocurrency === firiOrder.currency)?.price.last || '0'
         return {
@@ -17,7 +17,7 @@ export async function fetchFiriTransactions(account: Account, currenciesToExclud
             equityPrice: parseFloat(lastPrice),
             e24Key: '',
             equityShare: parseFloat(parseFloat(firiOrder.amount).toFixed(8)),
-            equityType: EquityTypes.CRYPTOCURRENCY,
+            equityType: "CRYPTOCURRENCY",
         }
     })
 
@@ -29,7 +29,7 @@ export async function fetchFiriTransactions(account: Account, currenciesToExclud
 export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
 
     const transactions = await fetchFiriTransactions(account, ['NOK'])
-    
+
     const currencies = [...new Set(transactions.map((transaction: Transaction) => transaction.name))].filter((currency: string) => currency !== 'DOGE')
     const price = await fetchLatestPriceInFiat(currencies as string[], account.apiInfo && account.apiInfo.accessKey)
     const firiPricePoint: FiriPricePoint[] = []
@@ -43,7 +43,7 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
             price: price.filter(price => price.cryptocurrency === currency)[0].price
         })
     })
-    
+
     const holdings: Holding[] = firiPricePoint
         .filter(equityShare => equityShare.equityShare > 0.00000001)
         .filter(equityShare => !equityShare.price?.message)
@@ -54,14 +54,14 @@ export async function fetchFiriHoldings(account: Account): Promise<Holding[]> {
                 key: uuidv4(),
                 accountKey: account.key,
                 value,
-                equityType: EquityTypes.CRYPTOCURRENCY,
+                equityType: "CRYPTOCURRENCY",
                 equityShare: equityShare.equityShare,
                 e24Key: '',
-                yield: 0//value-transactions.filter(transaction => transaction.name === equityShare.currency && (transaction.type === 'Match' || transaction.type === 'StakingReward' || transaction.type === 'AffiliateBonus' || transaction.type === 'Bonus' || transaction.type === 'FeebackBonus' || transaction.type === 'WelcomeBonus')).reduce((sum, transaction) => sum + transaction.cost, 0)
+                yield: 0
             }
-            
+
         })
-        console.log('Fetched Firi Holdings', holdings)
+    console.log('Fetched Firi Holdings', holdings)
 
     return new Promise((resolve, _) => {
         resolve(holdings)
@@ -83,7 +83,7 @@ async function getTransactionsFromFiri(accessKey: string | undefined, excludedCu
             return response.json()
         })
         .then((orders: FiriOrder[]) => {
-            const res = orders.filter(order =>  !excludedCurrencies.includes(order.currency))
+            const res = orders.filter(order => !excludedCurrencies.includes(order.currency))
             console.log('Fetched Firi Transactions', res)
             return res
         })

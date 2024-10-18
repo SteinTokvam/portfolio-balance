@@ -115,13 +115,6 @@ export enum TransactionType {
     WITHDRAWAL = "WITHDRAWAL",
 }
 
-export enum EquityTypes {
-    FUND = "Fund",
-    STOCK = "Stock",
-    CRYPTOCURRENCY = "Cryptocurrency",
-    LOAN = "Loan",
-}
-
 export enum AccountTypes {
     AKSJESPAREKONTO = "Aksjesparekonto",
     INDIVIDUELL_PENSJONSKONTO = "Individuell pensjonsparing",

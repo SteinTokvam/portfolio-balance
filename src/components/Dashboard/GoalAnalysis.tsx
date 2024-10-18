@@ -1,8 +1,11 @@
 import { styles } from "../../Util/Global";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { EquityType, Holding } from "../../types/Types";
 import { Divider } from "@nextui-org/react";
+import { useEffect } from "react";
+import { getEquityTypes } from "../../Util/Supabase";
+import { setEquityTypes } from "../../actions/equityType";
 
 export default function GoalAnalysis() {
 
@@ -14,6 +17,7 @@ export default function GoalAnalysis() {
     }
 
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
     const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
     const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
@@ -37,6 +41,11 @@ export default function GoalAnalysis() {
         }
         return 0
     })
+
+    useEffect(() => {
+        getEquityTypes()
+        .then(equityTypes => dispatch(setEquityTypes(equityTypes)))
+    }, [])
     return (
         <>
         {
@@ -46,11 +55,11 @@ export default function GoalAnalysis() {
 
                     <div className="flex flex-col gap-20 p-4 sm:grid sm:grid-rows-2 sm:gap-8 sm:justify-between" >
                         <h4 className={styles.valueHeaderText}>
-                            {
+                            { furthestFromGoal.length > 0 &&
                                 t('dashboard.investmentToFocus',
                                     {
                                         bullet: '\u{2022}',
-                                        equityType: t(`equityTypes.${furthestFromGoal[0].equityType.key.toLowerCase()}`),
+                                        equityType: furthestFromGoal[0].equityType.label,
                                         distanceFromGoalPercentage: furthestFromGoal[0].distanceFromGoalPercentage.toFixed(2)
                                     }
                                 )
@@ -58,11 +67,11 @@ export default function GoalAnalysis() {
                         </h4>
 
                         <h4 className={styles.valueHeaderText}>
-                            {
+                            { furthestFromGoal.length > 0 &&
                                 t('dashboard.investmentOverbought',
                                     {
                                         bullet: '\u{2022}',
-                                        equityType: t(`equityTypes.${furthestFromGoal[furthestFromGoal.length - 1].equityType.key.toLowerCase()}`),
+                                        equityType: furthestFromGoal[furthestFromGoal.length - 1].equityType.label,
                                         distanceFromGoalPercentage: Math.abs(furthestFromGoal[furthestFromGoal.length - 1].distanceFromGoalPercentage).toFixed(2)
                                     }
                                 )

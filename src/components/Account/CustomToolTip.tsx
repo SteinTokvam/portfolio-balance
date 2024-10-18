@@ -8,7 +8,7 @@ export default function CustomToolTip({ active, payload }: TooltipProps<ValueTyp
             <>
                 {
                     payload.map((_) => (
-                        <div className="bg-slate-800 text-white p-2">
+                        <div className="bg-slate-800 text-white p-2" key={payload[0].payload.date}>
                             <div className="bg-slate-600 text-white p-2 font-bold">{payload[0].payload.date}</div>
                             <div>
                                 <p>

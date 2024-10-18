@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer, Spinner } from "@nextui-org/react"
-
 import { Account, EquityType, Holding, State, Transaction, TransactionType } from "../../types/Types"
 import { addHoldings } from "../../actions/holdings"
 import { getAccountsAndHoldings } from "../../Util/Global"
@@ -14,6 +13,7 @@ import EmptyModal from "../Modal/EmptyModal"
 import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent"
 import { fetchKronBalance } from "../../Util/Kron"
 import CustomTooltip from "./CustomTooltip"
+import { setEquityTypes } from "../../actions/equityType"
 
 export default function Dashboard() {
     const { t } = useTranslation()
@@ -44,15 +44,16 @@ export default function Dashboard() {
             .then(accountsAndHoldings => {
                 dispatch(initSupabaseData(accountsAndHoldings.accounts))
                 dispatch(addHoldings(accountsAndHoldings.holdings))
+                dispatch(setEquityTypes(accountsAndHoldings.equityTypes))
             })
     }
 
     const equityTypeData = holdings.reduce((acc: any[], holding: Holding) => {
-        const existingType = acc.find(item => item.name === t(`equityTypes.${holding.equityType.toLowerCase()}`))
+        const existingType = acc.find(item => item.equityType.toLowerCase() === holding.equityType.toLowerCase())
         if (existingType) {
-            existingType.value += holding.value
+            acc[acc.indexOf(existingType)] = { name: existingType.name, equityType: existingType.equityType, totalValue: existingType.totalValue + holding.value }
         } else {
-            acc.push({ name: t(`equityTypes.${holding.equityType.toLowerCase()}`), equityType: holding.equityType, value: holding.value })
+            acc.push({ name: holding.equityType, equityType: holding.equityType, totalValue: holding.value })
         }
         return acc
     }, [])
@@ -78,7 +79,7 @@ export default function Dashboard() {
         }
     }).sort((a: any, b: any) => b.name - a.name)
 
-    function getHoldingCard() {
+    const getHoldingCard = () => {
         const tmpHoldings = [...holdings]
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -86,10 +87,10 @@ export default function Dashboard() {
                     tmpHoldings
                         .sort((a: Holding, b: Holding) => b.value - a.value)
                         .map((holding: Holding) => (
-                            <div>
+                            <div key={holding.key}>
                                 <h3 className="text-xl font-semibold">{holding.name}</h3>
                                 <p className="text-lg">
-                                    {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({t(`equityTypes.${holding.equityType.toLowerCase()}`)} - {accounts.filter((account: Account) => account.key === holding.accountKey)[0].name})
+                                    {settings.hideNumbers ? '*** Kr' : holding.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })} ({holding.equityType} - {accounts.filter((account: Account) => account.key === holding.accountKey)[0].name})
                                 </p>
                                 <p className={`text-md ${holding.yield >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                     ({settings.hideNumbers ? '*** Kr' : holding.yield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })})
@@ -107,7 +108,6 @@ export default function Dashboard() {
     }
 
     if (accounts.length > 0) {
-
 
         return (
             <div className="mx-auto p-4">
@@ -146,7 +146,7 @@ export default function Dashboard() {
                                 <PieChart>
                                     <Pie
                                         data={equityTypeData}
-                                        dataKey="value"
+                                        dataKey="totalValue"
                                         nameKey="name"
                                         cx="50%"
                                         cy="50%"
@@ -154,13 +154,15 @@ export default function Dashboard() {
                                         innerRadius={40}
                                         outerRadius={80}
                                         fill="#8884d8"
-                                        label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => equityTypeElem.key === equityType)[0]?.goalPercentage}%`}
+                                        label={({ equityType, percent }) => `${(percent * 100).toFixed(1)}% / ${equityTypes.filter((equityTypeElem: EquityType) => { 
+                                            return equityTypeElem.label.toLowerCase() === equityType.toLowerCase()})[0]?.goalPercentage}%`
+                                        }
                                     >
                                         {equityTypeData.map((_: any, index: number) => (
                                             <Cell key={`cell-${index}`} fill={`hsl(${index * 45}, 70%, 60%)`} />
                                         ))}
                                     </Pie>
-                                    <Tooltip formatter={(_: any, name: string, value: any) => `${name}: ${value.value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}`} />
+                                    <Tooltip content={<CustomTooltip />}/>
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>

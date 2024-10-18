@@ -1,11 +1,15 @@
-import { Account, Transaction } from "../types/Types"
+import { Account, EquityType, Transaction } from "../types/Types"
 import { supabase } from "../supabaseClient"
 
 
-export async function getAccounts(): Promise<Account[]> {
-    const { data, error } = await supabase
+export async function getAccounts(key: String = ""): Promise<Account[]> {
+    const { data, error } = key === "" ? await supabase
         .from('accounts')
         .select()
+        : await supabase
+            .from('accounts')
+            .select()
+            .eq('key', key)
     if (error) {
         console.log(error)
     }
@@ -23,6 +27,23 @@ export async function getAccounts(): Promise<Account[]> {
             }
         }
     }) as Account[]
+}
+
+export async function getEquityTypes(): Promise<EquityType[]> {
+    const { data, error } = await supabase
+        .from('equity_types')
+        .select()
+    if (error) {
+        console.log(error)
+    }
+
+    return data?.map(data => {
+        return {
+            label: data.name,
+            key: data.id,
+            goalPercentage: data.goal_percentage
+        } as EquityType
+    }) as EquityType[]
 }
 
 export const importAccountsToSupabase = (accounts: Account[]) => {
@@ -70,7 +91,7 @@ export async function updateAccount(account: Account): Promise<Boolean> {
         .eq('key', account.key)
         .select()
 
-        console.log(data)
+    console.log(data)
 
     if (error) {
         console.log(error)
@@ -84,7 +105,7 @@ export async function deleteAccountSupabase(accountKey: string): Promise<Boolean
         .delete()
         .eq('key', accountKey)
 
-        console.log(response)
+    console.log(response)
     return response.status === 204
 }
 
@@ -123,7 +144,7 @@ async function addTransactions(transactions: Transaction[], accountKey: string):
 
 export async function deleteTransactionSupabase(transactionKey: string): Promise<Boolean> {
     const response = await supabase
-    .from('transactions')
+        .from('transactions')
         .delete()
         .eq('transactionKey', transactionKey)
     return response.status === 204

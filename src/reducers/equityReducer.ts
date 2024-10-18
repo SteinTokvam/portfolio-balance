@@ -1,32 +1,16 @@
-import { EquityType, EquityTypes } from "../types/Types";
+import { EquityType } from "../types/Types";
 
 const initialState = {
-    equityTypes: window.localStorage.getItem('equitytypes') ? JSON.parse(window.localStorage.getItem('equitytypes') as string) :
-        [
-            {
-                key: EquityTypes.FUND,
-                label: EquityTypes.FUND,
-                goalPercentage: 45
-            },
-            {
-                key: EquityTypes.STOCK,
-                label: EquityTypes.STOCK,
-                goalPercentage: 29
-            },
-            {
-                key: EquityTypes.CRYPTOCURRENCY,
-                label: EquityTypes.CRYPTOCURRENCY,
-                goalPercentage: 13
-            },
-            {
-                key: EquityTypes.LOAN,
-                label: EquityTypes.LOAN,
-                goalPercentage: 13
-            }],
+    equityTypes: [] as EquityType[]
 }
 
 const equityTypeReducer = (state = initialState, action: { type: string; payload: EquityType[] }) => {
     switch (action.type) {
+        case 'SET_EQUITY_TYPES':
+            return {
+                ...state,
+                equityTypes: action.payload
+        }
         case 'SET_ALL_PERCENTAGES': 
             return {
                 ...state,

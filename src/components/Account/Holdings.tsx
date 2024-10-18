@@ -14,7 +14,7 @@ export default function Holdings({ account }: { account: Account }) {
 
     const { t } = useTranslation();
 
-    const columnNames = account.name === 'Kron' ? [
+    const columnNames = account && account.name === 'Kron' ? [
         {
             key: "name",
             label: "Name"
@@ -75,6 +75,7 @@ export default function Holdings({ account }: { account: Account }) {
         if(!account || holdings.length !== 0) {
             return
         }
+        
         getHoldings(account)
             .then((holdings: Holding[]) => {
                 if (holdings.length === 0) {

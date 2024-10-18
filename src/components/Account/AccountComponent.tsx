@@ -1,25 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor, Accordion, AccordionItem } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Spinner, getKeyValue, useDisclosure, Tabs, Tab, Image, SortDescriptor } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAccount, deleteTransaction, importTransactions } from "../../actions/accounts";
+import { deleteAccount, deleteTransaction, importTransactions, initSupabaseData } from "../../actions/accounts";
 import { UploadIcon } from "../../icons/UploadIcon";
 import EmptyModal from "../Modal/EmptyModal";
 import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, AccountTypes, EquityTypes, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
+import { Account, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
-import { deleteHoldingsForAccount } from "../../actions/holdings";
-import { fetchFiriTransactions } from "../../Util/Firi";
-import { fetchKronDevelopment, fetchKronTransactions } from "../../Util/Kron";
+import { addHoldings, deleteHoldingsForAccount } from "../../actions/holdings";
+import { fetchKronDevelopment } from "../../Util/Kron";
 import { useNavigate, useParams } from "react-router-dom";
-import { routes } from "../../Util/Global";
+import { getAccountsAndHoldings, routes } from "../../Util/Global";
 import Holdings from "./Holdings";
 import DevelopmentGraph from "./DevelopmentGraph";
 import NewsMessageModalContent from "./NewsMessageModalContent";
-import { fetchBBTransactions } from "../../Util/BareBitcoin";
+import { setEquityTypes } from "../../actions/equityType";
 
 export default function AccountComponent() {
 
@@ -35,19 +34,13 @@ export default function AccountComponent() {
     const navigate = useNavigate()
 
     const account = useSelector((state: State) => state.rootReducer.accounts.accounts).find((account: Account) => account.key === accountKey) as Account
-    
+
     const holdings = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.accountKey === accountKey && holding.value > 0.001)
     const dispatch = useDispatch()
     const { onOpen, isOpen, onOpenChange } = useDisclosure();
     const [modalContent, setModalContent] = useState(<></>)
     const [development, setDevelopment] = useState<KronDevelopment[]>([])
-    const [newsTitles, setNewsTitles] = useState<any[]>([])
 
-    useEffect(() => {
-        if(account === undefined) {
-            navigate(routes.dashboard)
-        }
-    })
     const sortedItems = useMemo(() => {
         return account ? [...account.transactions].sort((a, b) => {
             // @ts-ignore
@@ -115,53 +108,25 @@ export default function AccountComponent() {
                 ]
         }
     }
+    console.log("dev", development)
 
     useEffect(() => {
-        if (!account) {
-            return
-        }
-        if (account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key !== '').length > 0) {
-            console.log(holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key))
-            holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK && holding.e24Key).forEach((holding: Holding) => {
-                fetch('https://portfolio-balance-backend.onrender.com/newsweb/news', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ ticker: holding.e24Key }),
-                })
-                    .then(res => res.json())
-                    .then((news: any) => {
-                        setNewsTitles(prevState => [...prevState, { issuer: news[0].issuerSign, news: news }])
-                    })
-            })
-        }
-        if (account.isManual) {
-            return
-        }
-
-        if (!account.apiInfo) {
-            return
-        }
-
-        if (account.name === 'Firi') {
-            fetchFiriTransactions(account, ['NOK'])
-                .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account, transactions))
-                })
-        } else if (account.name === 'Kron') {
-            fetchKronTransactions(account)
-                .then((transactions: Transaction[]) => {
-                    dispatch(importTransactions(account, transactions))
-                })
+        console.log(account)
+        if (account) {
             fetchKronDevelopment(account)
                 .then((development: KronDevelopment[]) => setDevelopment(development))
-        } else if(account.name === 'Bare Bitcoin') {
-            fetchBBTransactions(account)
-            .then((transactions: Transaction[]) => {
-                dispatch(importTransactions(account, transactions))
-            })
+            return
         }
+        getAccountsAndHoldings(accountKey)
+            .then((accountsAndHoldings) => {
+                dispatch(addHoldings(accountsAndHoldings.holdings))
+                dispatch(initSupabaseData(accountsAndHoldings.accounts))
+                dispatch(setEquityTypes(accountsAndHoldings.equityTypes))
+
+                fetchKronDevelopment(accountsAndHoldings.accounts[0])
+                    .then((development: KronDevelopment[]) => setDevelopment(development))
+            });
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -258,38 +223,6 @@ export default function AccountComponent() {
                         alt="logo"
                     />
             }
-            {
-                account.type === AccountTypes.AKSJESPAREKONTO && holdings.filter((holding: Holding) => holding.equityType === EquityTypes.STOCK).length > 0 &&
-                <div className="sm:w-3/4 sm:mx-auto">
-                    <h1 className="text-default-800 font-bold text-xl">Børsmeldinger</h1>
-                    {
-                        newsTitles &&
-                        <Accordion>
-                            {
-                                newsTitles.map((issuer: any) => {
-                                    return (
-                                        <AccordionItem key={issuer.issuer} className="shadow-lg dark:bg-default/30 rounded-lg p-4" title={issuer.issuer}>
-                                            {
-                                                issuer.news.map((newsTitle: any) => {
-                                                    return (
-                                                        <div className="shadow-lg dark:bg-default/30 rounded-lg p-4">
-                                                            <Button variant="light" onPress={() => {
-                                                                handleOpen('news', undefined, newsTitle.messageId)
-                                                            }}>{newsTitle.title}</Button>
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </AccordionItem>
-                                    )
-                                })
-                            }
-
-                        </Accordion>
-                    }
-                </div>
-            }
-
             <div className="grid grid-cols-2 py-4">
                 <div className="p-4">
                     <p className="text-default-600">Antall transaksjoner</p>

@@ -89,12 +89,6 @@
         "header": "Støtt utviklingen",
         "ethAdress": "Ethereum adresse:"
     },
-    "equityTypes": {
-        "fund": "Fond",
-        "stock": "Aksje",
-        "cryptocurrency": "Kryptovaluta",
-        "loan": "Obligasjonslån"
-    },
     "holdings": {
         "seeMore": "Mer om dette fondet"
     }

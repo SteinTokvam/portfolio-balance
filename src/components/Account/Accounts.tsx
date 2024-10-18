@@ -3,11 +3,12 @@ import { Avatar, Card, CardBody, CardFooter, CardHeader, Skeleton } from "@nextu
 import { useDispatch, useSelector } from "react-redux";
 import AccountButton from "./AccountButton";
 import CompanyIcon from "../../icons/CompanyIcon";
-import { getHoldings, routes } from "../../Util/Global";
+import { getAccountsAndHoldings, routes } from "../../Util/Global";
 import { Account, Holding, State } from "../../types/Types";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { useNavigate } from "react-router-dom";
 import { addHoldings } from "../../actions/holdings";
+import { initSupabaseData } from "../../actions/accounts";
 
 export default function Accounts() {
 
@@ -20,19 +21,15 @@ export default function Accounts() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!accounts || holdings.length !== 0) {
+        if (!accounts) {
             return
         }
-        accounts.forEach((account: Account) => {
-            getHoldings(account)
-                .then(holdings => {
-                    if (holdings.length === 0) {
-                        return
-                    }
-                    dispatch(addHoldings(holdings))
-                })
-        })
-    }, [accounts, dispatch])
+        getAccountsAndHoldings()
+            .then(accountsAndHoldings => {
+                dispatch(initSupabaseData(accountsAndHoldings.accounts))
+                dispatch(addHoldings(accountsAndHoldings.holdings))
+            })
+    }, [])
 
     return (
         <div>
@@ -45,7 +42,7 @@ export default function Accounts() {
 
                         accounts.sort((a: Account, b: Account) => a.name.localeCompare(b.name)).map((account: Account) => {
                             return (
-                                <Card 
+                                <Card
                                     aria-label="Card"
                                     title={account.name}
                                     key={account.key} className="items-center justify-center"
@@ -65,19 +62,21 @@ export default function Accounts() {
                                         <div className="max-w-full grid grid-row justify-between">
                                             <div className="grid grid-col">
                                                 <div>
-                                                    <p className="text-default-800 font-bold">
-                                                        <Skeleton
-                                                            className="rounded-lg"
-                                                            isLoaded={
-                                                                settings.hideNumbers ? true : holdings
-                                                                    .filter((totalValue: Holding) => totalValue.accountKey === account.key)
-                                                                    .reduce((sum: number, item: Holding) => sum + item.value, 0) > 0
-                                                            }>
+
+                                                    <Skeleton
+                                                        className="rounded-lg"
+                                                        isLoaded={
+                                                            settings.hideNumbers ? true : holdings
+                                                                .filter((totalValue: Holding) => totalValue.accountKey === account.key)
+                                                                .reduce((sum: number, item: Holding) => sum + item.value, 0) > 0
+                                                        }>
+                                                        <p className="text-default-800 font-bold">
                                                             {
                                                                 settings.hideNumbers ? '*** Kr' : holdings.filter((totalValue: Holding) => totalValue.accountKey === account.key).reduce((sum: number, item: Holding) => sum + item.value, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                                             }
-                                                        </Skeleton>
-                                                    </p>
+                                                        </p>
+                                                    </Skeleton>
+
                                                 </div>
                                             </div>
                                         </div>

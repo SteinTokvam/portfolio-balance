@@ -87,6 +87,10 @@ export async function fetchKronBalance(account: Account): Promise<{value: number
 }
 
 export async function fetchKronDevelopment(account: Account): Promise<any> {
+    console.log('fetchKronDevelopment', account)
+    if(!account || account.name !== 'Kron') {
+        return emptyHoldingPromise()
+    }
     const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
     if (options.error) {
         return emptyHoldingPromise()

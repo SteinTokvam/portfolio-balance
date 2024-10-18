@@ -89,12 +89,6 @@
         "header": "Support development",
         "ethAdress": "Ethereum adress:"
     },
-    "equityTypes": {
-        "fund": "Fund",
-        "stock": "Stock",
-        "cryptocurrency": "Cryptocurrency",
-        "loan": "Loan"
-    },
     "holdings": {
         "seeMore": "Investment info"
     }

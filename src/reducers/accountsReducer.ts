@@ -12,7 +12,7 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
             }
             return {
                 ...state,
-                accounts: [...state.accounts, ...action.payload.accounts]
+                accounts: action.payload.accounts
             }
         case 'ADD_NEW_ACCOUNT':
             return {
