@@ -68,6 +68,24 @@ export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
     }
 }
 
+export async function fetchKronBalance(account: Account): Promise<{value: number, yield: number}> {
+    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key)
+    if (options.error) {
+        return new Promise((resolve, _) => {
+            resolve({value: 0, yield: 0})
+        })
+    }
+    try {
+        const response = await fetch(`${baseUrl}/kron/total_value`, options)
+        const res = await response.json()
+        console.log('Fetched Kron balance', res)
+        return res
+    } catch (error) {
+        console.log(error)
+        return {value: 0, yield: 0}
+    }
+}
+
 export async function fetchKronDevelopment(account: Account): Promise<any> {
     const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
     if (options.error) {
