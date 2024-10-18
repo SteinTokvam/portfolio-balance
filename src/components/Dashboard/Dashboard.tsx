@@ -178,7 +178,7 @@ export default function Dashboard() {
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="name" />
                                     <YAxis domain={[-1500, Math.ceil(parseInt(development.value.toFixed(0)) / 100) * 100]} />
-                                    <Tooltip content={<CustomTooltip />}/>
+                                    <Tooltip content={<CustomTooltip />} shared={false}/>
 
                                     <Bar dataKey="yield" stackId="a" name={t('dashboard.yield')}>
                                         {
