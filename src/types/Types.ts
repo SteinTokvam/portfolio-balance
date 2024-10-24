@@ -30,6 +30,18 @@ export type Account = {
     apiInfo?: ApiInfo
 }
 
+export type AccountsAndHoldings = {
+    accounts: Account[],
+    holdings: Holding[],
+    equityTypes: EquityType[],
+    valueOverTime: ValueOverTime[]
+}
+
+export type ValueOverTime = {
+    value: number,
+    created_at: string
+}
+
 export type KronDevelopment = {
     yield_percentage: number,
     date: string,
