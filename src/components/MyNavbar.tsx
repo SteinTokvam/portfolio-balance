@@ -9,6 +9,7 @@ import EmptyModal from "./Modal/EmptyModal";
 import { useDispatch } from "react-redux";
 import { resetState } from "../actions/accounts";
 import { supabase } from "../supabaseClient";
+import { ThemeSwitch } from "./theme-switch";
 
 export default function MyNavbar() {
 
@@ -71,6 +72,7 @@ export default function MyNavbar() {
               })
             }} >Logg ut</Button>
         </NavbarMenuItem>}
+        <ThemeSwitch />
       </NavbarContent>
 
       <NavbarContent justify="end">

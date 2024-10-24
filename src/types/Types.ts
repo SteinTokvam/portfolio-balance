@@ -1,3 +1,4 @@
+import { SVGProps } from "react"
 
 export type State = {
     rootReducer: {
@@ -18,6 +19,10 @@ export type State = {
         }
     }
 }
+
+export type IconSvgProps = SVGProps<SVGSVGElement> & {
+    size?: number;
+  };
 
 export type Account = {
     name: string
