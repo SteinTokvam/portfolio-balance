@@ -33,7 +33,13 @@ export type Account = {
 export type AccountsAndHoldings = {
     accounts: Account[],
     holdings: Holding[],
-    equityTypes: EquityType[]
+    equityTypes: EquityType[],
+    valueOverTime: ValueOverTime[]
+}
+
+export type ValueOverTime = {
+    value: number,
+    created_at: string
 }
 
 export type KronDevelopment = {

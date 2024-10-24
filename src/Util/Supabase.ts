@@ -86,6 +86,19 @@ export async function getEquityTypes(): Promise<EquityType[]> {
   }) as EquityType[];
 }
 
+export async function getValueOverTime(): Promise<any> {
+    const { data, error } = await supabase.from("value_over_time").select();
+    if (error) {
+      console.log(error);
+    }
+    return data?.map((data) => {
+      return {
+        created_at: data.created_at.split("T")[0],
+        value: data.value
+      }
+    })
+}
+
 export const importAccountsToSupabase = (accounts: Account[]) => {
   accounts.forEach((account) => {
     addAccount(account).then(() => {

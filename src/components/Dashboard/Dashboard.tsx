@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts'
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer, Spinner } from "@nextui-org/react"
-import { Account, EquityType, Holding, State, Transaction, TransactionType } from "../../types/Types"
+import { Account, EquityType, Holding, State, Transaction, TransactionType, ValueOverTime } from "../../types/Types"
 import { addHoldings } from "../../actions/holdings"
 import { getAccountsAndHoldings } from "../../Util/Global"
 import { resetState, initSupabaseData } from "../../actions/accounts"
@@ -25,6 +25,7 @@ export default function Dashboard() {
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
     const [development, setDevelopment] = useState<{ value: number, yield: number }>({ value: 0, yield: 0 })
+    const [valueOverTime, setValueOverTime] = useState<ValueOverTime[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
 
@@ -34,7 +35,8 @@ export default function Dashboard() {
             .then(accountsAndHoldings => {
                 dispatch(initSupabaseData(accountsAndHoldings.accounts))
                 dispatch(addHoldings(accountsAndHoldings.holdings))
-                setTotalValue(accountsAndHoldings)
+                //setTotalValue(accountsAndHoldings)
+                setValueOverTime(accountsAndHoldings.valueOverTime)
                 fetchKronBalance(accountsAndHoldings.accounts.filter((account: Account) => account.name === "Kron")[0])
                     .then(setDevelopment)
             })
@@ -135,6 +137,30 @@ export default function Dashboard() {
                             <h3 className="text-3xl font-bold">
                                 {settings.hideNumbers ? '*** Kr' : totalYield.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
                             </h3>
+                        </CardBody>
+                    </Card>
+                </div>
+                <div className="grid grid-cols-1 gap-4 pt-4">
+                    <Card>
+                        <CardHeader>
+                            <h2 className="text-lg font-semibold">{"Value over time"}</h2>
+                        </CardHeader>
+                        <CardBody>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={valueOverTime} margin={{
+                                top: 10,
+                                right: 30,
+                                left: 0,
+                                bottom: 0,
+                            }}
+                            >
+                                <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                                <XAxis dataKey="created_at" />
+                                <YAxis />
+                                <Tooltip />
+                                <Legend />
+                            </LineChart>
+                            </ResponsiveContainer>
                         </CardBody>
                     </Card>
                 </div>
