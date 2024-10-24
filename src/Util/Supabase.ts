@@ -38,7 +38,7 @@ export function setTotalValue(accountsAndHoldings: AccountsAndHoldings) {
           if (curr.accountKey === account.key) {
             return acc + curr.value;
           }
-          return 0;
+          return acc;
         }
       , 0),
     })
