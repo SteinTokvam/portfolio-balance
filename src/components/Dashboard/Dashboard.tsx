@@ -35,7 +35,7 @@ export default function Dashboard() {
             .then(accountsAndHoldings => {
                 dispatch(initSupabaseData(accountsAndHoldings.accounts))
                 dispatch(addHoldings(accountsAndHoldings.holdings))
-                //setTotalValue(accountsAndHoldings)
+                setTotalValue(accountsAndHoldings)
                 setValueOverTime(accountsAndHoldings.valueOverTime)
                 fetchKronBalance(accountsAndHoldings.accounts.filter((account: Account) => account.name === "Kron")[0])
                     .then(setDevelopment)
