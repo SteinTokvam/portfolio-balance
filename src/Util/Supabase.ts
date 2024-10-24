@@ -57,9 +57,9 @@ export async function logNewValueOverTime(totalValue: number) {
     .select("*")
     .order("created_at", { ascending: false });
 
-    const date = data?.[data.length - 1].created_at.split(" ")[0]
-    console.log("compare_date",date, new Date().toISOString().split(" ")[0])
-  if (data?.length === 0 || (date !== new Date().toISOString().split(" ")[0])) {
+    const date = data?.[data.length - 1].created_at.split("T")[0]
+
+  if (data?.length === 0 || (date !== new Date().toISOString().split("T")[0])) {
     const err = (
       await supabase.from("value_over_time").insert({
         value: totalValue,
