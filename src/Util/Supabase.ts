@@ -55,10 +55,10 @@ export async function logNewValueOverTime(totalValue: number) {
   const { data, error } = await supabase
     .from("value_over_time")
     .select("*")
-    .eq("created_at", new Date());
+    .order("created_at", { ascending: false });
     console.log(data)
 
-  if (data?.length === 0) {
+  if (data?.length === 0 || new Date(data?.[data.length - 1].created_at).getTime() < new Date().getTime() - 86400000) {
     const err = (
       await supabase.from("value_over_time").insert({
         value: totalValue,
