@@ -14,6 +14,7 @@ import ChangeGoalPercentageModalContent from "./ChangeGoalPercentageModalContent
 import { fetchKronBalance } from "../../Util/Kron"
 import CustomTooltip from "./CustomTooltip"
 import { setEquityTypes } from "../../actions/equityType"
+import { setTotalValue } from "../../Util/Supabase"
 
 export default function Dashboard() {
     const { t } = useTranslation()
@@ -33,6 +34,7 @@ export default function Dashboard() {
             .then(accountsAndHoldings => {
                 dispatch(initSupabaseData(accountsAndHoldings.accounts))
                 dispatch(addHoldings(accountsAndHoldings.holdings))
+                setTotalValue(accountsAndHoldings)
                 fetchKronBalance(accountsAndHoldings.accounts.filter((account: Account) => account.name === "Kron")[0])
                     .then(setDevelopment)
             })

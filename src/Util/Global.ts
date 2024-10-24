@@ -1,4 +1,4 @@
-import { Account, AccountTypes, EquityType, Holding, Transaction } from "../types/Types";
+import { Account, AccountsAndHoldings, AccountTypes, Holding, Transaction } from "../types/Types";
 import { v4 as uuidv4 } from 'uuid';
 import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
 import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
@@ -42,12 +42,6 @@ export const routes = {
     account: '/account/:accountKey',
     confirmMail: '/confirm-mail',
     login: '/login'
-}
-
-type AccountsAndHoldings = {
-    accounts: Account[],
-    holdings: Holding[],
-    equityTypes: EquityType[]
 }
 
 export async function getAccountsAndHoldings(key: string = ""): Promise<AccountsAndHoldings> {
