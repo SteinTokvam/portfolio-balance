@@ -4,7 +4,7 @@ import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
 import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
 import { fetchTicker } from "./E24";
 import { fetchBBHoldings, fetchBBTransactions, fetchPrice } from "./BareBitcoin";
-import { getAccounts, getEquityTypes, getTransactions } from "./Supabase";
+import { getAccounts, getEquityTypes, getTransactions, logNewValueOverTime } from "./Supabase";
 
 export const languages = ["us", "no"];
 
@@ -58,6 +58,7 @@ export async function getAccountsAndHoldings(key: string = ""): Promise<Accounts
             return await Promise.all(accountsWithTransactions)
         })
 
+        logNewValueOverTime(accounts.reduce((acc, curr) => acc + curr.totalValue, 0))
         return {accounts, holdings: await getAllHoldings(accounts), equityTypes: await getEquityTypes()}
         
 }

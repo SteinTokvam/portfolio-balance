@@ -33,18 +33,41 @@ export async function getAccounts(key: String = ""): Promise<Account[]> {
 
 export function setTotalValue(accountsAndHoldings: AccountsAndHoldings) {
   accountsAndHoldings.accounts.forEach(async (account) => {
-    const { error } = await supabase.from("accounts").update({
-      totalValue: accountsAndHoldings.holdings.reduce((acc: number, curr: Holding) => {
-          if (curr.accountKey === account.key) {
-            return acc + curr.value;
-          }
-          return acc;
-        }
-      , 0),
-    })
-    .eq("key", account.key);
+    const { error } = await supabase
+      .from("accounts")
+      .update({
+        totalValue: accountsAndHoldings.holdings.reduce(
+          (acc: number, curr: Holding) => {
+            if (curr.accountKey === account.key) {
+              return acc + curr.value;
+            }
+            return acc;
+          },
+          0
+        ),
+      })
+      .eq("key", account.key);
     console.error(error);
   });
+}
+
+export async function logNewValueOverTime(totalValue: number) {
+  const { data, error } = await supabase
+    .from("value_over_time")
+    .select("*")
+    .eq("created_at", new Date());
+    console.log(data)
+
+  if (data?.length === 0) {
+    const err = (
+      await supabase.from("value_over_time").insert({
+        value: totalValue,
+      })
+    ).error;
+    if (err) {
+      console.log(error);
+    }
+  }
 }
 
 export async function getEquityTypes(): Promise<EquityType[]> {
