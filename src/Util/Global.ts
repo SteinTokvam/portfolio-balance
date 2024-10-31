@@ -4,6 +4,7 @@ import {
   AccountTypes,
   Holding,
   KronDevelopment,
+  PriceHistory,
   Transaction,
   ValueOverTime,
 } from "../types/Types";
@@ -160,7 +161,7 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
     );
     holdingsOverTime.set(
       dates[i],
-      await getHoldingsForTransactions(transactionsBeforeDate, dates[i])
+      await getHoldingsForTransactions(transactionsBeforeDate, dates[i], await fetchPriceHistory(transactions.filter((transaction) => transaction.name === "BTC")[0].date.split("T")[0]))
     );
   }
   return Array.from(holdingsOverTime.values()).flat();
@@ -168,7 +169,8 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
 
 async function getHoldingsForTransactions(
   transactions: Transaction[],
-  date: string
+  date: string,
+  priceHistory: PriceHistory
 ): Promise<ValueOverTime> {
   //TODO: Må kunne hente fra e24/binance.. trenger egentlig bare equityShare og evt e24Key for dette og ikke et helt holding objekt
   if (!transactions) return {} as ValueOverTime;
@@ -201,9 +203,9 @@ async function getHoldingsForTransactions(
         return sum - transaction.equityShare}, 0
     ) 
     
-    const btcPrice = await fetchPriceHistory(date)
     
-    value += btcEquityShare * (btcPrice.data[0].close*11)
+    
+    value += btcEquityShare * (priceHistory.data.filter(price => price.date === date)[0].close*11)
   }
   
   return {

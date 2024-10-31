@@ -59,7 +59,7 @@ export async function fetchPriceHistory(startDate: string): Promise<PriceHistory
         symbol: "BTC/USDT",
         timeframe: "1d",
         since: new Date(startDate).getTime(),
-        limit: 1,
+        limit: 1000,
       })
 
   const response: PriceHistory = await fetch(`${baseUrl}/btcwallet/price`, {
