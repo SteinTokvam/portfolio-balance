@@ -25,8 +25,6 @@ import {
   getAccounts,
   getEquityTypes,
   getTransactions,
-  getValueOverTime,
-  logNewValueOverTime,
 } from "./Supabase";
 
 export const languages = ["us", "no"];
@@ -182,6 +180,7 @@ async function getHoldingsForTransactions(
   const uniqueE24Keys = [
     ...new Set(transactionsWithe24.map((transaction) => transaction.e24Key)),
   ];
+  console.log(uniqueE24Keys);
 
   const transactionsWithoutE24: Transaction[] = transactions.filter(
     (transaction) => !transaction.e24Key
