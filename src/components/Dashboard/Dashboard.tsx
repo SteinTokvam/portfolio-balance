@@ -5,7 +5,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis,
 import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer, Spinner } from "@nextui-org/react"
 import { Account, EquityType, Holding, State, Transaction, TransactionType, ValueOverTime } from "../../types/Types"
 import { addHoldings } from "../../actions/holdings"
-import { getAccountsAndHoldings } from "../../Util/Global"
+import { calculateValueOverTime, getAccountsAndHoldings } from "../../Util/Global"
 import { resetState, initSupabaseData } from "../../actions/accounts"
 import { toggleHideNumbers } from "../../actions/settings"
 import GoalAnalysis from "./GoalAnalysis"
@@ -36,7 +36,7 @@ export default function Dashboard() {
                 dispatch(initSupabaseData(accountsAndHoldings.accounts))
                 dispatch(addHoldings(accountsAndHoldings.holdings))
                 setTotalValue(accountsAndHoldings)
-                setValueOverTime(accountsAndHoldings.valueOverTime)
+                calculateValueOverTime(accountsAndHoldings.accounts).then(valueOverTime => setValueOverTime(valueOverTime))
                 fetchKronBalance(accountsAndHoldings.accounts.filter((account: Account) => account.name === "Kron")[0])
                     .then(setDevelopment)
             })

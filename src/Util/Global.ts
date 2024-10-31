@@ -82,12 +82,11 @@ export async function getAccountsAndHoldings(
   return {
     accounts,
     holdings: await getAllHoldings(accounts),
-    valueOverTime: await calculateValueOverTime(accounts),
     equityTypes: await getEquityTypes(),
   };
 }
 
-async function calculateValueOverTime(accounts: Account[]) {
+export async function calculateValueOverTime(accounts: Account[]) {
   const transactionsExceptKron = accounts
     .filter((account: Account) => account.name !== "Kron")
     .map((account) => account.transactions)
@@ -153,6 +152,7 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
   );
   const dates = generateDateList(new Date(transactions[0].date));
   const holdingsOverTime = new Map<string, ValueOverTime>();
+  const priceHistory = await fetchPriceHistory(transactions.filter((transaction) => transaction.name === "BTC")[0].date.split("T")[0])
   for (let i = 0; i < daysSinceFirstTransaction; i++) {
     const transactionsBeforeDate = transactions.filter(
       (transaction) =>
@@ -161,7 +161,7 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
     );
     holdingsOverTime.set(
       dates[i],
-      await getHoldingsForTransactions(transactionsBeforeDate, dates[i], await fetchPriceHistory(transactions.filter((transaction) => transaction.name === "BTC")[0].date.split("T")[0]))
+      await getHoldingsForTransactions(transactionsBeforeDate, dates[i], priceHistory)
     );
   }
   return Array.from(holdingsOverTime.values()).flat();
@@ -204,8 +204,13 @@ async function getHoldingsForTransactions(
     ) 
     
     
+    const btcPriceForDate = priceHistory.data.filter(price => price.date.split("T")[0] === date)
+    if(btcPriceForDate.length > 0) {
+        value += btcEquityShare * (btcPriceForDate[0].close*11)
+    } else {
+        console.log("BTC price not found for date", date, priceHistory.data)
+    }
     
-    value += btcEquityShare * (priceHistory.data.filter(price => price.date === date)[0].close*11)
   }
   
   return {
