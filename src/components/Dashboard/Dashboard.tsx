@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useDispatch, useSelector } from "react-redux"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from 'recharts'
-import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer, Spinner } from "@nextui-org/react"
+import { Card, CardBody, CardHeader, Button, Switch, Progress, useDisclosure, Spacer, Spinner, Slider } from "@nextui-org/react"
 import { Account, EquityType, Holding, State, Transaction, TransactionType, ValueOverTime } from "../../types/Types"
 import { addHoldings } from "../../actions/holdings"
 import { calculateValueOverTime, getAccountsAndHoldings } from "../../Util/Global"
@@ -26,6 +26,7 @@ export default function Dashboard() {
     const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
     const [development, setDevelopment] = useState<{ value: number, yield: number }>({ value: 0, yield: 0 })
     const [valueOverTime, setValueOverTime] = useState<ValueOverTime[]>([])
+    const [value, setValue] = useState([100, new Date().getTime()]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const equityTypes = useSelector((state: State) => state.rootReducer.equity.equityTypes)
 
@@ -147,7 +148,7 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardBody>
                             <ResponsiveContainer width="100%" height={300}>
-                                <LineChart data={valueOverTime} margin={{
+                                <LineChart data={valueOverTime.filter((valueOverTime: ValueOverTime) => new Date(valueOverTime.created_at).getTime() >= value[0] && new Date(valueOverTime.created_at).getTime() <= value[1])} margin={{
                                 top: 10,
                                 right: 30,
                                 left: 0,
@@ -161,6 +162,17 @@ export default function Dashboard() {
                                 <Legend />
                             </LineChart>
                             </ResponsiveContainer>
+                            {valueOverTime.length > 0 && <Slider
+                                label="Date Range"
+                                step={1000*3600*24} 
+                                minValue={new Date(valueOverTime[0].created_at).getTime()} 
+                                maxValue={new Date(valueOverTime[valueOverTime.length - 1].created_at).getTime()} 
+                                defaultValue={[new Date(valueOverTime[0].created_at).getTime(), new Date(valueOverTime[valueOverTime.length - 1].created_at).getTime()]} 
+                                getValue={() => `${new Date(value[0]).toISOString().split('T')[0]} - ${new Date(value[1]).toISOString().split('T')[0]}`}
+                                value={value}
+                                onChange={(value) => setValue(value as number[])}
+                                className="w-full"
+                                />}
                         </CardBody>
                     </Card>
                 </div>

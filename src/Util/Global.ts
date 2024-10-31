@@ -164,7 +164,9 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
       await getHoldingsForTransactions(transactionsBeforeDate, dates[i], priceHistory)
     );
   }
-  return Array.from(holdingsOverTime.values()).flat();
+  const ret = Array.from(holdingsOverTime.values()).flat();
+  
+  return ret;
 }
 
 async function getHoldingsForTransactions(
