@@ -153,6 +153,8 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
   const dates = generateDateList(new Date(transactions[0].date));
   const holdingsOverTime = new Map<string, ValueOverTime>();
   const priceHistory = await fetchPriceHistory(transactions.filter((transaction) => transaction.name === "BTC")[0].date.split("T")[0])
+  const currencyExchangeRate = parseFloat((await fetchPrice()).usdnok);
+
   for (let i = 0; i < daysSinceFirstTransaction; i++) {
     const transactionsBeforeDate = transactions.filter(
       (transaction) =>
@@ -161,7 +163,7 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
     );
     holdingsOverTime.set(
       dates[i],
-      await getHoldingsForTransactions(transactionsBeforeDate, dates[i], priceHistory)
+      await getHoldingsForTransactions(transactionsBeforeDate, dates[i], priceHistory, currencyExchangeRate)
     );
   }
   const ret = Array.from(holdingsOverTime.values()).flat();
@@ -172,9 +174,10 @@ async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOv
 async function getHoldingsForTransactions(
   transactions: Transaction[],
   date: string,
-  priceHistory: PriceHistory
+  priceHistory: PriceHistory,
+  currencyExchangeRate: number
 ): Promise<ValueOverTime> {
-  //TODO: Må kunne hente fra e24/binance.. trenger egentlig bare equityShare og evt e24Key for dette og ikke et helt holding objekt
+  //TODO: Må kunne hente fra e24.. trenger egentlig bare equityShare og evt e24Key for dette og ikke et helt holding objekt
   if (!transactions) return {} as ValueOverTime;
 
   const transactionsWithe24: Transaction[] = transactions.filter(
@@ -208,7 +211,7 @@ async function getHoldingsForTransactions(
     
     const btcPriceForDate = priceHistory.data.filter(price => price.date.split("T")[0] === date)
     if(btcPriceForDate.length > 0) {
-        value += btcEquityShare * (btcPriceForDate[0].close*11)
+        value += btcEquityShare * (btcPriceForDate[0].close*currencyExchangeRate)
     } else {
         console.log("BTC price not found for date", date, priceHistory.data)
     }
