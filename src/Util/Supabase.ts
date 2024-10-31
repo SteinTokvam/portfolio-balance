@@ -51,26 +51,6 @@ export function setTotalValue(accountsAndHoldings: AccountsAndHoldings) {
   });
 }
 
-export async function logNewValueOverTime(totalValue: number) {
-  const { data, error } = await supabase
-    .from("value_over_time")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-    const date = data?.[0].created_at.split("T")[0]
-
-  if (data?.length === 0 || (date !== new Date().toISOString().split("T")[0])) {
-    const err = (
-      await supabase.from("value_over_time").insert({
-        value: totalValue,
-      })
-    ).error;
-    if (err) {
-      console.log(error);
-    }
-  }
-}
-
 export async function getEquityTypes(): Promise<EquityType[]> {
   const { data, error } = await supabase.from("equity_types").select();
   if (error) {

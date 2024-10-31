@@ -5,7 +5,7 @@ import { emptyHoldingPromise, emptyTransactionPromise } from "./Global"
 const isLocal = false
 const baseUrl = isLocal ? 'http://localhost:3000' : 'https://portfolio-balance-backend.onrender.com'
 
-function getOptions(api_key: string | undefined, account_id: string | undefined, accountKey: string, haveInterval = false) {
+function getOptions(api_key: string | undefined, account_id: string | undefined, accountKey: string, haveInterval = false, interval: string = 'year-to-date') {
     if (!api_key || !account_id) {
         return { error: 'No api_key or account_id' }
     }
@@ -19,7 +19,7 @@ function getOptions(api_key: string | undefined, account_id: string | undefined,
                 'account_id': account_id,
                 'accessKey': api_key,
                 'accountKey': accountKey,
-                'interval': 'year-to-date'
+                'interval': interval//interval kan være 1W, 1M, 3M, year-to-date, total
             })
         } :
         {
@@ -86,11 +86,11 @@ export async function fetchKronBalance(account: Account): Promise<{value: number
     }
 }
 
-export async function fetchKronDevelopment(account: Account): Promise<any> {
+export async function fetchKronDevelopment(account: Account, interval: string = 'year-to-date'): Promise<any> {
     if(!account || account.name !== 'Kron') {
         return emptyHoldingPromise()
     }
-    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
+    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true, interval)
     if (options.error) {
         return emptyHoldingPromise()
     }

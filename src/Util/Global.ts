@@ -3,16 +3,23 @@ import {
   AccountsAndHoldings,
   AccountTypes,
   Holding,
+  KronDevelopment,
   Transaction,
+  ValueOverTime,
 } from "../types/Types";
 import { v4 as uuidv4 } from "uuid";
-import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
+import {
+  fetchKronDevelopment,
+  fetchKronHoldings,
+  fetchKronTransactions,
+} from "./Kron";
 import { fetchFiriHoldings, fetchFiriTransactions } from "./Firi";
 import { fetchTicker } from "./E24";
 import {
   fetchBBHoldings,
   fetchBBTransactions,
   fetchPrice,
+  fetchPriceHistory,
 } from "./BareBitcoin";
 import {
   getAccounts,
@@ -73,12 +80,136 @@ export async function getAccountsAndHoldings(
     return await Promise.all(accountsWithTransactions);
   });
 
-  logNewValueOverTime(accounts.reduce((acc, curr) => acc + curr.totalValue, 0));
   return {
     accounts,
     holdings: await getAllHoldings(accounts),
+    valueOverTime: await calculateValueOverTime(accounts),
     equityTypes: await getEquityTypes(),
-    valueOverTime: await getValueOverTime(),
+  };
+}
+
+async function calculateValueOverTime(accounts: Account[]) {
+  const transactionsExceptKron = accounts
+    .filter((account: Account) => account.name !== "Kron")
+    .map((account) => account.transactions)
+    .flat();
+  const kronDevelopment: KronDevelopment[] = await fetchKronDevelopment(
+    accounts.filter((account: Account) => account.name === "Kron", "total")[0]
+  );
+
+  const valueOverTimeExceptKron = await getHoldingsOverTime(
+    transactionsExceptKron.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    )
+  );
+
+  const allValueOverTime: ValueOverTime[] = [
+    ...valueOverTimeExceptKron,
+    ...kronDevelopment.map((kron: KronDevelopment) => {
+      return {
+        created_at: kron.date,
+        value: kron.market_value,
+      };
+    }),
+  ]
+    .sort(
+      (a, b) =>
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    )
+    .reduce((acc: ValueOverTime[], curr: ValueOverTime) => {
+      const existingValue = acc.find(
+        (item) => item.created_at === curr.created_at
+      );
+      if (existingValue) {
+        existingValue.value += curr.value;
+      } else {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+  return allValueOverTime.map((item) => {
+    return {
+      ...item,
+      value: parseFloat(item.value.toFixed(2)),
+    };
+  });
+}
+
+function generateDateList(startDate: Date) {
+  const dateList = [];
+  let currentDate = new Date(startDate);
+
+  while (currentDate <= new Date()) {
+    dateList.push(new Date(currentDate).toISOString().split("T")[0]);
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateList;
+}
+
+async function getHoldingsOverTime(transactions: Transaction[]): Promise<ValueOverTime[]> {
+  const daysSinceFirstTransaction = Math.round(
+    (new Date().getTime() - new Date(transactions[0].date).getTime()) /
+      (1000 * 3600 * 24)
+  );
+  const dates = generateDateList(new Date(transactions[0].date));
+  const holdingsOverTime = new Map<string, ValueOverTime>();
+  for (let i = 0; i < daysSinceFirstTransaction; i++) {
+    const transactionsBeforeDate = transactions.filter(
+      (transaction) =>
+        new Date(transaction.date.split("T")[0]).getTime() <=
+        new Date(dates[i]).getTime()
+    );
+    holdingsOverTime.set(
+      dates[i],
+      await getHoldingsForTransactions(transactionsBeforeDate, dates[i])
+    );
+  }
+  return Array.from(holdingsOverTime.values()).flat();
+}
+
+async function getHoldingsForTransactions(
+  transactions: Transaction[],
+  date: string
+): Promise<ValueOverTime> {
+  //TODO: Må kunne hente fra e24/binance.. trenger egentlig bare equityShare og evt e24Key for dette og ikke et helt holding objekt
+  if (!transactions) return {} as ValueOverTime;
+
+  const transactionsWithe24: Transaction[] = transactions.filter(
+    (transaction) => transaction.e24Key
+  );
+
+  const uniqueE24Keys = [
+    ...new Set(transactionsWithe24.map((transaction) => transaction.e24Key)),
+  ];
+
+  const transactionsWithoutE24: Transaction[] = transactions.filter(
+    (transaction) => !transaction.e24Key
+  );
+  var value = getHoldingsWithoutE24TickerCalc(
+    transactionsWithoutE24,
+    ""
+  ).reduce((sum, holding) => sum + holding.value, 0);
+
+  const bitcoin = transactions.filter(
+    (transaction) => transaction.name === "BTC"
+  )
+
+  if(bitcoin.length > 0) {
+    const btcEquityShare = bitcoin.reduce((sum, transaction) => {
+        if(transaction.type === "BUY" || transaction.type === "YIELD" || transaction.type === "DEPOSIT") 
+            return sum + transaction.equityShare
+        return sum - transaction.equityShare}, 0
+    ) 
+    
+    const btcPrice = await fetchPriceHistory(date)
+    
+    value += btcEquityShare * (btcPrice.data[0].close*11)
+  }
+  
+  return {
+    created_at: date,
+    value: parseFloat(value.toFixed(2)),
   };
 }
 
@@ -222,17 +353,20 @@ async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
   return holdings;
 }
 
-function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
+function getHoldingsWithoutE24TickerCalc(
+  transactions: Transaction[],
+  accountKey: string
+): Holding[] {
   const holdings: Holding[] = [];
-  const transactions = account.transactions.filter(
+  const transactionsWithoutE24 = transactions.filter(
     (transaction) => !transaction.e24Key
   );
   const uniquieHoldingNames = [
-    ...new Set(transactions.map((transaction) => transaction.name)),
+    ...new Set(transactionsWithoutE24.map((transaction) => transaction.name)),
   ];
 
   uniquieHoldingNames.forEach((uniqueHoldingName) => {
-    const buysAndSells = account.transactions
+    const buysAndSells = transactions
       .filter((transaction) => transaction.name === uniqueHoldingName)
       .filter(
         (transaction) =>
@@ -253,13 +387,13 @@ function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
       )[0];
       holdings.push({
         name: uniqueHoldingName,
-        accountKey: account.key,
+        accountKey: accountKey,
         equityShare,
         equityType: transaction.equityType,
         e24Key: transaction.e24Key,
         key: uuidv4(),
         value,
-        yield: account.transactions
+        yield: transactions
           .filter((transaction) => transaction.name === uniqueHoldingName)
           .filter((transaction) => transaction.type === "YIELD")
           .reduce((sum, transaction) => sum + transaction.cost, 0),
@@ -268,6 +402,10 @@ function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
   });
 
   return holdings;
+}
+
+function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
+  return getHoldingsWithoutE24TickerCalc(account.transactions, account.key);
 }
 
 async function fetchTickers(

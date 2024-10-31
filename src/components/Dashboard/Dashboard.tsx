@@ -154,7 +154,7 @@ export default function Dashboard() {
                                 bottom: 0,
                             }}
                             >
-                                <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                                <Line type="monotone" dataKey="value" stroke="#8884d8" dot={false} />
                                 <XAxis dataKey="created_at" />
                                 <YAxis />
                                 <Tooltip />
