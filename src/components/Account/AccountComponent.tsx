@@ -17,7 +17,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { getAccountsAndHoldings, routes } from "../../Util/Global";
 import Holdings from "./Holdings";
 import DevelopmentGraph from "./DevelopmentGraph";
-import NewsMessageModalContent from "./NewsMessageModalContent";
 import { setEquityTypes } from "../../actions/equityType";
 
 export default function AccountComponent() {
@@ -108,7 +107,6 @@ export default function AccountComponent() {
                 ]
         }
     }
-    console.log("dev", development)
 
     useEffect(() => {
         console.log(account)
@@ -130,7 +128,7 @@ export default function AccountComponent() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    function handleOpen(type: string, account: Account | undefined, messageId?: string) {
+    function handleOpen(type: string, account: Account | undefined) {
         switch (type) {
             case 'import':
                 if (account) {
@@ -142,9 +140,6 @@ export default function AccountComponent() {
                     setModalContent(<NewTransactionModalContent account={account} />)
                 }
                 break
-            case 'news':
-                setModalContent(<NewsMessageModalContent messageId={messageId} />)
-                break;
             default:
                 if (account) {
                     setModalContent(<ImportTransactionsModalContent account={account} />)

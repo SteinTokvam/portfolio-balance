@@ -187,7 +187,7 @@ return (
                     >
                         {equityTypes.map((equityType: EquityType) => (
                             <SelectItem key={equityType.key} value={t(`equityTypes.${equityType.key.toLowerCase()}`)} >
-                                {t(`equityTypes.${equityType.key.toLowerCase()}`)}
+                                {equityType.label}
                             </SelectItem>
                         ))}
                     </Select>
