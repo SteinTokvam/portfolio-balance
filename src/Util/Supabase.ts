@@ -62,7 +62,7 @@ export async function logNewValueOverTime(totalValue: number) {
   if (data?.length === 0 || (date !== new Date().toISOString().split("T")[0])) {
     const err = (
       await supabase.from("value_over_time").insert({
-        value: totalValue,
+        value: parseInt(totalValue.toString()),
       })
     ).error;
     if (err) {
