@@ -1,6 +1,8 @@
-export async function fetchTicker(ticker: string, exchange = "OSE", type: string, period = "1weeks") {
+import { E24Ticker } from "@/types/Types";
+
+export async function fetchTicker(ticker: string, exchange = "OSE", type: string, period = "1weeks"): Promise<E24Ticker[]> {
     if (!type) {
-        return [{ date: "", value: 0 }]
+        return [{ date: new Date(), value: 0 }]
     }
 
     if (!ticker || ticker === "") {

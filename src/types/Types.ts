@@ -89,6 +89,11 @@ export type EquityType = {
     goalPercentage: number
 }
 
+export type E24Ticker = {
+    date: Date,
+    value: number
+}
+
 export type FiriOrder = {
     id: string,
     amount: string,
