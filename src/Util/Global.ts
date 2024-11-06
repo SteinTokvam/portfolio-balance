@@ -151,10 +151,10 @@ async function getManualAccountHoldings(account: Account): Promise<Holding[]> {
         equityShare,
         e24Key: "",
         yield:
-          account.transactions.reduce(
+        value - account.transactions.reduce(
             (sum, transaction) => sum + transaction.cost,
             0
-          ) - value,
+          ),
       },
     ];
   }
