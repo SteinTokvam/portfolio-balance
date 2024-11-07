@@ -1,13 +1,13 @@
 import { styles } from "../../Util/Global";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { EquityType, Holding } from "../../types/Types";
 import { Divider } from "@nextui-org/react";
 import { useEffect } from "react";
 import { getEquityTypes } from "../../Util/Supabase";
 import { setEquityTypes } from "../../actions/equityType";
 
-export default function GoalAnalysis() {
+export default function GoalAnalysis({holdings, equityTypes}: {holdings: Holding[], equityTypes: EquityType[]}) {
 
     type FurthestFromGoal = {
         currentPercentage: number,
@@ -18,15 +18,19 @@ export default function GoalAnalysis() {
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const accounts = useSelector((state: any) => state.rootReducer.accounts.accounts)
-    const equityTypes = useSelector((state: any) => state.rootReducer.equity.equityTypes)
-    const holdings = useSelector((state: any) => state.rootReducer.holdings.holdings)
+    console.log(holdings)
     const furthestFromGoal = equityTypes.map((equityType: EquityType) => {
+        const currentPercentage = parseFloat((holdings
+            .filter((holding: Holding) => {
+                return holding.equityType.toLowerCase() === equityType.label.toLocaleLowerCase()
+            })
+            .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2))
+            console.log(currentPercentage)
         return {
-            currentPercentage: parseFloat((holdings
-                .filter((holding: Holding) => holding.equityType === equityType.key)
-                .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2)),
-            equityType
+            currentPercentage,
+            equityType: equityType,
+            goalPercentage: equityType.goalPercentage,
+            distanceFromGoalPercentage: equityType.goalPercentage - currentPercentage
         }
     }).map((furthest: FurthestFromGoal) => {
         return {
@@ -49,7 +53,7 @@ export default function GoalAnalysis() {
     return (
         <>
         {
-            accounts && accounts.length > 0 ?
+            holdings && holdings.length > 0 ?
                 <div className="w-full flex flex-col justify-center">
                     <Divider />
 

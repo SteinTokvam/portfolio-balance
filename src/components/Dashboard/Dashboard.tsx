@@ -239,7 +239,7 @@ export default function Dashboard() {
                             <h2 className="text-lg font-semibold">{t('dashboard.analysis')}</h2>
                         </CardHeader>
                         <CardBody>
-                            <GoalAnalysis />
+                            <GoalAnalysis holdings={holdings} equityTypes={equityTypes} />
                         </CardBody>
                     </Card>
                 </div>
