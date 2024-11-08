@@ -96,6 +96,8 @@ export async function getValueOverTime(): Promise<any> {
         created_at: data.created_at.split("T")[0],
         value: data.value
       }
+    }).sort((a, b) => {
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
     })
 }
 
