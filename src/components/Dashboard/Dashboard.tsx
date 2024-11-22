@@ -15,6 +15,7 @@ import { fetchKronBalance } from "../../Util/Kron"
 import CustomTooltip from "./CustomTooltip"
 import { setEquityTypes } from "../../actions/equityType"
 import { setTotalValue } from "../../Util/Supabase"
+import CustomTooltipYield from "./CustomTooltipYield"
 
 export default function Dashboard() {
     const { t } = useTranslation()
@@ -159,7 +160,7 @@ export default function Dashboard() {
                                 <Line type="monotone" dataKey="value" stroke="#8884d8" />
                                 <XAxis dataKey="created_at" />
                                 <YAxis domain={["auto", "auto"]} />
-                                <Tooltip />
+                                <Tooltip content={<CustomTooltipYield />}/>
                                 <Legend />
                             </LineChart>
                             </ResponsiveContainer>

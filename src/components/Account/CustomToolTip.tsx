@@ -1,15 +1,17 @@
+import { useTheme } from "../../hooks/use-theme";
 import { TooltipProps } from "recharts"
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
 
 export default function CustomToolTip({ active, payload }: TooltipProps<ValueType, NameType>) {
+    const { theme } = useTheme();
     if (active && payload && payload.length) {
         return (
             <>
                 {
                     payload.map((_) => (
-                        <div className="bg-slate-800 text-white p-2" key={payload[0].payload.date}>
-                            <div className="bg-slate-600 text-white p-2 font-bold">{payload[0].payload.date}</div>
+                        <div className={`${theme === 'dark' ? 'bg-slate-800' : 'bg-slate-400'} text-gey p-2 rounded-xl`} key={payload[0].payload.date}>
+                            <div className={`${theme === 'dark' ? 'bg-slate-600' : 'bg-slate-200'} text-grey p-2 font-bold rounded-md`}>{payload[0].payload.date}</div>
                             <div>
                                 <p>
                                     Markedsverdi: {payload[0].payload.market_value.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })}
