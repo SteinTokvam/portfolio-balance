@@ -156,7 +156,7 @@ export default function Dashboard() {
                             >
                                 <Line type="monotone" dataKey="value" stroke="#8884d8" />
                                 <XAxis dataKey="created_at" />
-                                <YAxis />
+                                <YAxis domain={["auto", "auto"]} />
                                 <Tooltip />
                                 <Legend />
                             </LineChart>
