@@ -179,7 +179,7 @@ async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
     .map((uniqueE24Key) => {
       const transactions = account.transactions.filter(
         (transaction) => transaction.e24Key === uniqueE24Key
-      );
+      ).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL");
       return {
         e24Key: uniqueE24Key,
         equityShare: transactions.reduce(
@@ -216,7 +216,7 @@ async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
             (transaction) =>
               transaction.type === "BUY" || transaction.type === "SELL"
           )
-          .reduce((sum, transaction) => sum + transaction.cost, 0),
+          .reduce((sum, transaction) => sum + transaction.cost, 0) + transactions.filter(transaction => transaction.type === "DIVIDEND").reduce((sum, transaction) => sum + transaction.cost, 0),
     });
   });
   return holdings;

@@ -71,6 +71,8 @@ export default function Dashboard() {
             yieldForAccount = development.value > 0 ? development.yield.toFixed(0) : "0"
         } else if (account.name === "Bare Bitcoin") {
             yieldForAccount = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.yield, 0).toFixed(0)
+        } else if (account.name === "Nordnet") {
+            yieldForAccount = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.yield, 0).toFixed(0) + (accountValue - account.transactions.reduce((a: number, b: Transaction) => a + b.cost, 0)).toFixed(0)
         } else {
             yieldForAccount = (accountValue - account.transactions.reduce((a: number, b: Transaction) => a + b.cost, 0)).toFixed(0)
         }
