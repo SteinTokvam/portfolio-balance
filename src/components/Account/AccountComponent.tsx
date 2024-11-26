@@ -163,6 +163,8 @@ export default function AccountComponent() {
                 return item.type === 'FEE' ? item.name = 'Fee' : item.name
             case 'cost':
                 return item.cost.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+            case 'equityPrice':
+                return item.equityPrice.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
             default:
                 return getKeyValue(item, columnKey)
         }
