@@ -110,7 +110,6 @@ const accountReducer = (state = initialState, action: { type: string; payload: {
                 accounts: newAccounts
             }
         case 'DELETE_ACCOUNT':
-            console.log(action.payload.accountKey)
             currentAccounts = [...state.accounts]
             const remainingAccounts = currentAccounts.filter(account => account.key !== action.payload.accountKey)
 

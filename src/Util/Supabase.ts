@@ -164,7 +164,6 @@ export async function deleteAccountSupabase(
     .delete()
     .eq("key", accountKey);
 
-  console.log(response);
   return response.status === 204;
 }
 

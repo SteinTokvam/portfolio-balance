@@ -18,14 +18,12 @@ export default function GoalAnalysis({holdings, equityTypes}: {holdings: Holding
 
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    console.log(holdings)
     const furthestFromGoal = equityTypes.map((equityType: EquityType) => {
         const currentPercentage = parseFloat((holdings
             .filter((holding: Holding) => {
                 return holding.equityType.toLowerCase() === equityType.label.toLocaleLowerCase()
             })
             .reduce((acc: number, cur: Holding) => cur.value ? acc + cur.value : 0, 0) / holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0) * 100).toFixed(2))
-            console.log(currentPercentage)
         return {
             currentPercentage,
             equityType: equityType,

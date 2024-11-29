@@ -89,7 +89,6 @@ export default function Auth() {
             <Button
                 color='primary'
                 onKeyDown={(e) => {
-                    console.log(e.key)
                     if (e.key === 'Enter') {
                         e.preventDefault()
                         handleButton()

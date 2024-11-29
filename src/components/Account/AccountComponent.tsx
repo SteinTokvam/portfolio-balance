@@ -109,7 +109,6 @@ export default function AccountComponent() {
     }
 
     useEffect(() => {
-        console.log(account)
         if (account) {
             fetchKronDevelopment(account)
                 .then((development: KronDevelopment[]) => setDevelopment(development))
@@ -179,7 +178,6 @@ export default function AccountComponent() {
                     </AccountButton>
                     <DeleteButton handleDelete={() => {
                         dispatch(deleteAccount(account.key))
-                        console.log("hre")
                         navigate(routes.portfolio)
                     }}
                         buttonText={t('transactionsTable.deleteAccount')}
