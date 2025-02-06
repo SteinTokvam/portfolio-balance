@@ -8,7 +8,7 @@ import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, Holding, KronDevelopment, State, Transaction, TransactionType } from "../../types/Types";
+import { Account, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { addHoldings, deleteHoldingsForAccount } from "../../actions/holdings";
