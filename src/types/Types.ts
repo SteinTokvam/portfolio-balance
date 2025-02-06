@@ -135,6 +135,7 @@ export enum TransactionType {
     YIELD = "YIELD",
     DEPOSIT = "DEPOSIT",
     WITHDRAWAL = "WITHDRAWAL",
+    WRITEDOWN = "WRITE-DOWN"
 }
 
 export enum AccountTypes {

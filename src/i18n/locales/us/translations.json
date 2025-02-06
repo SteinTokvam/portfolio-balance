@@ -69,7 +69,8 @@
         "dividend": "Dividend",
         "yield": "Yield",
         "deposit": "Deposit",
-        "withdrawal": "Withdrawal"
+        "withdrawal": "Withdrawal",
+        "writedown": "Write-down"
     },
     "settings": {
         "header": "Settings",

@@ -236,7 +236,7 @@ function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
       .filter((transaction) => transaction.name === uniqueHoldingName)
       .filter(
         (transaction) =>
-          transaction.type === "BUY" || transaction.type === "SELL"
+          transaction.type === "BUY" || transaction.type === "SELL" || transaction.type === "WRITE-DOWN"
       );
     const equityShare = buysAndSells.reduce(
       (sum, transaction) => sum + transaction.equityShare,

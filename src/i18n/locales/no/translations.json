@@ -69,7 +69,8 @@
         "dividend": "Utbytte",
         "yield": "Renter",
         "deposit": "Innskudd",
-        "withdrawal": "Uttak"
+        "withdrawal": "Uttak",
+        "writedown": "Nedskrivning"
     },
     "settings": {
         "header": "Innstillinger",
