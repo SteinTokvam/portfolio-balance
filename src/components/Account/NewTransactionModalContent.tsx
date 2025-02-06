@@ -32,6 +32,7 @@ export default function NewTransactionModalContent({ account }: { account: Accou
         { key: TransactionType.YIELD, label: t('transactionType.yield') },
         { key: TransactionType.DEPOSIT, label: t('transactionType.deposit') },
         { key: TransactionType.WITHDRAWAL, label: t('transactionType.withdrawal') },
+        { key: TransactionType.WRITEDOWN, label: t('transactionType.writedown') },
     ]
     const [selectedTransactionKeys, setSelectedTransactionKeys] = useState([]);
     const selectedTransactionType = useMemo(

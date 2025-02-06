@@ -21,6 +21,7 @@ import {
   getValueOverTime,
   logNewValueOverTime,
 } from "./Supabase";
+import { fetchFundingpartnerHoldings, fetchFundingpartnerTransactions } from "./Fundingpartner";
 
 export const languages = ["us", "no"];
 
@@ -88,7 +89,9 @@ export async function getAllTransactions(
   if (account.isManual) {
     return getTransactions(account.key);
   }
-  if (account.name === "Kron") {
+  if(account.name === "FundingPartner") {
+    return fetchFundingpartnerTransactions(account)
+  } else if (account.name === "Kron") {
     return fetchKronTransactions(account);
   } else if (account.name === "Firi") {
     return fetchFiriTransactions(account, ["NOK"]);
@@ -120,6 +123,8 @@ export async function getHoldings(account: Account): Promise<Holding[]> {
       return firiHoldings;
     } else if (account.name === "Bare Bitcoin") {
       return fetchBBHoldings(account);
+    } else if(account.name === "FundingPartner") {
+      return fetchFundingpartnerHoldings(account)
     }
   }
 
