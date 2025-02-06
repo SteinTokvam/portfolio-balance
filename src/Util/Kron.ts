@@ -19,7 +19,7 @@ function getOptions(api_key: string | undefined, account_id: string | undefined,
                 'account_id': account_id,
                 'accessKey': api_key,
                 'accountKey': accountKey,
-                'interval': 'year-to-date'
+                'interval': 'total'
             })
         } :
         {
@@ -69,7 +69,7 @@ export async function fetchKronHoldings(account: Account): Promise<Holding[]> {
 }
 
 export async function fetchKronBalance(account: Account): Promise<{value: number, yield: number}> {
-    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key)
+    const options = getOptions(account.apiInfo?.accessKey, account.apiInfo?.kronAccountId, account.key, true)
     if (options.error) {
         return new Promise((resolve, _) => {
             resolve({value: 0, yield: 0})

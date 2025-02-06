@@ -67,7 +67,9 @@ export default function Dashboard() {
         const accountValue = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.value, 0)
         var yieldForAccount = "0"
         if (account.name === "FundingPartner") {
-            yieldForAccount = account.transactions.filter((transaction: Transaction) => transaction.type === TransactionType.YIELD).reduce((a: number, b: Transaction) => a + b.cost, 0).toFixed(0)
+            yieldForAccount = account.transactions
+                .filter((transaction: Transaction) => transaction.type === TransactionType.YIELD)
+                .reduce((a: number, b: Transaction) => a + b.cost, 0).toFixed(0)
         } else if (account.name === "Kron") {
             yieldForAccount = development.value > 0 ? development.yield.toFixed(0) : "0"
         } else if (account.name === "Bare Bitcoin") {
@@ -75,7 +77,8 @@ export default function Dashboard() {
         } else if (account.name === "Nordnet") {
             yieldForAccount = holdings.filter((holding: Holding) => holding.accountKey === account.key).reduce((a: number, b: Holding) => a + b.yield, 0).toFixed(0) + (accountValue - account.transactions.reduce((a: number, b: Transaction) => a + b.cost, 0)).toFixed(0)
         } else {
-            yieldForAccount = (accountValue - account.transactions.reduce((a: number, b: Transaction) => a + b.cost, 0)).toFixed(0)
+            const cost = account.transactions.filter(transaction => transaction.type !== TransactionType.WRITEDOWN).reduce((a: number, b: Transaction) => a + b.cost, 0)
+            yieldForAccount = (accountValue - cost).toFixed(0)
         }
         return {
             name: account.name,
@@ -93,6 +96,7 @@ export default function Dashboard() {
                 {
                     tmpHoldings
                         .sort((a: Holding, b: Holding) => b.value - a.value)
+                        .filter(holding => holding.value > 1)
                         .map((holding: Holding) => (
                             <div key={holding.key}>
                                 <h3 className="text-xl font-semibold">{holding.name}</h3>

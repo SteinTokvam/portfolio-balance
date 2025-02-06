@@ -4,6 +4,7 @@ import {
   AccountTypes,
   Holding,
   Transaction,
+  TransactionType,
 } from "../types/Types";
 import { v4 as uuidv4 } from "uuid";
 import { fetchKronHoldings, fetchKronTransactions } from "./Kron";
@@ -184,7 +185,7 @@ async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
     .map((uniqueE24Key) => {
       const transactions = account.transactions.filter(
         (transaction) => transaction.e24Key === uniqueE24Key
-      ).filter(transaction => transaction.type === "BUY" || transaction.type === "SELL");
+      ).filter(transaction => transaction.type === TransactionType.BUY || transaction.type === TransactionType.SELL);
       return {
         e24Key: uniqueE24Key,
         equityShare: transactions.reduce(
@@ -219,9 +220,9 @@ async function getHoldingsWithE24Ticker(account: Account): Promise<Holding[]> {
         transactions
           .filter(
             (transaction) =>
-              transaction.type === "BUY" || transaction.type === "SELL"
+              transaction.type === TransactionType.BUY || transaction.type === TransactionType.SELL
           )
-          .reduce((sum, transaction) => sum + transaction.cost, 0) + transactions.filter(transaction => transaction.type === "DIVIDEND").reduce((sum, transaction) => sum + transaction.cost, 0),
+          .reduce((sum, transaction) => sum + transaction.cost, 0) + transactions.filter(transaction => transaction.type === TransactionType.DIVIDEND).reduce((sum, transaction) => sum + transaction.cost, 0),
     });
   });
   return holdings;
@@ -241,17 +242,19 @@ function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
       .filter((transaction) => transaction.name === uniqueHoldingName)
       .filter(
         (transaction) =>
-          transaction.type === "BUY" || transaction.type === "SELL" || transaction.type === "WRITE-DOWN"
+          transaction.type === TransactionType.BUY || transaction.type === TransactionType.SELL
       );
     const equityShare = buysAndSells.reduce(
       (sum, transaction) => sum + transaction.equityShare,
       0
     );
-    const value = buysAndSells.reduce(
-      (sum, transaction) => sum + transaction.cost,
-      0
-    );
 
+    const value = buysAndSells
+      .reduce((sum, transaction) => sum + transaction.cost,0) - account.transactions.filter(transactions => transactions.type === TransactionType.WRITEDOWN).reduce((sum, transaction) => sum + transaction.cost, 0);
+
+      
+    console.log(account.name, value)
+      
     if (value > 0.5) {
       const transaction = buysAndSells.filter(
         (transaction) => transaction.name === uniqueHoldingName
@@ -266,8 +269,10 @@ function getHoldingsWithoutE24Ticker(account: Account): Holding[] {
         value,
         yield: account.transactions
           .filter((transaction) => transaction.name === uniqueHoldingName)
-          .filter((transaction) => transaction.type === "YIELD")
-          .reduce((sum, transaction) => sum + transaction.cost, 0),
+          .filter((transaction) => transaction.type === TransactionType.YIELD || transaction.type === TransactionType.WRITEDOWN)
+          .reduce((sum, transaction) => {
+            return transaction.type === TransactionType.YIELD ? sum + transaction.cost : sum - transaction.cost
+          }, 0),
       });
     }
   });

@@ -8,7 +8,7 @@ import ImportTransactionsModalContent from "./ImportTransactionsModalContent";
 import { useTranslation } from "react-i18next";
 import NewTransactionModalContent from "./NewTransactionModalContent";
 import DeleteButton from "./DeleteButton";
-import { Account, Holding, KronDevelopment, State, Transaction } from "../../types/Types";
+import { Account, Holding, KronDevelopment, State, Transaction, TransactionType } from "../../types/Types";
 import AccountButton from "./AccountButton";
 import { AccountTypeModalContent } from "./AccountTypeModalContent";
 import { addHoldings, deleteHoldingsForAccount } from "../../actions/holdings";
@@ -242,18 +242,17 @@ export default function AccountComponent() {
                         : ''
                 }
                 {
-                    account && account.transactions.filter((transaction: Transaction) => transaction.type === 'YIELD').length > 0 ?
+                    account && 
                         <div className="p-4">
                             <p className="text-default-600">Avkastning</p>
                             <p className="text-default-800 font-bold">
                                 {
-                                    account.transactions
-                                        .filter((transaction: Transaction) => transaction.type === 'YIELD' || transaction.type === 'DIVIDEND')
-                                        .reduce((acc: number, cur: Transaction) => acc + cur.cost, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                    account.name === "Kron" && development.length > 0 ? development[development.length-1].yield_in_currency.toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
+                                    : holdings.reduce((acc, curr) => acc + curr.yield, 0).toLocaleString('nb-NO', { style: 'currency', currency: 'NOK' })
                                 }
                             </p>
                         </div>
-                        : ''
+                        
                 }
             </div>
 
