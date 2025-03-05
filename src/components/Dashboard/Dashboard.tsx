@@ -24,7 +24,8 @@ export default function Dashboard() {
     const holdings: Holding[] = useSelector((state: State) => state.rootReducer.holdings.holdings).filter((holding: Holding) => holding.value > 0.001)
     const settings = useSelector((state: State) => state.rootReducer.settings)
     const totalValue: number = holdings.reduce((a: number, b: Holding) => b.value ? a + b.value : 0, 0)
-    const totalYield: number = holdings.filter((holding: Holding) => holding.yield).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
+    const tangem = accounts.filter((account: Account) => account.name === "Tangem")[0]
+    const totalYield: number = holdings.filter((holding: Holding) => holding.yield).filter(holding => holding.accountKey !== tangem.key).reduce((a: number, b: Holding) => b.yield ? a + b.yield : 0, 0)
     const [development, setDevelopment] = useState<{ value: number, yield: number }>({ value: 0, yield: 0 })
     const [valueOverTime, setValueOverTime] = useState<ValueOverTime[]>([])
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
